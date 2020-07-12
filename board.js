@@ -237,6 +237,20 @@ function graphicButton(){
 //Draw functions
 //--------------------------------------------------
 
+var canvas = document.getElementById('canvas')
+var canvasDiv = document.getElementById('canvasDiv')
+canvas.style.background = 'powderblue'
+canvas.width  = canvasDiv.clientWidth;
+canvas.height = canvasDiv.clientHeight;
+
+var ctx = canvas.getContext('2d')
+
+var svg = document.getElementById('display')
+svg.style.width = "100%";
+var svgWidth = svg.clientWidth;
+console.log(svgWidth)
+
+
 function clearDisplay(){
     d3.selectAll("svg > *").remove();
 }
@@ -249,7 +263,7 @@ function drawDiceResults() {
     d3.selectAll("svg > *").remove(); 
 
     const margin = 50
-    const width = 500 - 2 * margin;
+    const width = svgWidth - 2 * margin;
     const height = 300 - 2 * margin;
     
     const svg = d3.select('svg')
@@ -323,7 +337,7 @@ function drawUnplayedDevCards(){
 
      // set the dimensions and margins of the graph
      const margin = 50
-     const width = 500;
+     const width = svgWidth;
      const height = 300;
 
     // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
@@ -419,7 +433,7 @@ function drawPlayedDevCards(){
 
      // set the dimensions and margins of the graph
      const margin = 50
-     const width = 500;
+     const width = svgWidth;
      const height = 300;
 
     // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.

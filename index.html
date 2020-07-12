@@ -10,8 +10,6 @@
 
         <script src="https://d3js.org/d3.v5.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.min.js"></script>
-
-        <script src=board.js></script>
     </head>
 
     <body>
@@ -46,8 +44,8 @@
                         
                     </div>
 
-                    <div class="row">
-                        canvas<canvas></canvas>
+                    <div class="row" id="canvasDiv">
+                        <canvas id="canvas" width=900 height="650"></canvas>
                     </div>
                     
                 </div>
@@ -55,7 +53,7 @@
                 <div class="col-4" id="right">
                     
                     <div class="row">
-                        <svg id = "display" width = "500" height = "300" style = "background-color:lightblue;" visibility= "visible"></svg> 
+                        <svg id = "display" height="300"  style = "background-color:cornsilk;" visibility= "visible"></svg> 
                     </div>
                     
                     <div class="row">
@@ -66,7 +64,7 @@
                             <option value="dev unplayed">Unplayed Dev Cards</option>
                         </select>
 
-                        <select name="playerDisplayOption" id="playerDisplayOptions" disabled="disabled">
+                        <select name="playerDisplayOption" id="playerDisplayOptions" enabled="enabled">
                             <option value="P1">Player 1</option>
                             <option value="P2">Player 2</option>
                             <option value="P3">Player 3</option>
@@ -85,7 +83,7 @@
         </div>
         
 
-        
+        <script src=board.js></script>
 
         
 

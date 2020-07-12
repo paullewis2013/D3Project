@@ -3,19 +3,27 @@ body {
 }
 
 .row{
+    padding: 0px;
     outline: double;
-    padding: 3px;
+    outline-color: black;
+    outline-width: 1px;
 }
 
 #controls{
-    padding-bottom: 50px;
+    height: 100px;
 }
 
-.btn{
-    margin: 2px;
+body {
+    padding: 5px;
 }
 
 html, body {
-    height: 100%;
-    padding: 2px;
+    height: 100vh;
+    overflow-y: scroll;
 }
+
+.container-fluid{
+    height: 100vh;
+    width: 99vw;
+}
+

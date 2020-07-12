@@ -1,0 +1,21 @@
+body {
+    background-color: antiquewhite;
+}
+
+.row{
+    outline: double;
+    padding: 3px;
+}
+
+#controls{
+    padding-bottom: 50px;
+}
+
+.btn{
+    margin: 2px;
+}
+
+html, body {
+    height: 100%;
+    padding: 2px;
+}

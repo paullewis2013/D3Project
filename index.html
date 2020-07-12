@@ -6,7 +6,7 @@
 
 
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        
+        <link rel="stylesheet" type="text/css" href="index.css">
 
         <script src="https://d3js.org/d3.v5.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.min.js"></script>
@@ -15,25 +15,80 @@
     </head>
 
     <body>
-        <button class="btn btn-primary" onclick="diceButton()">Roll Dice</button>
-        <button class="btn btn-primary" onclick="devButton()">Draw Dev Card</button> 
-        <p id="rollResult">Dice roll:</p>
-        <p id="turnNumber">Turn number:</p>
-        <p id="devCardsRemaining">Dev Cards Remaining: 25</p>
-        <p id="lastDevCard">Last Dev card drawn: </p>
 
-        <select name="displayOptions" id="displayOptions" onchange="graphicButton()">
-            <option value="None">None</option>
-            <option value="Dice Distribution">Dice Distribution</option>
-            <option value="dev played">Played Dev Cards</option>
-            <option value="dev unplayed">Unplayed Dev Cards</option>
-        </select>
+        <div class="container-fluid">
+            <div class="row" id="big-row">
+                
+                
+                <div class="col-8" id="left">
+                    <div class="row" id="controls">
+                        
+                        <div class="col-3" id="buttons">
+                            <button class="btn btn-primary" onclick="diceButton()">Roll Dice</button>
+                            <button class="btn btn-primary" onclick="devButton()">Draw Dev</button>
+                        </div>
+                        
+                        <div class="col">
+                            <p id="rollResult">Dice roll:</p>   
+                        </div>
 
-        <br>
-        <svg id = "display" width = "600" height = "400" style = "background-color:lightblue;" visibility= "visible"></svg> 
+                        <div class="col">
+                            <p id="turnNumber">Turn number:</p>
+                        </div>
 
-        <br>
+                        <div class="col">
+                            <p id="devCardsRemaining">Dev Cards Remaining: 25</p>
+                        </div>
+                        
+                        <div class="col">
+                            <p id="lastDevCard">Last Dev card drawn: </p>
+                        </div>
+                        
+                    </div>
+
+                    <div class="row">
+                        canvas<canvas></canvas>
+                    </div>
+                    
+                </div>
+                
+                <div class="col-4" id="right">
+                    
+                    <div class="row">
+                        <svg id = "display" width = "500" height = "300" style = "background-color:lightblue;" visibility= "visible"></svg> 
+                    </div>
+                    
+                    <div class="row">
+                        <select name="displayOptions" id="displayOptions" onchange="graphicButton()">
+                            <option value="None">None</option>
+                            <option value="Dice Distribution">Dice Distribution</option>
+                            <option value="dev played">Played Dev Cards</option>
+                            <option value="dev unplayed">Unplayed Dev Cards</option>
+                        </select>
+
+                        <select name="playerDisplayOption" id="playerDisplayOptions" disabled="disabled">
+                            <option value="P1">Player 1</option>
+                            <option value="P2">Player 2</option>
+                            <option value="P3">Player 3</option>
+                            <option value="P4">Player 4</option>
+                        </select>
+                    </div>
+                    
+                    <div class="row">
+                        player info in this row
+                    </div>
+                    
+                    
+                </div>
+
+            </div>
+        </div>
         
+
+        
+
+        
+
 
     </body>
 

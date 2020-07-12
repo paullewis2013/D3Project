@@ -105,7 +105,7 @@ function drawDevCard(){
     if(devCardArray.length > 0){
         var card = devCardArray.pop();
         document.getElementById("lastDevCard").innerHTML = "Last Dev card drawn: " + card
-        document.getElementById("devCardsRemaining").innerHTML = "Dev Cards Remaining: : " + devCardArray.length
+        document.getElementById("devCardsRemaining").innerHTML = "Dev Cards Remaining: " + devCardArray.length
         //console.log(card)
 
 
@@ -249,8 +249,8 @@ function drawDiceResults() {
     d3.selectAll("svg > *").remove(); 
 
     const margin = 50
-    const width = 600 - 2 * margin;
-    const height = 400 - 2 * margin;
+    const width = 500 - 2 * margin;
+    const height = 300 - 2 * margin;
     
     const svg = d3.select('svg')
         .attr("width", width + 2 * margin)
@@ -323,8 +323,8 @@ function drawUnplayedDevCards(){
 
      // set the dimensions and margins of the graph
      const margin = 50
-     const width = 600;
-     const height = 400;
+     const width = 500;
+     const height = 300;
 
     // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
     var radius = Math.min(width, height) / 2 - margin
@@ -419,8 +419,8 @@ function drawPlayedDevCards(){
 
      // set the dimensions and margins of the graph
      const margin = 50
-     const width = 600;
-     const height = 400;
+     const width = 500;
+     const height = 300;
 
     // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
     var radius = Math.min(width, height) / 2 - margin

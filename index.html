@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Test</title>
+
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        
+
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.min.js"></script>
+
+        <script src=board.js></script>
+    </head>
+
+    <body>
+        <button class="btn btn-primary" onclick="diceButton()">Roll Dice</button>
+        <button class="btn btn-primary" onclick="devButton()">Draw Dev Card</button> 
+        <p id="rollResult">Dice roll:</p>
+        <p id="turnNumber">Turn number:</p>
+        <p id="devCardsRemaining">Dev Cards Remaining: 25</p>
+        <p id="lastDevCard">Last Dev card drawn: </p>
+
+        <select name="displayOptions" id="displayOptions" onchange="graphicButton()">
+            <option value="None">None</option>
+            <option value="Dice Distribution">Dice Distribution</option>
+            <option value="dev played">Played Dev Cards</option>
+            <option value="dev unplayed">Unplayed Dev Cards</option>
+        </select>
+
+        <br>
+        <svg id = "display" width = "600" height = "400" style = "background-color:lightblue;" visibility= "visible"></svg> 
+
+        <br>
+        
+
+    </body>
+
+
+</html>

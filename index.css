@@ -31,6 +31,10 @@ html, body {
     line-height: 23px;
 }
 
+td, th {
+    text-align: center;
+}
+
 #right{
     display: flex;
     flex-direction: column;

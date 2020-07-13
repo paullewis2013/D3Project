@@ -21,6 +21,21 @@ var bank = [];
 var resultsShown = false
 var turnNumber = 0
 
+
+//the tiles on the board
+//a 2d array where first index represents row and second represent num in row
+var tilesArr = [
+    [],
+    [],
+    [],
+    [],
+    []
+]
+
+var resourceNums = [2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12]
+
+
+
 //defines enum for a dev card
 const devCard = {
     KNIGHT: 'knight',
@@ -43,6 +58,32 @@ const resourceCard = {
 //end of instance fields
 //--------------------------------------------------
 
+function setUpTiles(){
+    resourceNums = _.shuffle(resourceNums)
+    counter = resourceNums.length - 1;
+    for(i = 0; i < 5; i++){
+        
+        //first and last row
+        if(i === 0 || i === 4){
+            times = 3
+        }
+        //second and second to last row
+        if(i === 1 || i === 3){
+            times = 4;
+        }
+        //middle row
+        if(i === 2){
+            times = 5;
+        }
+
+        for(j = 0; j < times; j++){
+            tilesArr[i].push(resourceNums[counter]);
+            counter--;
+        }
+    }
+
+    console.log(tilesArr)
+}
 
 //this code should be somewhere else lol
 var svg = document.getElementById('display')
@@ -63,6 +104,7 @@ function setup(){
     populateDevCardDeck()
     populateDiceArr()
     graphicButton()
+    setUpTiles()
 }
 
 //populate dev card array and unplayed dev card array then shuffle the dev card array 
@@ -255,6 +297,65 @@ canvas.width  = canvasDiv.clientWidth;
 canvas.height = canvasDiv.clientHeight;
 
 var ctx = canvas.getContext('2d')
+ctx.font= "30px Arial";
+//ctx.fillText("Game board will go here", 100, 100)
+
+drawCircles()
+
+function drawCircles(){
+    var centerX = canvas.width /2;
+    var centerY = 2 * (canvas.height / 7) - 50;
+    var radius = 60;
+
+    //how to draw a circle in case I forget
+    // ctx.beginPath();
+    // ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+    // ctx.lineWidth = 5;
+    // ctx.strokeStyle = '#003300';
+    // ctx.stroke();
+
+    ctx.textAlign = "center"
+    ctx.font = "20px Arial";
+
+    for(i = 0; i < 5; i++){
+        //centerY = ((2 + i) * (canvas.height / 7)) - radius;
+
+        //some circle packing magic thats like a 30-60-90 triangle
+        centerY = (canvas.height / 2) - Math.sqrt(3)*radius*(2-i);
+
+        var times;
+
+        //first and last row
+        if(i === 0 || i === 4){
+            centerX = (canvas.width/2) - 3*radius
+            times = 3;
+        }
+        //second and second to last row
+        if(i === 1 || i === 3){
+            centerX = (canvas.width/2) - 4*radius
+            times = 4;
+        }
+        //middle row
+        if(i === 2){
+            centerX = (canvas.width/2) - 5*radius
+            times = 5;
+        }
+
+        for(j = 0; j < times; j++){
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = 'black';
+            ctx.stroke();
+
+            ctx.fillText(tilesArr[i][j], centerX, centerY + 10)
+
+            centerX += radius * 2 
+        }
+
+    }
+    
+}
 
 function clearDisplay(){
     d3.selectAll("svg > *").remove();
@@ -265,7 +366,7 @@ function clearDisplay(){
 
     //title
     svg.append('text')
-        .attr('x', svgWidth / 2 + margin)
+        .attr('x', svgWidth / 2)
         .attr('y', 30)
         .attr('text-anchor', 'middle')
         .text('Select info to display below')
@@ -287,7 +388,7 @@ function drawDiceResults() {
         .attr("height", height + 2 * margin)
 
     const chart = svg.append('g')
-        .attr('transform', `translate(${margin}, ${margin})`);
+        .attr('transform', `translate(${margin * 1.5}, ${margin})`);
 
     var yScale = d3.scaleLinear()
         .domain([0, d3.max(dice_results_arr, function(o) {return o.frequency}) + 3])

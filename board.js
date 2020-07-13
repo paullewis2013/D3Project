@@ -44,6 +44,16 @@ const resourceCard = {
 //--------------------------------------------------
 
 
+//this code should be somewhere else lol
+var svg = document.getElementById('display')
+svg.style.width = "100%";
+svg.style.height = 300;
+var svgWidth = svg.clientWidth;
+var svgHeight = svg.clientHeight;
+var margin = 50;
+
+console.log(svgWidth / 2 + margin)
+
 
 //important!
 setup()
@@ -52,6 +62,7 @@ setup()
 function setup(){
     populateDevCardDeck()
     populateDiceArr()
+    graphicButton()
 }
 
 //populate dev card array and unplayed dev card array then shuffle the dev card array 
@@ -104,8 +115,8 @@ function rollDice(){
 function drawDevCard(){
     if(devCardArray.length > 0){
         var card = devCardArray.pop();
-        document.getElementById("lastDevCard").innerHTML = "Last Dev card drawn: " + card
-        document.getElementById("devCardsRemaining").innerHTML = "Dev Cards Remaining: " + devCardArray.length
+        //document.getElementById("lastDevCard").innerHTML = "Last Dev card drawn: " + card
+        document.getElementById("devCardsRemaining").innerHTML = devCardArray.length
         //console.log(card)
 
 
@@ -245,14 +256,19 @@ canvas.height = canvasDiv.clientHeight;
 
 var ctx = canvas.getContext('2d')
 
-var svg = document.getElementById('display')
-svg.style.width = "100%";
-var svgWidth = svg.clientWidth;
-console.log(svgWidth)
-
-
 function clearDisplay(){
     d3.selectAll("svg > *").remove();
+
+    const svg = d3.select('svg')
+        .attr("width", svgWidth + 2 * margin)
+        .attr("height", svgHeight + 2 * margin)
+
+    //title
+    svg.append('text')
+        .attr('x', svgWidth / 2 + margin)
+        .attr('y', 30)
+        .attr('text-anchor', 'middle')
+        .text('Select info to display below')
 }
 
 
@@ -264,7 +280,7 @@ function drawDiceResults() {
 
     const margin = 50
     const width = svgWidth - 2 * margin;
-    const height = 300 - 2 * margin;
+    const height = svgHeight - 2 * margin;
     
     const svg = d3.select('svg')
         .attr("width", width + 2 * margin)
@@ -338,7 +354,7 @@ function drawUnplayedDevCards(){
      // set the dimensions and margins of the graph
      const margin = 50
      const width = svgWidth;
-     const height = 300;
+     const height = svgHeight;
 
     // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
     var radius = Math.min(width, height) / 2 - margin

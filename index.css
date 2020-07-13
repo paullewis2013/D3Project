@@ -4,6 +4,7 @@ body {
 
 .row{
     padding: 0px;
+    border-collapse: collapse;
     outline: double;
     outline-color: black;
     outline-width: 1px;
@@ -23,7 +24,20 @@ html, body {
 }
 
 .container-fluid{
-    height: 100vh;
     width: 99vw;
+}
+
+#bankTable {
+    line-height: 23px;
+}
+
+#right{
+    display: flex;
+    flex-direction: column;
+}
+
+#playerDiv{
+    padding: 4px;
+    flex-grow: 1;
 }
 

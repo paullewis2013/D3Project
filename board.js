@@ -327,27 +327,62 @@ function drawCircles(){
 
         //first and last row
         if(i === 0 || i === 4){
-            centerX = (canvas.width/2) - 3*radius
+            centerX = (canvas.width/2) - 2*radius
             times = 3;
         }
         //second and second to last row
         if(i === 1 || i === 3){
-            centerX = (canvas.width/2) - 4*radius
+            centerX = (canvas.width/2) - 3*radius
             times = 4;
         }
         //middle row
         if(i === 2){
-            centerX = (canvas.width/2) - 5*radius
+            centerX = (canvas.width/2) - 4*radius
             times = 5;
         }
 
         for(j = 0; j < times; j++){
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-            ctx.lineWidth = 5;
-            ctx.strokeStyle = 'black';
-            ctx.stroke();
 
+            //outer circle of size radius
+            // ctx.beginPath();
+            // ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+            // ctx.lineWidth = 1;
+            // ctx.strokeStyle = 'black';
+            // ctx.stroke();
+            // ctx.closePath()
+
+            //draw hexagon
+            var hexAngle = ((2 * Math.PI) / 6)
+
+            //7/6 makes the hexagons flushhh 6.9/6 looks nicer anything below leaves a gap
+            var hexRad = radius * 6.5/6
+            
+            ctx.beginPath();
+            ctx.moveTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
+            ctx.lineTo(centerX + hexRad * Math.cos(0.5*hexAngle), centerY + hexRad * Math.sin(0.5*hexAngle))
+            ctx.lineTo(centerX + hexRad * Math.cos(1.5*hexAngle), centerY + hexRad * Math.sin(1.5*hexAngle))
+            ctx.lineTo(centerX + hexRad * Math.cos(2.5*hexAngle), centerY + hexRad * Math.sin(2.5*hexAngle))
+            ctx.lineTo(centerX + hexRad * Math.cos(3.5*hexAngle), centerY + hexRad * Math.sin(3.5*hexAngle))
+            ctx.lineTo(centerX + hexRad * Math.cos(4.5*hexAngle), centerY + hexRad * Math.sin(4.5*hexAngle))
+            ctx.lineTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = 'black';
+            ctx.closePath()
+            ctx.stroke()
+            ctx.fillStyle = "lightgrey"
+            ctx.fill()
+            
+            //draw inner circle
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 20, 0, 2 * Math.PI, false);
+            ctx.lineWidth = 0;
+            ctx.strokeStyle = 'black';
+            ctx.closePath()
+            ctx.stroke();
+            ctx.fillStyle = "white"
+            ctx.fill()
+
+            ctx.fillStyle = "black"
             ctx.fillText(tilesArr[i][j], centerX, centerY + 10)
 
             centerX += radius * 2 

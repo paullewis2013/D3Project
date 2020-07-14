@@ -16,7 +16,7 @@ var unplayedDevCards = {knight: 14, vp: 5, monopoly: 2, road: 2, plenty: 2};
 var playedDevCards = {knight: 0, vp: 0, monopoly: 0, road: 0, plenty: 0}
 
 //array to store resource cards in bank
-var bank = [];
+var bank = [19, 19, 19, 19, 19];
 
 var resultsShown = false
 var turnNumber = 0
@@ -35,7 +35,48 @@ var tilesArr = [
 var resourceNums = [2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12]
 var colorNums = ["green", "green","green","green","red","red","red","lightgreen","lightgreen",
                 "lightgreen","lightgreen","#ffff99","#ffff99","#ffff99","#ffff99","slategrey","slategrey",
-                "slategrey", "tan"]
+                "slategrey", "tan"];
+
+
+//define dice object
+function Dice() {
+    this.value = 0;
+    this.img = "https://upload.wikimedia.org/wikipedia/commons/9/99/Dice-0.svg";
+}
+Dice.prototype.roll = function() {
+    this.value = Math.floor(Math.random() * 6) + 1;
+}
+Dice.prototype.getValue = function() {
+    return this.value;
+}
+//returns a string with the url for the correct image
+//images from wikipedia commons
+Dice.prototype.getImg = function() {
+    if(this.value === 0){
+        return this.img;
+    }else if(this.value === 1){
+        this.img = "assets/Dice-1.png";
+        return this.img;
+    }else if(this.value === 2){
+        this.img = "assets/Dice-2.png";
+        return this.img;
+    }else if(this.value === 3){
+        this.img = "assets/Dice-3.png";
+        return this.img;
+    }else if(this.value === 4){
+        this.img = "assets/Dice-4.png";
+        return this.img;
+    }else if(this.value === 5){
+        this.img = "assets/Dice-5.png";
+        return this.img;
+    }else{
+        this.img = "assets/Dice-6.png";
+        return this.img;
+    }
+}
+
+//create an array of dice
+var diceArr = new Array(new Dice(), new Dice());
 
 
 //defines enum for a dev card
@@ -161,7 +202,11 @@ function populateDiceArr(){
 
 //generates a dice roll between 1 and 12 by summing two d6
 function rollDice(){
-    var result = Math.ceil(Math.random() * 6) + Math.ceil(Math.random() * 6);
+
+    diceArr[0].roll()
+    diceArr[1].roll()
+
+    var result = diceArr[0].getValue() + diceArr[1].getValue()
 
     dice_results_arr[result - 2].frequency += 1;
 
@@ -230,7 +275,7 @@ function playDevCard(card){
 //called when dice button is clicked
 function diceButton(){
     document.getElementById("rollResult").innerHTML = "Roll Result: " + rollDice();
-    //console.log(dice_results_arr);
+    drawDice()
     
     //updates dice results if they are visible
     graphicButton()
@@ -697,3 +742,22 @@ function drawPlayedDevCards(){
             })
     
 }
+
+//draw the dice in corner of canvas
+function drawDice(){
+    var diceImgs = []
+    for(i=0; i<diceArr.length; i++){
+  
+        (function (i) {
+            var xPos = ((i * 60) + 10);
+            var yPos = 0;
+            diceImgs[i] = new Image();
+            diceImgs[i].src = diceArr[i].getImg();
+            diceImgs[i].onload = function () {
+                ctx.drawImage(diceImgs[i], xPos, yPos, 55, 55);
+    
+            };
+        })(i);
+  
+    }
+  }

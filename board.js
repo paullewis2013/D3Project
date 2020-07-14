@@ -33,7 +33,9 @@ var tilesArr = [
 ]
 
 var resourceNums = [2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12]
-
+var colorNums = ["green", "green","green","green","red","red","red","lightgreen","lightgreen",
+                "lightgreen","lightgreen","#ffff99","#ffff99","#ffff99","#ffff99","slategrey","slategrey",
+                "slategrey", "tan"]
 
 
 //defines enum for a dev card
@@ -59,8 +61,20 @@ const resourceCard = {
 //--------------------------------------------------
 
 function setUpTiles(){
+    //randomize tile num order
     resourceNums = _.shuffle(resourceNums)
-    counter = resourceNums.length - 1;
+
+    //randomize tile resource order
+    colorNums = _.shuffle(colorNums)
+
+    //make sure desert is on 7 num
+    var resourceIndex = resourceNums.indexOf(7)
+    var colorIndex = colorNums.indexOf("tan")
+    var colorTemp = colorNums[resourceIndex]
+    colorNums[resourceIndex] = "tan"
+    colorNums[colorIndex] = colorTemp
+
+    counter = 0;
     for(i = 0; i < 5; i++){
         
         //first and last row
@@ -77,8 +91,11 @@ function setUpTiles(){
         }
 
         for(j = 0; j < times; j++){
-            tilesArr[i].push(resourceNums[counter]);
-            counter--;
+            tilesArr[i].push({
+                Number: resourceNums[counter],
+                Color: colorNums[counter]
+            });
+            counter++;
         }
     }
 
@@ -92,8 +109,6 @@ svg.style.height = 300;
 var svgWidth = svg.clientWidth;
 var svgHeight = svg.clientHeight;
 var margin = 50;
-
-console.log(svgWidth / 2 + margin)
 
 
 //important!
@@ -302,6 +317,8 @@ ctx.font= "30px Arial";
 
 drawCircles()
 
+//this actually draws hexagons now but it could do circles or whatever else involves visiting 
+//center point of each tile
 function drawCircles(){
     var centerX = canvas.width /2;
     var centerY = 2 * (canvas.height / 7) - 50;
@@ -343,13 +360,7 @@ function drawCircles(){
 
         for(j = 0; j < times; j++){
 
-            //outer circle of size radius
-            // ctx.beginPath();
-            // ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-            // ctx.lineWidth = 1;
-            // ctx.strokeStyle = 'black';
-            // ctx.stroke();
-            // ctx.closePath()
+           
 
             //draw hexagon
             var hexAngle = ((2 * Math.PI) / 6)
@@ -369,21 +380,32 @@ function drawCircles(){
             ctx.strokeStyle = 'black';
             ctx.closePath()
             ctx.stroke()
-            ctx.fillStyle = "lightgrey"
-            ctx.fill()
-            
-            //draw inner circle
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, 20, 0, 2 * Math.PI, false);
-            ctx.lineWidth = 0;
-            ctx.strokeStyle = 'black';
-            ctx.closePath()
-            ctx.stroke();
-            ctx.fillStyle = "white"
+            ctx.fillStyle = tilesArr[i][j].Color
             ctx.fill()
 
-            ctx.fillStyle = "black"
-            ctx.fillText(tilesArr[i][j], centerX, centerY + 10)
+            //outer circle of size radius
+            // ctx.beginPath();
+            // ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+            // ctx.lineWidth = 1;
+            // ctx.strokeStyle = 'black';
+            // ctx.closePath()
+            // ctx.stroke();
+            
+            //dont draw a num tile on the desert
+            if(tilesArr[i][j].Number != 7){
+                //draw inner circle
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, 20, 0, 2 * Math.PI, false);
+                ctx.lineWidth = 0;
+                ctx.strokeStyle = 'black';
+                ctx.closePath()
+                ctx.stroke();
+                ctx.fillStyle = "white"
+                ctx.fill()
+
+                ctx.fillStyle = "black"
+                ctx.fillText(tilesArr[i][j].Number, centerX, centerY + 10)
+            }
 
             centerX += radius * 2 
         }

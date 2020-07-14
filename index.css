@@ -19,13 +19,22 @@ body {
 }
 
 html, body {
+    margin: 0px;
     height: 100vh;
     overflow-y: scroll;
 }
 
 .container-fluid{
-    width: 99vw;
+    height: 100%;
 }
+
+#big-row{
+    height: 100%
+} 
+
+/* #canvasDiv {
+    height: 100%
+} */
 
 #bankTable {
     line-height: 23px;

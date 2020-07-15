@@ -5,6 +5,12 @@
 
 //I'm pretty sure this should just contain code for drawing d3 charts but maybe theres other things too
 
+var svg = document.getElementById('display')
+svg.style.width = "100%";
+svg.style.height = 300;
+var svgWidth = svg.clientWidth;
+var svgHeight = svg.clientHeight;
+var margin = 50;
 
 //removes all elements on the svg display
 function clearDisplay(){
@@ -290,4 +296,77 @@ function drawPlayedDevCards(){
                 return (midangle < Math.PI ? 'start' : 'end')
             })
     
+}
+
+
+//this one calculates production capacity
+function drawProductionCapacity(){
+    console.log(productionCapacity)
+
+    d3.selectAll("svg > *").remove(); 
+
+    const margin = 50
+    const width = svgWidth - 2 * margin;
+    const height = svgHeight - 2 * margin;
+    
+    const barWidth = width / 5 - (width / 10)
+
+    const svg = d3.select('svg')
+        .attr("width", width + 2 * margin)
+        .attr("height", height + 2 * margin)
+
+    const chart = svg.append('g')
+        .attr('transform', `translate(${margin * 1.5}, ${margin})`);
+
+    var yScale = d3.scaleLinear()
+        .domain([0, d3.max(productionCapacity, function(d) { return d; }) + 3])
+        .range([height, 0])
+
+    chart.append("g")
+        .call(d3.axisLeft(yScale))
+
+    const xScale = d3.scaleBand()
+        .range([0, width])
+        .domain(["Wood", "Brick", "Sheep", "Wheat", "Ore"])
+        .padding(0.2)
+
+    chart.append('g')
+        .attr('transform', `translate(0, ${height})`)
+        .call(d3.axisBottom(xScale));
+        
+
+    //horizontal lines
+    chart.append('g')
+        .attr('class', 'grid')
+        .call(d3.axisLeft()
+            .scale(yScale)
+            .tickSize(-width, 0, 0)
+            .tickFormat(''))
+
+
+    chart.selectAll("rect")
+        .data(productionCapacity)
+        .enter()
+        .append("rect")
+        .attr('x', (d, i) => (i * barWidth + i * (width/10) + width/20)) 
+        .attr('y', (d, i) => yScale(d))
+        .attr('height', (d, i) => height - yScale(d))
+        .attr('width', barWidth)
+        .attr("fill", "#a05d56")
+        .style("opacity", 0.9)
+        .exit()
+
+    svg.append('text')
+        .attr('x', -(height / 2) - margin)
+        .attr('y', margin / 2.4)
+        .attr('transform', 'rotate(-90)')
+        .attr('text-anchor', 'middle')
+        .text('Production Points')
+    
+    //title
+    svg.append('text')
+        .attr('x', width / 2 + margin)
+        .attr('y', 30)
+        .attr('text-anchor', 'middle')
+        .text('Resource Production Capacity')
 }

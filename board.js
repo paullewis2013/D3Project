@@ -76,7 +76,8 @@ Dice.prototype.getImg = function() {
     }
 }
 
-//create an array of dice
+
+//create an array of 2 dice to be rolled
 var diceArr = new Array(new Dice(), new Dice());
 
 
@@ -98,123 +99,94 @@ const resourceCard = {
     ORE: 'ore'
 }
 
+
+var productionCapacity = [0, 0, 0, 0, 0]
+
+
+//define tile object
+function Tile(r, num, color){
+    this.resourceCard = r;
+    this.color = color;
+    this.number = num;
+    this.settlements = [];  
+    this.blocked = false;
+}
+Tile.prototype.block = function() {
+    this.blocked = true;
+}
+Tile.prototype.unBlock = function() {
+    this.blocked = false;
+}
+
+
 //--------------------------------------------------
 //end of instance fields
 //--------------------------------------------------
 
 function setUpTiles(){
-    //randomize tile num order
+    //randomize tile num order (do this for fully random board)
     //resourceNums = _.shuffle(resourceNums)
 
     //randomize tile resource order
     colorNums = _.shuffle(colorNums)
 
-    //make sure desert is on 7 num
-    // var resourceIndex = resourceNums.indexOf(7)
-    // var colorIndex = colorNums.indexOf("tan")
-    // var colorTemp = colorNums[resourceIndex]
-    // colorNums[resourceIndex] = "tan"
-    // colorNums[colorIndex] = colorTemp
-
-    var randomIndex = Math.floor(Math.random() * colorNums.length)
+    var randomIndex = Math.floor(Math.random() * (colorNums.length + 1))
     colorNums.splice(randomIndex, 0, "tan")
     resourceNums.splice(randomIndex, 0, 7)
 
+    var resourceTypes = []
+
+    for(i = 0; i < colorNums.length; i++){
+        if(colorNums[i] === "green"){
+            resourceTypes.push(resourceCard.WOOD)
+        }else if(colorNums[i] === "firebrick"){
+            resourceTypes.push(resourceCard.BRICK)
+        }else if(colorNums[i] === "lightgreen"){
+            resourceTypes.push(resourceCard.SHEEP)
+        }else if(colorNums[i] === "#ffff99"){
+            resourceTypes.push(resourceCard.WHEAT)
+        }else if(colorNums[i] === "slategrey"){
+            resourceTypes.push(resourceCard.ORE)
+        }else{
+            resourceTypes.push(null)
+        }
+    }
+    
     counter = 0;
     //spiral insert
 
     //go down left side first
     for(i = 0; i < 5; i++){
-        tilesArr[i].push({
-            Number: resourceNums[counter],
-            Color: colorNums[counter]
-        });
+        tilesArr[i].push( new Tile(resourceTypes[counter], resourceNums[counter], colorNums[counter]));
         counter++;
     }
     //middle one on bottom row
-    tilesArr[4].push({
-        Number: resourceNums[counter],
-        Color: colorNums[counter]
-    });
+    tilesArr[4].push(new Tile(resourceTypes[counter], resourceNums[counter], colorNums[counter]))
     counter++;
 
     //put these ones in the wrong spot but we fix it later
     for(i = 4; i >= 0; i--){
-        tilesArr[i].push({
-            Number: resourceNums[counter],
-            Color: colorNums[counter]
-        });
+        tilesArr[i].push(new Tile(resourceTypes[counter], resourceNums[counter], colorNums[counter]))
         counter++;
     }
 
     //go down next part of spiral on inside
     for(i = 0; i < 4; i++){
-        tilesArr[i].splice(1,0,{
-            Number: resourceNums[counter],
-            Color: colorNums[counter]
-        });
+        tilesArr[i].splice(1,0,new Tile(resourceTypes[counter], resourceNums[counter], colorNums[counter]))
         counter++;
     }
 
     //go up next part of spiral on inside
     for(i = 3; i > 0; i--){
-        tilesArr[i].splice(2,0,{
-            Number: resourceNums[counter],
-            Color: colorNums[counter]
-        });
+        tilesArr[i].splice(2,0,new Tile(resourceTypes[counter], resourceNums[counter], colorNums[counter]))
         counter++;
     }
 
     //finally center goes in
-    tilesArr[2].splice(2,0,{
-        Number: resourceNums[counter],
-        Color: colorNums[counter]
-    });
+    tilesArr[2].splice(2,0,new Tile(resourceTypes[counter], resourceNums[counter], colorNums[counter]))
     counter++;
 
-
-
-
-
-
-    
-    //inserts tiles one row at a time
-    // for(i = 0; i < 5; i++){
-        
-    //     //first and last row
-    //     if(i === 0 || i === 4){
-    //         times = 3
-    //     }
-    //     //second and second to last row
-    //     if(i === 1 || i === 3){
-    //         times = 4;
-    //     }
-    //     //middle row
-    //     if(i === 2){
-    //         times = 5;
-    //     }
-
-    //     for(j = 0; j < times; j++){
-    //         tilesArr[i].push({
-    //             Number: resourceNums[counter],
-    //             Color: colorNums[counter]
-    //         });
-    //         counter++;
-    //     }
-    // }
-
-    console.log(tilesArr)
 }
-
-//this code should be somewhere else lol
-//ok seriously move this code to the other file it does not belong here
-var svg = document.getElementById('display')
-svg.style.width = "100%";
-svg.style.height = 300;
-var svgWidth = svg.clientWidth;
-var svgHeight = svg.clientHeight;
-var margin = 50;
-
 
 //important!
 setup()
@@ -225,6 +197,8 @@ function setup(){
     populateDiceResultsArr()
     graphicButton()
     setUpTiles()
+    drawCircles()
+    calcProduction()
 }
 
 //populate dev card array and unplayed dev card array then shuffle the dev card array 
@@ -380,6 +354,10 @@ function graphicButton(){
             drawUnplayedDevCards()
             break;
 
+        case "prod":
+            drawProductionCapacity();
+            break;
+
         default:
             break;
     }
@@ -410,137 +388,32 @@ function graphicButton(){
 
 
 
+//where does this belong??
+//sums up dot values for each resource by checking all tiles
+function calcProduction(){
+    for(i = 0; i < tilesArr.length; i++){
+        for(j = 0; j < tilesArr[i].length; j++){
 
-//--------------------------------------------------
-//Draw functions
-//--------------------------------------------------
-
-var canvas = document.getElementById('canvas')
-var canvasDiv = document.getElementById('canvasDiv')
-canvas.style.background = 'powderblue'
-canvas.width  = canvasDiv.clientWidth;
-canvas.height = canvasDiv.clientHeight;
-
-var ctx = canvas.getContext('2d')
-ctx.font= "30px Arial";
-//ctx.fillText("Game board will go here", 100, 100)
-
-drawCircles()
-
-//this actually draws hexagons now but it could do circles or whatever else involves visiting 
-//center point of each tile
-function drawCircles(){
-    var centerX = canvas.width /2;
-    var centerY = 2 * (canvas.height / 7) - 50;
-    var radius = 60;
-
-    //how to draw a circle in case I forget
-    // ctx.beginPath();
-    // ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-    // ctx.lineWidth = 5;
-    // ctx.strokeStyle = '#003300';
-    // ctx.stroke();
-
-    ctx.textAlign = "center"
-    ctx.font = "20px Arial";
-
-    for(i = 0; i < 5; i++){
-        //centerY = ((2 + i) * (canvas.height / 7)) - radius;
-
-        //some circle packing magic thats like a 30-60-90 triangle
-        centerY = (canvas.height / 2) - Math.sqrt(3)*radius*(2-i);
-
-        var times;
-
-        //first and last row
-        if(i === 0 || i === 4){
-            centerX = (canvas.width/2) - 2*radius
-            times = 3;
-        }
-        //second and second to last row
-        if(i === 1 || i === 3){
-            centerX = (canvas.width/2) - 3*radius
-            times = 4;
-        }
-        //middle row
-        if(i === 2){
-            centerX = (canvas.width/2) - 4*radius
-            times = 5;
-        }
-
-        for(j = 0; j < times; j++){
-
-           
-
-            //draw hexagon
-            var hexAngle = ((2 * Math.PI) / 6)
-
-            //7/6 makes the hexagons flushhh 6.9/6 looks nicer anything below leaves a gap
-            var hexRad = radius * 6.5/6
-            
-            ctx.beginPath();
-            ctx.moveTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
-            ctx.lineTo(centerX + hexRad * Math.cos(0.5*hexAngle), centerY + hexRad * Math.sin(0.5*hexAngle))
-            ctx.lineTo(centerX + hexRad * Math.cos(1.5*hexAngle), centerY + hexRad * Math.sin(1.5*hexAngle))
-            ctx.lineTo(centerX + hexRad * Math.cos(2.5*hexAngle), centerY + hexRad * Math.sin(2.5*hexAngle))
-            ctx.lineTo(centerX + hexRad * Math.cos(3.5*hexAngle), centerY + hexRad * Math.sin(3.5*hexAngle))
-            ctx.lineTo(centerX + hexRad * Math.cos(4.5*hexAngle), centerY + hexRad * Math.sin(4.5*hexAngle))
-            ctx.lineTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = 'black';
-            ctx.closePath()
-            ctx.stroke()
-            ctx.fillStyle = tilesArr[i][j].Color
-            ctx.fill()
-
-            //outer circle of size radius
-            // ctx.beginPath();
-            // ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-            // ctx.lineWidth = 1;
-            // ctx.strokeStyle = 'black';
-            // ctx.closePath()
-            // ctx.stroke();
-            
-            //dont draw a num tile on the desert
-            if(tilesArr[i][j].Number != 7){
-                //draw inner circle
-                ctx.beginPath();
-                ctx.arc(centerX, centerY, 20, 0, 2 * Math.PI, false);
-                ctx.lineWidth = 0;
-                ctx.strokeStyle = 'black';
-                ctx.closePath()
-                ctx.stroke();
-                ctx.fillStyle = "white"
-                ctx.fill()
-
-                ctx.fillStyle = "black"
-                ctx.fillText(tilesArr[i][j].Number, centerX, centerY + 10)
+            if(tilesArr[i][j].resourceCard === "wood"){
+                productionCapacity[0] += (6 - Math.abs(7 - tilesArr[i][j].number))
+            }else if(tilesArr[i][j].resourceCard === "brick"){
+                productionCapacity[1] += (6 - Math.abs(7 - tilesArr[i][j].number))
+            }else if(tilesArr[i][j].resourceCard === "sheep"){
+                productionCapacity[2] += (6 - Math.abs(7 - tilesArr[i][j].number))
+            }else if(tilesArr[i][j].resourceCard === "wheat"){
+                productionCapacity[3] += (6 - Math.abs(7 - tilesArr[i][j].number))
+            }else if(tilesArr[i][j].resourceCard === "ore"){
+                productionCapacity[4] += (6 - Math.abs(7 - tilesArr[i][j].number))
             }
 
-            centerX += radius * 2 
         }
-
     }
-    
 }
 
-//draw the dice in corner of canvas
-function drawDice(){
-    var diceImgs = []
-    for(i=0; i<diceArr.length; i++){
-  
-        //this thing is called a closure but idk how it works tbh
-        (function (i) {
-            var xPos = ((i * 65) + 10);
-            var yPos = 10;
-            diceImgs[i] = new Image();
-            diceImgs[i].src = diceArr[i].getImg();
 
-            diceImgs[i].onload = function () {
-                ctx.drawImage(diceImgs[i], xPos, yPos, 60, 60);
-            };
 
-        })(i);
-  
-    }
-  }
+
+//--------------------------------------------------
+//Draw functions (moved to other files now sorry just ignore this)
+//--------------------------------------------------
+

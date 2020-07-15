@@ -80,9 +80,11 @@ function drawDiceResults() {
         .attr('y', (s) => yScale(s.frequency))
         .attr('height', (s) => height - yScale(s.frequency))
         .attr('width', xScale.bandwidth())
-        .attr("fill", "#a05d56")
+        .attr("fill", "#4e79a7")
         .style("opacity", 0.9)
         .exit()
+
+        //["#4e79a7","#f28e2c","#e15759","#76b7b2","#59a14f","#edc949","#af7aa1","#ff9da7","#9c755f","#bab0ab"]
 
     svg.append('text')
         .attr('x', -(height / 2) - margin)
@@ -352,7 +354,7 @@ function drawProductionCapacity(){
         .attr('y', (d, i) => yScale(d))
         .attr('height', (d, i) => height - yScale(d))
         .attr('width', barWidth)
-        .attr("fill", "#a05d56")
+        .attr("fill", "#4e79a7")
         .style("opacity", 0.9)
         .exit()
 

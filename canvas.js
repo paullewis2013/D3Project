@@ -58,23 +58,21 @@ function drawCircles(){
 
         //first and last row
         if(i === 0 || i === 4){
-            centerX = (canvas.width/2) - 2*radius
+            centerX = (canvas.width/2) - 3*radius
             times = 3;
         }
         //second and second to last row
         if(i === 1 || i === 3){
-            centerX = (canvas.width/2) - 3*radius
+            centerX = (canvas.width/2) - 4*radius
             times = 4;
         }
         //middle row
         if(i === 2){
-            centerX = (canvas.width/2) - 4*radius
+            centerX = (canvas.width/2) - 5*radius
             times = 5;
         }
 
         for(j = 0; j < times; j++){
-
-           
 
             //draw hexagon
             var hexAngle = ((2 * Math.PI) / 6)
@@ -118,12 +116,53 @@ function drawCircles(){
                 ctx.fill()
 
                 ctx.fillStyle = "black"
-                ctx.fillText(tilesArr[i][j].number, centerX, centerY + 10)
+                if(tilesArr[i][j].number == 6 || tilesArr[i][j].number == 8){
+                    ctx.fillStyle = "red"
+                }
+
+                ctx.fillText(tilesArr[i][j].number, centerX, centerY + 5)
+
+                //draw dots
+                var dots = (6 - Math.abs(7 - tilesArr[i][j].number))
+
+                var offSetX = 2.5 * (dots - 1)
+
+                for(k = 0; k < dots; k++){
+                    ctx.beginPath();
+                    ctx.arc(centerX + 5*k - offSetX, centerY + 12, 1.5, 0, 2 * Math.PI, false);
+                    ctx.lineWidth = 1;
+                    ctx.strokeStyle = 'black';
+                    ctx.closePath()
+                    ctx.stroke();
+                    ctx.fillStyle = "black"
+                    if(dots == 5){
+                        ctx.fillStyle = "red"
+                    }
+                    ctx.fill()
+                }
             }
+
+            
 
             centerX += radius * 2 
         }
 
     }
     
+}
+
+function drawBank(){
+
+}
+
+function drawCanvas(){
+
+    //draw the background maybe here
+
+    //draw the hexagons
+    drawCircles()
+
+    drawDice()
+    drawBank()
+
 }

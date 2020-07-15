@@ -41,7 +41,7 @@ var colorNums = ["green", "green","green","green","firebrick","firebrick","fireb
 
 //define dice object
 function Dice() {
-    this.value = 0;
+    this.value = 1;
     this.img = "Dice-1.png";
 }
 Dice.prototype.roll = function() {
@@ -199,6 +199,7 @@ function setup(){
     setUpTiles()
     drawCircles()
     calcProduction()
+    drawCanvas()
 }
 
 //populate dev card array and unplayed dev card array then shuffle the dev card array 

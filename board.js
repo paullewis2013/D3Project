@@ -106,12 +106,14 @@ var productionCapacity = [0, 0, 0, 0, 0]
 
 
 //define tile object
-function Tile(r, num, color){
+function Tile(r, num, color, path){
     this.resourceCard = r;
     this.color = color;
     this.number = num;
     this.settlements = [];  
     this.blocked = false;
+    this.path = path;
+    this.img = null;
 }
 Tile.prototype.block = function() {
     this.blocked = true;
@@ -119,6 +121,10 @@ Tile.prototype.block = function() {
 Tile.prototype.unBlock = function() {
     this.blocked = false;
 }
+Tile.prototype.getPath = function(){
+    return this.path;
+}
+
 
 
 //--------------------------------------------------
@@ -137,20 +143,27 @@ function setUpTiles(){
     resourceNums.splice(randomIndex, 0, 7)
 
     var resourceTypes = []
+    var resourceImgs = []
 
     for(i = 0; i < colorNums.length; i++){
         if(colorNums[i] === "green"){
             resourceTypes.push(resourceCard.WOOD)
+            resourceImgs.push("assets/WoodTexture.png")
         }else if(colorNums[i] === "firebrick"){
             resourceTypes.push(resourceCard.BRICK)
+            resourceImgs.push("assets/BrickTexture.png")
         }else if(colorNums[i] === "lightgreen"){
             resourceTypes.push(resourceCard.SHEEP)
+            resourceImgs.push("assets/SheepTexture.png")
         }else if(colorNums[i] === "#ffff99"){
             resourceTypes.push(resourceCard.WHEAT)
+            resourceImgs.push("assets/WheatTexture.png")
         }else if(colorNums[i] === "slategrey"){
             resourceTypes.push(resourceCard.ORE)
+            resourceImgs.push("assets/OreTexture.png")
         }else{
             resourceTypes.push(null)
+            resourceImgs.push("assets/DesertTexture.png")
         }
     }
     
@@ -159,33 +172,33 @@ function setUpTiles(){
 
     //go down left side first
     for(i = 0; i < 5; i++){
-        tilesArr[i].push( new Tile(resourceTypes[counter], resourceNums[counter], colorNums[counter]));
+        tilesArr[i].push( new Tile(resourceTypes[counter], resourceNums[counter], colorNums[counter], resourceImgs[counter]));
         counter++;
     }
     //middle one on bottom row
-    tilesArr[4].push(new Tile(resourceTypes[counter], resourceNums[counter], colorNums[counter]))
+    tilesArr[4].push(new Tile(resourceTypes[counter], resourceNums[counter], colorNums[counter], resourceImgs[counter]))
     counter++;
 
     //put these ones in the wrong spot but we fix it later
     for(i = 4; i >= 0; i--){
-        tilesArr[i].push(new Tile(resourceTypes[counter], resourceNums[counter], colorNums[counter]))
+        tilesArr[i].push(new Tile(resourceTypes[counter], resourceNums[counter], colorNums[counter], resourceImgs[counter]))
         counter++;
     }
 
     //go down next part of spiral on inside
     for(i = 0; i < 4; i++){
-        tilesArr[i].splice(1,0,new Tile(resourceTypes[counter], resourceNums[counter], colorNums[counter]))
+        tilesArr[i].splice(1,0,new Tile(resourceTypes[counter], resourceNums[counter], colorNums[counter], resourceImgs[counter]))
         counter++;
     }
 
     //go up next part of spiral on inside
     for(i = 3; i > 0; i--){
-        tilesArr[i].splice(2,0,new Tile(resourceTypes[counter], resourceNums[counter], colorNums[counter]))
+        tilesArr[i].splice(2,0,new Tile(resourceTypes[counter], resourceNums[counter], colorNums[counter], resourceImgs[counter]))
         counter++;
     }
 
     //finally center goes in
-    tilesArr[2].splice(2,0,new Tile(resourceTypes[counter], resourceNums[counter], colorNums[counter]))
+    tilesArr[2].splice(2,0,new Tile(resourceTypes[counter], resourceNums[counter], colorNums[counter], resourceImgs[counter]))
     counter++;
 
 }
@@ -199,7 +212,7 @@ function setup(){
     populateDiceResultsArr()
     graphicButton()
     setUpTiles()
-    drawCircles()
+    //drawCircles()
     calcProduction()
     drawCanvas()
 }

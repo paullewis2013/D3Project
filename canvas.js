@@ -10,6 +10,13 @@ canvas.height = canvasDiv.clientHeight;
 var ctx = canvas.getContext('2d')
 ctx.font= "30px Arial";
 
+var textured = false;
+
+function toggleTexture(){
+    textured = !textured
+    drawCanvas()
+}
+
 //draw the dice in corner of canvas
 function drawDice(){
     var diceImgs = []
@@ -29,10 +36,101 @@ function drawDice(){
         })(i);
   
     }
+    //remove me I don't belong here
+    drawCircles()
+}
+
+function drawTileTextures(){
+    var centerX = canvas.width /2;
+    var centerY = 2 * (canvas.height / 7) - 50;
+    var radius = canvas.height/11.5;
+
+    for(i = 0; i < 5; i++){
+        //centerY = ((2 + i) * (canvas.height / 7)) - radius;
+
+        //some circle packing magic thats like a 30-60-90 triangle
+        centerY = (canvas.height / 2) - Math.sqrt(3)*radius*(2-i);
+
+        var times;
+
+        //first and last row
+        if(i === 0 || i === 4){
+            centerX = (canvas.width/2) - 3.5*radius
+            times = 3;
+        }
+        //second and second to last row
+        if(i === 1 || i === 3){
+            centerX = (canvas.width/2) - 4.5*radius
+            times = 4;
+        }
+        //middle row
+        if(i === 2){
+            centerX = (canvas.width/2) - 5.5*radius
+            times = 5;
+        }
+
+        for(j = 0; j < times; j++){
+
+            //draw hexagon
+            var hexAngle = ((2 * Math.PI) / 6)
+
+            //7/6 makes the hexagons flushhh 6.9/6 looks nicer anything below leaves a gap
+            var hexRad = radius * 6.5/6
+            
+            tilesArr[i][j].img = new Image();
+            tilesArr[i][j].img.src = tilesArr[i][j].getPath()
+
+            console.log(tilesArr[i][j].img)
+
+            
+            //this is a miracle
+            var drawTheImage = function(ctx, tilesArr, i, j, centerX, centerY) {
+                return function() {
+
+                    //save state of canvas define a closed path on canvas
+                    ctx.save();
+                    ctx.beginPath()
+                    ctx.moveTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
+                    ctx.lineTo(centerX + hexRad * Math.cos(0.5*hexAngle), centerY + hexRad * Math.sin(0.5*hexAngle))
+                    ctx.lineTo(centerX + hexRad * Math.cos(1.5*hexAngle), centerY + hexRad * Math.sin(1.5*hexAngle))
+                    ctx.lineTo(centerX + hexRad * Math.cos(2.5*hexAngle), centerY + hexRad * Math.sin(2.5*hexAngle))
+                    ctx.lineTo(centerX + hexRad * Math.cos(3.5*hexAngle), centerY + hexRad * Math.sin(3.5*hexAngle))
+                    ctx.lineTo(centerX + hexRad * Math.cos(4.5*hexAngle), centerY + hexRad * Math.sin(4.5*hexAngle))
+                    ctx.lineTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
+                    ctx.closePath()
+                    ctx.clip();
+                    
+                    //draw image(inside of path only)
+                    ctx.drawImage(tilesArr[i][j].img, centerX - (hexRad + Math.random()*200), centerY - (hexRad + Math.random()*200), 500, 500);
+
+                    //remove path and restore canvas to normal
+                    ctx.restore();
+
+                    //pay attention to this here because it is wrong
+                    //this will immediately start drawing tiles
+                    //any number of the image functions could have finished but none are guaranteed to
+                    if(i == 4 && j == 2){
+                        drawCircles()
+                        console.log("boop")
+                    }
+                }
+                
+            }
+
+            tilesArr[i][j].img.onload = drawTheImage(ctx, tilesArr, i, j, centerX, centerY);
+
+            centerX += radius * 2 
+                
+        }
+
+
+    } 
+
 }
 
 //this actually draws hexagons now but it could do circles or whatever else involves visiting 
 //center point of each tile
+//this function should be called drawTiles lol
 function drawCircles(){
     var centerX = canvas.width /2;
     var centerY = 2 * (canvas.height / 7) - 50;
@@ -80,20 +178,29 @@ function drawCircles(){
             //7/6 makes the hexagons flushhh 6.9/6 looks nicer anything below leaves a gap
             var hexRad = radius * 6.5/6
             
-            ctx.beginPath();
-            ctx.moveTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
-            ctx.lineTo(centerX + hexRad * Math.cos(0.5*hexAngle), centerY + hexRad * Math.sin(0.5*hexAngle))
-            ctx.lineTo(centerX + hexRad * Math.cos(1.5*hexAngle), centerY + hexRad * Math.sin(1.5*hexAngle))
-            ctx.lineTo(centerX + hexRad * Math.cos(2.5*hexAngle), centerY + hexRad * Math.sin(2.5*hexAngle))
-            ctx.lineTo(centerX + hexRad * Math.cos(3.5*hexAngle), centerY + hexRad * Math.sin(3.5*hexAngle))
-            ctx.lineTo(centerX + hexRad * Math.cos(4.5*hexAngle), centerY + hexRad * Math.sin(4.5*hexAngle))
-            ctx.lineTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = 'black';
-            ctx.closePath()
-            ctx.stroke()
-            ctx.fillStyle = tilesArr[i][j].color
-            ctx.fill()
+            if(!textured){
+                //makes hexagon with color
+                ctx.beginPath();
+                ctx.moveTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
+                ctx.lineTo(centerX + hexRad * Math.cos(0.5*hexAngle), centerY + hexRad * Math.sin(0.5*hexAngle))
+                ctx.lineTo(centerX + hexRad * Math.cos(1.5*hexAngle), centerY + hexRad * Math.sin(1.5*hexAngle))
+                ctx.lineTo(centerX + hexRad * Math.cos(2.5*hexAngle), centerY + hexRad * Math.sin(2.5*hexAngle))
+                ctx.lineTo(centerX + hexRad * Math.cos(3.5*hexAngle), centerY + hexRad * Math.sin(3.5*hexAngle))
+                ctx.lineTo(centerX + hexRad * Math.cos(4.5*hexAngle), centerY + hexRad * Math.sin(4.5*hexAngle))
+                ctx.lineTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = 'black';
+                ctx.closePath()
+                ctx.stroke()
+                
+                ctx.fillStyle = tilesArr[i][j].color
+                ctx.fill()
+            }else{
+
+                //wait for textures to load
+                
+            }
+            
 
             //outer circle of size radius
             // ctx.beginPath();
@@ -193,11 +300,18 @@ function drawSettlements(){
 
 }
 
+function drawTimer(){
+
+}
+
 function drawCanvas(){
 
     //draw the background maybe here
 
     //draw the tiles
+    if(textured){
+        drawTileTextures()
+    }
     drawCircles()
 
     drawDice()
@@ -205,5 +319,10 @@ function drawCanvas(){
 
     drawRoads()
     drawSettlements()
+
+    //this one can be uncommented when it exists
+    // if(showTime){
+    //     drawTimer()
+    // }
 
 }

@@ -36,7 +36,7 @@ function drawDice(){
 function drawCircles(){
     var centerX = canvas.width /2;
     var centerY = 2 * (canvas.height / 7) - 50;
-    var radius = 60;
+    var radius = canvas.height/11.5;
 
     //how to draw a circle in case I forget
     // ctx.beginPath();
@@ -58,17 +58,17 @@ function drawCircles(){
 
         //first and last row
         if(i === 0 || i === 4){
-            centerX = (canvas.width/2) - 3*radius
+            centerX = (canvas.width/2) - 3.5*radius
             times = 3;
         }
         //second and second to last row
         if(i === 1 || i === 3){
-            centerX = (canvas.width/2) - 4*radius
+            centerX = (canvas.width/2) - 4.5*radius
             times = 4;
         }
         //middle row
         if(i === 2){
-            centerX = (canvas.width/2) - 5*radius
+            centerX = (canvas.width/2) - 5.5*radius
             times = 5;
         }
 
@@ -125,7 +125,8 @@ function drawCircles(){
                 //draw dots
                 var dots = (6 - Math.abs(7 - tilesArr[i][j].number))
 
-                var offSetX = 2.5 * (dots - 1)
+                //this makes sure the dots are centered
+                var offSetX = 2.5 * (dots-1.25)
 
                 for(k = 0; k < dots; k++){
                     ctx.beginPath();
@@ -140,9 +141,8 @@ function drawCircles(){
                     }
                     ctx.fill()
                 }
+                
             }
-
-            
 
             centerX += radius * 2 
         }
@@ -153,16 +153,57 @@ function drawCircles(){
 
 function drawBank(){
 
+    //draw box for bank to go in
+    ctx.beginPath()
+    ctx.rect(canvas.width - 330, 10, 320, 100);
+    ctx.stroke();
+    ctx.fillStyle = "antiquewhite"
+    ctx.fill()
+    
+    //draw numbers for resources
+    for(i=0; i < 6; i++){
+        ctx.fillStyle = "black"
+        ctx.font = "15px Arial"
+        if(i<5){
+            ctx.beginPath()
+            ctx.rect(canvas.width - 316 + (i*320/6), 30, 25, 25)
+            ctx.stroke()
+            ctx.fillStyle = colorVals[i]
+            ctx.fill()
+            ctx.fillStyle = "black"
+            ctx.fillText(bank[i], canvas.width - 305 + (i*320/6), 95)
+        }else{
+            ctx.beginPath()
+            ctx.rect(canvas.width - 316 + (i*320/6), 30, 25, 25)
+            ctx.stroke()
+            ctx.fillStyle = colorVals[i]
+            ctx.fill()
+            ctx.fillStyle = "black"
+            ctx.fillText(devCardArray.length, canvas.width - 305 + (i*320/6), 95)
+        }
+        
+    }
+}
+
+function drawRoads(){
+
+}
+
+function drawSettlements(){
+
 }
 
 function drawCanvas(){
 
     //draw the background maybe here
 
-    //draw the hexagons
+    //draw the tiles
     drawCircles()
 
     drawDice()
     drawBank()
+
+    drawRoads()
+    drawSettlements()
 
 }

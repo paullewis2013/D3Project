@@ -38,6 +38,8 @@ var colorNums = ["green", "green","green","green","firebrick","firebrick","fireb
                 "lightgreen","lightgreen","#ffff99","#ffff99","#ffff99","#ffff99","slategrey","slategrey",
                 "slategrey"];
 
+var colorVals = ["green", "firebrick", "lightgreen", "#ffff99", "slategrey", "blue"]
+
 
 //define dice object
 function Dice() {
@@ -257,7 +259,7 @@ function drawDevCard(){
     if(devCardArray.length > 0){
         var card = devCardArray.pop();
         //document.getElementById("lastDevCard").innerHTML = "Last Dev card drawn: " + card
-        document.getElementById("devCardsRemaining").innerHTML = devCardArray.length
+        //document.getElementById("devCardsRemaining").innerHTML = devCardArray.length
         //console.log(card)
 
 
@@ -266,6 +268,7 @@ function drawDevCard(){
     }else{
         console.log("deck empty")
     }
+    drawBank()
     
 }
 

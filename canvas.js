@@ -12,6 +12,10 @@ ctx.font= "30px Arial";
 
 var textured = false;
 
+var robberImage = new Image();
+robberImage.src = "assets/robber.svg"
+var robberLoaded = false;
+
 function toggleTexture(){
     textured = !textured
     drawCanvas()
@@ -37,7 +41,7 @@ function drawDice(){
   
     }
     //remove me I don't belong here
-    drawCircles()
+    //drawCircles()
 }
 
 function drawTileTextures(){
@@ -80,7 +84,7 @@ function drawTileTextures(){
             tilesArr[i][j].img = new Image();
             tilesArr[i][j].img.src = tilesArr[i][j].getPath()
 
-            console.log(tilesArr[i][j].img)
+            //console.log(tilesArr[i][j].img)
 
             
             //this is a miracle
@@ -109,10 +113,12 @@ function drawTileTextures(){
                     //pay attention to this here because it is wrong
                     //this will immediately start drawing tiles
                     //any number of the image functions could have finished but none are guaranteed to
-                    if(i == 4 && j == 2){
-                        drawCircles()
-                        console.log("boop")
-                    }
+
+                    //accidental race condition
+                    // if(i == 4 && j == 2){
+                    //     drawCircles()
+                    //     //console.log("boop")
+                    // }
                 }
                 
             }
@@ -125,13 +131,14 @@ function drawTileTextures(){
 
 
     } 
+    setTimeout(drawTiles(), 5500)
 
 }
 
 //this actually draws hexagons now but it could do circles or whatever else involves visiting 
 //center point of each tile
 //this function should be called drawTiles lol
-function drawCircles(){
+function drawTiles(){
     var centerX = canvas.width /2;
     var centerY = 2 * (canvas.height / 7) - 50;
     var radius = canvas.height/11.5;
@@ -177,6 +184,9 @@ function drawCircles(){
 
             //7/6 makes the hexagons flushhh 6.9/6 looks nicer anything below leaves a gap
             var hexRad = radius * 6.5/6
+
+            tilesArr[i][j].cx = centerX;
+            tilesArr[i][j].cy = centerY;
             
             if(!textured){
                 //makes hexagon with color
@@ -198,7 +208,8 @@ function drawCircles(){
             }else{
 
                 //wait for textures to load
-                
+                //drawTileTextures()
+
             }
             
 
@@ -211,6 +222,8 @@ function drawCircles(){
             // ctx.stroke();
             
             //dont draw a num tile on the desert
+            //console.log(tilesArr[i][j].number)
+
             if(tilesArr[i][j].number != 7){
                 //draw inner circle
                 ctx.beginPath();
@@ -255,7 +268,7 @@ function drawCircles(){
         }
 
     }
-    
+    //console.log(tilesArr)
 }
 
 function drawBank(){
@@ -292,16 +305,34 @@ function drawBank(){
     }
 }
 
+//write me
 function drawRoads(){
 
 }
 
+//write me
 function drawSettlements(){
 
 }
 
+//write me
 function drawTimer(){
 
+}
+
+//write me
+function drawRobber(){
+
+    if(!robberLoaded){
+        robberImage.onload = function(){
+            ctx.drawImage(robberImage, robberLocation.cx - 55, robberLocation.cy - 20, 40, 40);
+            //console.log("drawing at " + robberLocation.cx + "," + robberLocation.cy)
+            robberLoaded = true;
+        }
+    }else{
+        ctx.drawImage(robberImage, robberLocation.cx - 55, robberLocation.cy - 20, 40, 40);
+    }
+    
 }
 
 function drawCanvas(){
@@ -311,14 +342,16 @@ function drawCanvas(){
     //draw the tiles
     if(textured){
         drawTileTextures()
+    }else{
+        drawTiles()
     }
-    drawCircles()
 
     drawDice()
     drawBank()
 
     drawRoads()
     drawSettlements()
+    drawRobber()
 
     //this one can be uncommented when it exists
     // if(showTime){

@@ -21,6 +21,8 @@ var bank = [19, 19, 19, 19, 19];
 var resultsShown = false
 var turnNumber = 0
 
+//maybe this should point to a tile
+var robberLocation = null
 
 //the tiles on the board
 //a 2d array where first index represents row and second represent num in row
@@ -114,6 +116,8 @@ function Tile(r, num, color, path){
     this.blocked = false;
     this.path = path;
     this.img = null;
+    this.cx = 0;
+    this.cy = 0;
 }
 Tile.prototype.block = function() {
     this.blocked = true;
@@ -166,40 +170,63 @@ function setUpTiles(){
             resourceImgs.push("assets/DesertTexture.png")
         }
     }
+
+    //assemble things into tiles
+    var tempTiles = []
+    for(i = 0; i < colorNums.length; i++){
+        tempTiles[i] = new Tile(resourceTypes[i], resourceNums[i], colorNums[i], resourceImgs[i])
+        if(tempTiles[i].number == 7){
+            tempTiles[i].block()
+        }
+    }
+
+    //console.log(tempTiles)
     
-    counter = 0;
     //spiral insert
+    counter = 0;
 
     //go down left side first
     for(i = 0; i < 5; i++){
-        tilesArr[i].push( new Tile(resourceTypes[counter], resourceNums[counter], colorNums[counter], resourceImgs[counter]));
+        tilesArr[i].push( tempTiles[counter]);
         counter++;
     }
     //middle one on bottom row
-    tilesArr[4].push(new Tile(resourceTypes[counter], resourceNums[counter], colorNums[counter], resourceImgs[counter]))
+    tilesArr[4].push( tempTiles[counter]);
     counter++;
 
     //put these ones in the wrong spot but we fix it later
     for(i = 4; i >= 0; i--){
-        tilesArr[i].push(new Tile(resourceTypes[counter], resourceNums[counter], colorNums[counter], resourceImgs[counter]))
+        tilesArr[i].push( tempTiles[counter]);
         counter++;
     }
 
     //go down next part of spiral on inside
     for(i = 0; i < 4; i++){
-        tilesArr[i].splice(1,0,new Tile(resourceTypes[counter], resourceNums[counter], colorNums[counter], resourceImgs[counter]))
+        tilesArr[i].splice(1,0,( tempTiles[counter]))
         counter++;
     }
 
     //go up next part of spiral on inside
     for(i = 3; i > 0; i--){
-        tilesArr[i].splice(2,0,new Tile(resourceTypes[counter], resourceNums[counter], colorNums[counter], resourceImgs[counter]))
+        tilesArr[i].splice(2,0,( tempTiles[counter]));
         counter++;
     }
 
     //finally center goes in
-    tilesArr[2].splice(2,0,new Tile(resourceTypes[counter], resourceNums[counter], colorNums[counter], resourceImgs[counter]))
+    tilesArr[2].splice(2,0,( tempTiles[counter]));
     counter++;
+
+
+    //find location of robber and record it
+    for(i = 0; i < 5; i++){
+        for(j = 0; j < tilesArr[i].length; j++){
+            if(tilesArr[i][j].blocked == true){
+                robberLocation = tilesArr[i][j]
+            }
+        }
+    }
+
+    //console.log(robberLocation)
 
 }
 
@@ -212,7 +239,7 @@ function setup(){
     populateDiceResultsArr()
     graphicButton()
     setUpTiles()
-    //drawCircles()
+    drawTiles()
     calcProduction()
     drawCanvas()
 }
@@ -264,6 +291,12 @@ function rollDice(){
 
     dice_results_arr[result - 2].frequency += 1;
 
+    if(result ==7){
+        moveRobber()
+    }else{
+        //generate resources
+    }
+
     return result;
 }
 
@@ -312,6 +345,34 @@ function playDevCard(card){
         default:
             break;
     }
+}
+
+function moveRobber(){
+
+    currTile = robberLocation
+    currTile.unBlock()
+
+    //replace this with ability to select tile
+    randomIndex = Math.floor(Math.random() * 19)
+    //console.log(randomIndex)
+
+    for(i=0; i<5; i++){
+        for(j=0; j<tilesArr[i].length; j++){
+            randomIndex -= 1
+            if(randomIndex == 0 && tilesArr[i][j] != currTile){
+                robberLocation = tilesArr[i][j]
+                tilesArr[i][j].block()
+            }
+        }
+    }
+
+    if(textured){
+        drawTileTextures()
+    }
+    drawTiles()
+    drawRobber()
+
+    
 }
 
 //--------------------------------------------------

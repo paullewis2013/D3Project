@@ -5,6 +5,8 @@
 //instance fields
 //--------------------------------------------------
 
+//TODO organize instance fields
+
 //an array to store value and frequency of dice rolls
 var dice_results_arr = [];
 
@@ -18,7 +20,6 @@ var playedDevCards = {knight: 0, vp: 0, monopoly: 0, road: 0, plenty: 0}
 //array to store resource cards in bank
 var bank = [19, 19, 19, 19, 19];
 
-var resultsShown = false
 var turnNumber = 0
 
 //maybe this should point to a tile
@@ -34,13 +35,6 @@ var tilesArr = [
     []
 ]
 
-//this order is set to generate standard catan boards
-var resourceNums = [5, 2, 6, 3, 8, 10, 9, 12, 11, 4, 8, 10, 9, 4, 5, 6, 3, 11]
-var colorNums = ["green", "green","green","green","firebrick","firebrick","firebrick","lightgreen","lightgreen",
-                "lightgreen","lightgreen","#ffff99","#ffff99","#ffff99","#ffff99","slategrey","slategrey",
-                "slategrey"];
-
-var colorVals = ["green", "firebrick", "lightgreen", "#ffff99", "slategrey", "blue"]
 
 
 //define dice object
@@ -103,10 +97,11 @@ const resourceCard = {
     ORE: 'ore'
 }
 
-
+//another weird statistical thing to track
 var productionCapacity = [0, 0, 0, 0, 0]
 
 
+//TODO move objects to new js file
 //define tile object
 function Tile(r, num, color, path){
     this.resourceCard = r;
@@ -118,6 +113,7 @@ function Tile(r, num, color, path){
     this.img = null;
     this.cx = 0;
     this.cy = 0;
+    this.hitbox = {};
 }
 Tile.prototype.block = function() {
     this.blocked = true;
@@ -139,8 +135,13 @@ function setUpTiles(){
     //randomize tile num order (do this for fully random board)
     //resourceNums = _.shuffle(resourceNums)
 
+    var colorNums = ["green", "green","green","green","firebrick","firebrick","firebrick","lightgreen","lightgreen",
+                "lightgreen","lightgreen","#ffff99","#ffff99","#ffff99","#ffff99","slategrey","slategrey",
+                "slategrey"];
+
     //randomize tile resource order
     colorNums = _.shuffle(colorNums)
+    var resourceNums = [5, 2, 6, 3, 8, 10, 9, 12, 11, 4, 8, 10, 9, 4, 5, 6, 3, 11]
 
     var randomIndex = Math.floor(Math.random() * (colorNums.length + 1))
     colorNums.splice(randomIndex, 0, "tan")
@@ -292,6 +293,9 @@ function rollDice(){
     dice_results_arr[result - 2].frequency += 1;
 
     if(result ==7){
+        //discard resources over 7 first
+
+        //move robber after resources discarded
         moveRobber()
     }else{
         //generate resources
@@ -439,24 +443,6 @@ function graphicButton(){
         default:
             break;
     }
-
-    // if(document.getElementById("resultsButton").innerHTML === "Show Results"){
-        
-    //     //make graph visible
-    //     d3.select('svg')
-    //         .attr("visibility", "visible");   
-
-    //     drawDiceResults()
-    //     document.getElementById("resultsButton").innerHTML = "Hide Results"
-    //     resultsShown = true
-    // }else{
-
-    //     //hide graph
-    //     d3.select('svg')
-    //         .attr("visibility", "hidden");
-
-    //     document.getElementById("resultsButton").innerHTML = "Show Results"
-    // }
     
 }
 

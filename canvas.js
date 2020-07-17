@@ -16,6 +16,24 @@ var robberImage = new Image();
 robberImage.src = "assets/robber.svg"
 var robberLoaded = false;
 
+var colorVals = ["green", "firebrick", "lightgreen", "#ffff99", "slategrey", "blue"]
+
+
+canvas.addEventListener('mousedown', function(e) {
+    
+    //loop through all tiles
+    for(i = 0; i < 5; i++){
+        for(j = 0; j < tilesArr[i].length; j++){
+
+            //if click occurred in tile hitbox do something
+            if (ctx.isPointInPath(tilesArr[i][j].hitbox, e.offsetX, e.offsetY)) {
+                console.log(tilesArr[i][j]);
+            }
+        }
+    }
+
+});
+
 function toggleTexture(){
     textured = !textured
     drawCanvas()
@@ -189,22 +207,26 @@ function drawTiles(){
             tilesArr[i][j].cy = centerY;
             
             if(!textured){
+
+                tilesArr[i][j].hitbox = new Path2D()
+
                 //makes hexagon with color
                 ctx.beginPath();
-                ctx.moveTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
-                ctx.lineTo(centerX + hexRad * Math.cos(0.5*hexAngle), centerY + hexRad * Math.sin(0.5*hexAngle))
-                ctx.lineTo(centerX + hexRad * Math.cos(1.5*hexAngle), centerY + hexRad * Math.sin(1.5*hexAngle))
-                ctx.lineTo(centerX + hexRad * Math.cos(2.5*hexAngle), centerY + hexRad * Math.sin(2.5*hexAngle))
-                ctx.lineTo(centerX + hexRad * Math.cos(3.5*hexAngle), centerY + hexRad * Math.sin(3.5*hexAngle))
-                ctx.lineTo(centerX + hexRad * Math.cos(4.5*hexAngle), centerY + hexRad * Math.sin(4.5*hexAngle))
-                ctx.lineTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
+                tilesArr[i][j].hitbox.moveTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
+                tilesArr[i][j].hitbox.lineTo(centerX + hexRad * Math.cos(0.5*hexAngle), centerY + hexRad * Math.sin(0.5*hexAngle))
+                tilesArr[i][j].hitbox.lineTo(centerX + hexRad * Math.cos(1.5*hexAngle), centerY + hexRad * Math.sin(1.5*hexAngle))
+                tilesArr[i][j].hitbox.lineTo(centerX + hexRad * Math.cos(2.5*hexAngle), centerY + hexRad * Math.sin(2.5*hexAngle))
+                tilesArr[i][j].hitbox.lineTo(centerX + hexRad * Math.cos(3.5*hexAngle), centerY + hexRad * Math.sin(3.5*hexAngle))
+                tilesArr[i][j].hitbox.lineTo(centerX + hexRad * Math.cos(4.5*hexAngle), centerY + hexRad * Math.sin(4.5*hexAngle))
+                tilesArr[i][j].hitbox.lineTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
                 ctx.lineWidth = 1;
                 ctx.strokeStyle = 'black';
                 ctx.closePath()
-                ctx.stroke()
+                ctx.stroke(tilesArr[i][j].hitbox)
+                
                 
                 ctx.fillStyle = tilesArr[i][j].color
-                ctx.fill()
+                ctx.fill(tilesArr[i][j].hitbox)
             }else{
 
                 //wait for textures to load

@@ -15,11 +15,13 @@ var textured = false;
 var robberImage = new Image();
 robberImage.src = "assets/robber.svg"
 var robberLoaded = false;
+var movingRobber = false;
 
 var colorVals = ["green", "firebrick", "lightgreen", "#ffff99", "slategrey", "blue"]
 
 
 canvas.addEventListener('mousedown', function(e) {
+    
     
     //loop through all tiles
     for(i = 0; i < 5; i++){
@@ -28,7 +30,27 @@ canvas.addEventListener('mousedown', function(e) {
             //if click occurred in tile hitbox do something
             if (ctx.isPointInPath(tilesArr[i][j].hitbox, e.offsetX, e.offsetY)) {
                 console.log(tilesArr[i][j]);
+
+                if(movingRobber){
+                    robberLocation = tilesArr[i][j]
+                    movingRobber = false;
+                    tilesArr[i][j].block()
+                    
+                    if(textured){
+                        drawTileTextures()
+                    }
+                    drawTiles()
+                    drawRobber()
+
+                    //TODO select player to steal from if multiple are adjacent
+
+                    //reenable buttons to work
+                    unfreeze()
+                }
+
             }
+
+            
         }
     }
 

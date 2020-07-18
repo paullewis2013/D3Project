@@ -357,26 +357,33 @@ function moveRobber(){
     currTile.unBlock()
 
     //replace this with ability to select tile
-    randomIndex = Math.floor(Math.random() * 19)
-    //console.log(randomIndex)
+    // randomIndex = Math.floor(Math.random() * 19)
+    // //console.log(randomIndex)
 
-    for(i=0; i<5; i++){
-        for(j=0; j<tilesArr[i].length; j++){
-            randomIndex -= 1
-            if(randomIndex == 0 && tilesArr[i][j] != currTile){
-                robberLocation = tilesArr[i][j]
-                tilesArr[i][j].block()
-            }
-        }
-    }
+    // for(i=0; i<5; i++){
+    //     for(j=0; j<tilesArr[i].length; j++){
+    //         randomIndex -= 1
+    //         if(randomIndex == 0 && tilesArr[i][j] != currTile){
+    //             robberLocation = tilesArr[i][j]
+    //             tilesArr[i][j].block()
+    //         }
+    //     }
+    // }
 
-    if(textured){
-        drawTileTextures()
-    }
-    drawTiles()
-    drawRobber()
+    movingRobber = true;
+    freeze()
 
     
+}
+
+function freeze(){
+    document.getElementById("diceButton").disabled = true;
+    document.getElementById("devButton").disabled = true;
+}
+
+function unfreeze(){
+    document.getElementById("diceButton").disabled = false;
+    document.getElementById("devButton").disabled = false;
 }
 
 //--------------------------------------------------

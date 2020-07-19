@@ -227,8 +227,6 @@ function setUpTiles(){
         }
     }
 
-    //console.log(robberLocation)
-
 }
 
 //important!
@@ -353,27 +351,14 @@ function playDevCard(card){
 
 function moveRobber(){
 
+    //unblock current tile
     currTile = robberLocation
     currTile.unBlock()
 
-    //replace this with ability to select tile
-    // randomIndex = Math.floor(Math.random() * 19)
-    // //console.log(randomIndex)
-
-    // for(i=0; i<5; i++){
-    //     for(j=0; j<tilesArr[i].length; j++){
-    //         randomIndex -= 1
-    //         if(randomIndex == 0 && tilesArr[i][j] != currTile){
-    //             robberLocation = tilesArr[i][j]
-    //             tilesArr[i][j].block()
-    //         }
-    //     }
-    // }
-
+    //disable all other actions until robber is moved
     movingRobber = true;
     freeze()
 
-    
 }
 
 function freeze(){

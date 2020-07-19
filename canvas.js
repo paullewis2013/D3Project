@@ -12,6 +12,8 @@ ctx.font= "30px Arial";
 
 var textured = false;
 
+var texturesLoaded = 0;
+
 var robberImage = new Image();
 robberImage.src = "assets/robber.svg"
 var robberLoaded = false;
@@ -31,7 +33,8 @@ canvas.addEventListener('mousedown', function(e) {
             if (ctx.isPointInPath(tilesArr[i][j].hitbox, e.offsetX, e.offsetY)) {
                 console.log(tilesArr[i][j]);
 
-                if(movingRobber){
+                //moves robber to new tile if the robber is not already there
+                if(movingRobber && robberLocation != tilesArr[i][j]){
                     robberLocation = tilesArr[i][j]
                     movingRobber = false;
                     tilesArr[i][j].block()
@@ -85,9 +88,14 @@ function drawDice(){
 }
 
 function drawTileTextures(){
+    
+    //setTimeout(drawTiles(), 5000);
+
     var centerX = canvas.width /2;
     var centerY = 2 * (canvas.height / 7) - 50;
     var radius = canvas.height/11.5;
+
+    texturesLoaded = 0;
 
     for(i = 0; i < 5; i++){
         //centerY = ((2 + i) * (canvas.height / 7)) - radius;
@@ -145,10 +153,13 @@ function drawTileTextures(){
                     ctx.clip();
                     
                     //draw image(inside of path only)
-                    ctx.drawImage(tilesArr[i][j].img, centerX - (hexRad + Math.random()*200), centerY - (hexRad + Math.random()*200), 500, 500);
+                    ctx.drawImage(tilesArr[i][j].img, centerX - (hexRad), centerY - (hexRad), 300, 300);
 
                     //remove path and restore canvas to normal
                     ctx.restore();
+
+                    texturesLoaded++
+
 
                     //pay attention to this here because it is wrong
                     //this will immediately start drawing tiles
@@ -166,12 +177,123 @@ function drawTileTextures(){
             tilesArr[i][j].img.onload = drawTheImage(ctx, tilesArr, i, j, centerX, centerY);
 
             centerX += radius * 2 
-                
+            
         }
 
 
     } 
-    setTimeout(drawTiles(), 5500)
+    loadTiles()
+   
+
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+ }
+
+async function loadTiles(){
+
+    //waste time until tiles load
+
+    //console.log("time 1")
+    await sleep(1)
+    //console.log("time 2")
+    drawTiles()
+    drawRobber()
+
+}
+
+function drawVertices(){
+
+    var radius = canvas.height/11.5;
+    var centerX;
+    var centerY;
+    var hexRad = radius * 7/6
+    var hexAngle = ((2 * Math.PI) / 6)
+
+    //loop through all tiles
+    for(i = 0; i < 5; i++){
+
+        centerY = tilesArr[i][0].cy
+
+        for(j = 0; j < tilesArr[i].length; j++){
+            
+            centerX = tilesArr[i][j].cx;
+
+            //draw a circle at vertex north of tile
+            ctx.beginPath();
+            ctx.arc(centerX, centerY - hexRad, 10, 0, 2 * Math.PI, false);
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = 'white';
+            ctx.closePath()
+            ctx.stroke();
+            
+            //draw a circle at vertex north west of tile
+            ctx.beginPath();
+            ctx.arc(centerX + hexRad * Math.cos(3.5*hexAngle), centerY + hexRad * Math.sin(3.5*hexAngle), 10, 0, 2 * Math.PI, false);
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = 'white';
+            ctx.closePath()
+            ctx.stroke();
+
+            //draw vertex only on tile at end of row
+            //on tiles not at end this would be redundant
+            if(j === tilesArr[i].length - 1){
+                //draw a circle at vertex north east of tile
+                ctx.beginPath();
+                ctx.arc(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle), 10, 0, 2 * Math.PI, false);
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = 'white';
+                ctx.closePath()
+                ctx.stroke();
+            }
+
+            //draw southwest vertex on first tile of rows with less tiles than row above them 
+            if(i > 1 && j == 0){
+                //draw a circle at vertex southwest of tile
+                ctx.beginPath();
+                ctx.arc(centerX + hexRad * Math.cos(2.5*hexAngle), centerY + hexRad * Math.sin(2.5*hexAngle), 10, 0, 2 * Math.PI, false);
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = 'white';
+                ctx.closePath()
+                ctx.stroke();
+            }
+
+            //draw southeast vertex on last tile of rows with less tiles than row above them
+            if(i > 1 && i < 4 && j === tilesArr[i].length - 1){
+                //draw a circle at vertex southwest of tile
+                ctx.beginPath();
+                ctx.arc(centerX + hexRad * Math.cos(0.5*hexAngle), centerY + hexRad * Math.sin(0.5*hexAngle), 10, 0, 2 * Math.PI, false);
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = 'white';
+                ctx.closePath()
+                ctx.stroke();
+            }
+
+            //draw south vertex and south east vertex on bottom row of tiles
+            if(i == 4){
+
+                //draw a circle at vertex south of tile
+                ctx.beginPath();
+                ctx.arc(centerX + hexRad * Math.cos(1.5*hexAngle), centerY + hexRad * Math.sin(1.5*hexAngle), 10, 0, 2 * Math.PI, false);
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = 'white';
+                ctx.closePath()
+                ctx.stroke();
+
+                //draw a circle at vertex southwest of tile
+                ctx.beginPath();
+                ctx.arc(centerX + hexRad * Math.cos(0.5*hexAngle), centerY + hexRad * Math.sin(0.5*hexAngle), 10, 0, 2 * Math.PI, false);
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = 'white';
+                ctx.closePath()
+                ctx.stroke();
+            }
+
+
+            //console.log(centerY);
+        }
+    }
 
 }
 
@@ -251,11 +373,8 @@ function drawTiles(){
                 ctx.fill(tilesArr[i][j].hitbox)
             }else{
 
-                //wait for textures to load
-                //drawTileTextures()
-
+                
             }
-            
 
             //outer circle of size radius
             // ctx.beginPath();
@@ -393,9 +512,12 @@ function drawCanvas(){
     drawDice()
     drawBank()
 
+    drawVertices()
     drawRoads()
     drawSettlements()
     drawRobber()
+
+
 
     //this one can be uncommented when it exists
     // if(showTime){

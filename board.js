@@ -35,7 +35,28 @@ var tilesArr = [
     []
 ]
 
+var verticesArr = [
+    [],
+    [],
+    [],
+    [],
+    
+    [],
+    [],
+    [],
+    [],
+    
+    [],
+    [],
+    [],
+    [],
+]
 
+function Vertex(cx, cy, hitbox){
+    this.cx = cx;
+    this.cy = cy;
+    this.hitbox = hitbox;
+}
 
 //define dice object
 function Dice() {
@@ -240,6 +261,7 @@ function setup(){
     setUpTiles()
     drawTiles()
     calcProduction()
+    initVertices()
     drawCanvas()
 }
 

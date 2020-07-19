@@ -29,6 +29,9 @@ canvas.addEventListener('mousedown', function(e) {
     for(i = 0; i < 5; i++){
         for(j = 0; j < tilesArr[i].length; j++){
 
+
+
+
             //if click occurred in tile hitbox do something
             if (ctx.isPointInPath(tilesArr[i][j].hitbox, e.offsetX, e.offsetY)) {
                 console.log(tilesArr[i][j]);
@@ -44,6 +47,7 @@ canvas.addEventListener('mousedown', function(e) {
                     }
                     drawTiles()
                     drawRobber()
+                    drawVertices()
 
                     //TODO select player to steal from if multiple are adjacent
 
@@ -200,10 +204,28 @@ async function loadTiles(){
     //console.log("time 2")
     drawTiles()
     drawRobber()
+    drawVertices()
 
 }
 
 function drawVertices(){
+    
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = 'black';
+    ctx.fillStyle = "white";
+
+    for(i = 0; i < 12; i++){
+
+        for(j = 0; j < verticesArr[i].length; j++){
+            
+            ctx.fill(verticesArr[i][j].hitbox)
+            ctx.stroke(verticesArr[i][j].hitbox)
+        }
+
+    }
+}
+
+function initVertices(){
 
     var radius = canvas.height/11.5;
     var centerX;
@@ -220,80 +242,87 @@ function drawVertices(){
             
             centerX = tilesArr[i][j].cx;
 
+            hitbox = new Path2D()
             //draw a circle at vertex north of tile
             ctx.beginPath();
-            ctx.arc(centerX, centerY - hexRad, 10, 0, 2 * Math.PI, false);
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = 'white';
+            hitbox.arc(centerX, centerY - hexRad, 15, 0, 2 * Math.PI, false);
             ctx.closePath()
-            ctx.stroke();
+
+            verticesArr[i*2].push(new Vertex(centerX, centerY - hexRad, hitbox))
             
-            //draw a circle at vertex north west of tile
+            hitbox = new Path2D()
+            //draw a circle at vertex northwest of tile
             ctx.beginPath();
-            ctx.arc(centerX + hexRad * Math.cos(3.5*hexAngle), centerY + hexRad * Math.sin(3.5*hexAngle), 10, 0, 2 * Math.PI, false);
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = 'white';
+            hitbox.arc(centerX + hexRad * Math.cos(3.5*hexAngle), centerY + hexRad * Math.sin(3.5*hexAngle), 15, 0, 2 * Math.PI, false);
             ctx.closePath()
-            ctx.stroke();
+
+            verticesArr[(i * 2) + 1].push(new Vertex(centerX + hexRad * Math.cos(3.5*hexAngle), centerY + hexRad * Math.sin(3.5*hexAngle), hitbox))
 
             //draw vertex only on tile at end of row
             //on tiles not at end this would be redundant
             if(j === tilesArr[i].length - 1){
+
+                hitbox = new Path2D()
                 //draw a circle at vertex north east of tile
                 ctx.beginPath();
-                ctx.arc(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle), 10, 0, 2 * Math.PI, false);
-                ctx.lineWidth = 2;
-                ctx.strokeStyle = 'white';
+                hitbox.arc(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle), 15, 0, 2 * Math.PI, false);
                 ctx.closePath()
-                ctx.stroke();
+
+                verticesArr[(i * 2) + 1].push(new Vertex(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle), hitbox))
             }
 
             //draw southwest vertex on first tile of rows with less tiles than row above them 
             if(i > 1 && j == 0){
+
+                hitbox = new Path2D()
                 //draw a circle at vertex southwest of tile
                 ctx.beginPath();
-                ctx.arc(centerX + hexRad * Math.cos(2.5*hexAngle), centerY + hexRad * Math.sin(2.5*hexAngle), 10, 0, 2 * Math.PI, false);
-                ctx.lineWidth = 2;
-                ctx.strokeStyle = 'white';
+                hitbox.arc(centerX + hexRad * Math.cos(2.5*hexAngle), centerY + hexRad * Math.sin(2.5*hexAngle), 15, 0, 2 * Math.PI, false);
                 ctx.closePath()
-                ctx.stroke();
+
+                verticesArr[(i * 2) + 2].push(new Vertex(centerX + hexRad * Math.cos(2.5*hexAngle), centerY + hexRad * Math.sin(2.5*hexAngle), hitbox))
             }
 
             //draw southeast vertex on last tile of rows with less tiles than row above them
             if(i > 1 && i < 4 && j === tilesArr[i].length - 1){
+                
+                hitbox = new Path2D()
                 //draw a circle at vertex southwest of tile
                 ctx.beginPath();
-                ctx.arc(centerX + hexRad * Math.cos(0.5*hexAngle), centerY + hexRad * Math.sin(0.5*hexAngle), 10, 0, 2 * Math.PI, false);
-                ctx.lineWidth = 2;
-                ctx.strokeStyle = 'white';
+                hitbox.arc(centerX + hexRad * Math.cos(0.5*hexAngle), centerY + hexRad * Math.sin(0.5*hexAngle), 15, 0, 2 * Math.PI, false);
                 ctx.closePath()
-                ctx.stroke();
+
+                verticesArr[(i * 2) + 2].push(new Vertex(centerX + hexRad * Math.cos(0.5*hexAngle), centerY + hexRad * Math.sin(0.5*hexAngle), hitbox))
             }
 
             //draw south vertex and south east vertex on bottom row of tiles
             if(i == 4){
 
+                hitbox = new Path2D()
                 //draw a circle at vertex south of tile
                 ctx.beginPath();
-                ctx.arc(centerX + hexRad * Math.cos(1.5*hexAngle), centerY + hexRad * Math.sin(1.5*hexAngle), 10, 0, 2 * Math.PI, false);
-                ctx.lineWidth = 2;
-                ctx.strokeStyle = 'white';
+                hitbox.arc(centerX + hexRad * Math.cos(1.5*hexAngle), centerY + hexRad * Math.sin(1.5*hexAngle), 15, 0, 2 * Math.PI, false);
                 ctx.closePath()
-                ctx.stroke();
 
+                verticesArr[11].push(new Vertex(centerX + hexRad * Math.cos(1.5*hexAngle), centerY + hexRad * Math.sin(1.5*hexAngle), hitbox))
+
+                hitbox = new Path2D()
                 //draw a circle at vertex southwest of tile
                 ctx.beginPath();
-                ctx.arc(centerX + hexRad * Math.cos(0.5*hexAngle), centerY + hexRad * Math.sin(0.5*hexAngle), 10, 0, 2 * Math.PI, false);
-                ctx.lineWidth = 2;
-                ctx.strokeStyle = 'white';
+                hitbox.arc(centerX + hexRad * Math.cos(0.5*hexAngle), centerY + hexRad * Math.sin(0.5*hexAngle), 15, 0, 2 * Math.PI, false);
                 ctx.closePath()
-                ctx.stroke();
+
+                verticesArr[10].push(new Vertex(centerX + hexRad * Math.cos(0.5*hexAngle), centerY + hexRad * Math.sin(0.5*hexAngle), hitbox))
             }
 
-
-            //console.log(centerY);
         }
     }
+
+    //fix rows 6 and 8 by moving out of order index to back
+    verticesArr[6].push(verticesArr[6].splice(1, 1)[0])
+    verticesArr[8].push(verticesArr[8].splice(1, 1)[0])
+
+    console.log(verticesArr)
 
 }
 

@@ -35,6 +35,7 @@ var tilesArr = [
     []
 ]
 
+//2d array to store vertices
 var verticesArr = [
     [],
     [],
@@ -56,6 +57,23 @@ function Vertex(cx, cy, hitbox){
     this.cx = cx;
     this.cy = cy;
     this.hitbox = hitbox;
+    this.adjTiles = []
+}
+Vertex.prototype.toString = function(){
+    var string = "";
+
+    for(i = 0; i < this.adjTiles.length; i++){    
+        string += "("
+        
+        if(this.adjTiles[i].blocked == true){
+            string += "blocked"
+        }
+        string += `${this.adjTiles[i].number}_${this.adjTiles[i].resourceCard})`
+    }
+
+    //string += this.adjTiles.length
+
+    return string
 }
 
 //define dice object

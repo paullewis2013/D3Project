@@ -25,12 +25,31 @@ var colorVals = ["green", "firebrick", "lightgreen", "#ffff99", "slategrey", "bl
 canvas.addEventListener('mousedown', function(e) {
     
     
+    //loop through all vertices
+    for(i = 0; i < 12; i++){
+
+        //console.log(verticesArr[i].length)
+
+        for(j = 0; j < verticesArr[i].length; j++){
+
+            //if click occurred in vertex hitbox do something
+            if (ctx.isPointInPath(verticesArr[i][j].hitbox, e.offsetX, e.offsetY)){
+                console.log(verticesArr[i][j].toString())
+                
+                
+                //if this isn't here things absolutely shit themselves and the page crashes
+                return;
+            }
+
+        }
+    }
+
     //loop through all tiles
     for(i = 0; i < 5; i++){
+
+        //console.log(tilesArr[i])
+
         for(j = 0; j < tilesArr[i].length; j++){
-
-
-
 
             //if click occurred in tile hitbox do something
             if (ctx.isPointInPath(tilesArr[i][j].hitbox, e.offsetX, e.offsetY)) {
@@ -53,6 +72,10 @@ canvas.addEventListener('mousedown', function(e) {
 
                     //reenable buttons to work
                     unfreeze()
+                    
+                    //if this isn't here I get an error but the error doesn't seem to cause any problems
+                    //it just makes me uncomfortable
+                    return;
                 }
 
             }
@@ -210,16 +233,22 @@ async function loadTiles(){
 
 function drawVertices(){
     
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = 'grey';
     ctx.fillStyle = "white";
+    ctx.font = "15px Arial"
 
     for(i = 0; i < 12; i++){
 
         for(j = 0; j < verticesArr[i].length; j++){
             
+            ctx.fillStyle = "white";
             ctx.fill(verticesArr[i][j].hitbox)
             ctx.stroke(verticesArr[i][j].hitbox)
+
+            //for debug
+            ctx.fillStyle = "black"
+            ctx.fillText(i + "," + j, verticesArr[i][j].cx, verticesArr[i][j].cy + 5)
         }
 
     }
@@ -321,6 +350,43 @@ function initVertices(){
     //fix rows 6 and 8 by moving out of order index to back
     verticesArr[6].push(verticesArr[6].splice(1, 1)[0])
     verticesArr[8].push(verticesArr[8].splice(1, 1)[0])
+
+
+    //loop through all tiles again now that vertices exist and link each vertex to adjacent tiles
+    for(i = 0; i < 5; i++){
+        for(j = 0; j < tilesArr[i].length; j++){
+
+            
+            //link all 6 adjacent vertices to tile
+
+            //north
+            if(i < 3){
+                verticesArr[2 * i][j].adjTiles.push(tilesArr[i][j])
+            }else{
+                verticesArr[2 * i][j + 1].adjTiles.push(tilesArr[i][j])
+            }
+
+            //northeast
+            verticesArr[(2 * i) + 1][j + 1].adjTiles.push(tilesArr[i][j])
+
+            //southeast
+            verticesArr[2 * (i + 1)][j + 1].adjTiles.push(tilesArr[i][j])
+
+            //south
+            if(i < 2){
+                verticesArr[(2 * i) + 3][j + 1].adjTiles.push(tilesArr[i][j])
+            }else{
+                verticesArr[(2 * i) + 3][j].adjTiles.push(tilesArr[i][j])
+            }
+            
+            //southwest
+            verticesArr[2 * (i + 1)][j].adjTiles.push(tilesArr[i][j])
+
+            //northwest
+            verticesArr[2 * i + 1][j].adjTiles.push(tilesArr[i][j])
+
+        }
+    }
 
     console.log(verticesArr)
 

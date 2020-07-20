@@ -22,34 +22,39 @@ var movingRobber = false;
 var colorVals = ["green", "firebrick", "lightgreen", "#ffff99", "slategrey", "blue"]
 
 
-canvas.addEventListener('mousedown', function(e) {
-    
-    
+canvas.addEventListener('click', function(e) {
+
     //loop through all vertices
-    for(i = 0; i < 12; i++){
+    for(var i = 0; i < 12; i++){
 
-        //console.log(verticesArr[i].length)
-
-        for(j = 0; j < verticesArr[i].length; j++){
+        for(var j = 0; j < verticesArr[i].length; j++){
 
             //if click occurred in vertex hitbox do something
             if (ctx.isPointInPath(verticesArr[i][j].hitbox, e.offsetX, e.offsetY)){
-                console.log(verticesArr[i][j].toString())
                 
+                console.log(verticesArr[i][j].toString())
+
+                if(buildingSettlement){
+                    //console.log("attempting to build settlement at " + verticesArr[i][j].toString())
+                    buildSettlement(verticesArr[i][j])
+                }
                 
                 //if this isn't here things absolutely shit themselves and the page crashes
-                return;
+                //I have literally no idea why
+                //haha nevermind I fixed it
+                //I had some undefined behavior because i and j somehow became global variables outside my for loops
+                //return;
             }
 
         }
     }
 
     //loop through all tiles
-    for(i = 0; i < 5; i++){
+    for(var i = 0; i < 5; i++){
 
         //console.log(tilesArr[i])
 
-        for(j = 0; j < tilesArr[i].length; j++){
+        for(var j = 0; j < tilesArr[i].length; j++){
 
             //if click occurred in tile hitbox do something
             if (ctx.isPointInPath(tilesArr[i][j].hitbox, e.offsetX, e.offsetY)) {
@@ -66,7 +71,7 @@ canvas.addEventListener('mousedown', function(e) {
                     }
                     drawTiles()
                     drawRobber()
-                    drawVertices()
+                    //drawVertices()
 
                     //TODO select player to steal from if multiple are adjacent
 
@@ -84,6 +89,8 @@ canvas.addEventListener('mousedown', function(e) {
         }
     }
 
+
+    return;
 });
 
 function toggleTexture(){
@@ -124,7 +131,7 @@ function drawTileTextures(){
 
     texturesLoaded = 0;
 
-    for(i = 0; i < 5; i++){
+    for(var i = 0; i < 5; i++){
         //centerY = ((2 + i) * (canvas.height / 7)) - radius;
 
         //some circle packing magic thats like a 30-60-90 triangle
@@ -148,7 +155,7 @@ function drawTileTextures(){
             times = 5;
         }
 
-        for(j = 0; j < times; j++){
+        for(var j = 0; j < times; j++){
 
             //draw hexagon
             var hexAngle = ((2 * Math.PI) / 6)
@@ -227,28 +234,30 @@ async function loadTiles(){
     //console.log("time 2")
     drawTiles()
     drawRobber()
-    drawVertices()
+    //drawVertices()
 
 }
 
 function drawVertices(){
     
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = 'grey';
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = 'black';
     ctx.fillStyle = "white";
     ctx.font = "15px Arial"
 
-    for(i = 0; i < 12; i++){
+    for(var i = 0; i < 12; i++){
 
-        for(j = 0; j < verticesArr[i].length; j++){
+        for(var j = 0; j < verticesArr[i].length; j++){
             
-            ctx.fillStyle = "white";
-            ctx.fill(verticesArr[i][j].hitbox)
-            ctx.stroke(verticesArr[i][j].hitbox)
+            if(verticesArr[i][j].settlement == null){
+                ctx.fillStyle = "white";
+                ctx.fill(verticesArr[i][j].hitbox)
+                ctx.stroke(verticesArr[i][j].hitbox)
 
-            //for debug
-            ctx.fillStyle = "black"
-            ctx.fillText(i + "," + j, verticesArr[i][j].cx, verticesArr[i][j].cy + 5)
+                //for debug
+                ctx.fillStyle = "black"
+                ctx.fillText(i + "," + j, verticesArr[i][j].cx, verticesArr[i][j].cy + 5)
+            }
         }
 
     }
@@ -263,11 +272,11 @@ function initVertices(){
     var hexAngle = ((2 * Math.PI) / 6)
 
     //loop through all tiles
-    for(i = 0; i < 5; i++){
+    for(var i = 0; i < 5; i++){
 
         centerY = tilesArr[i][0].cy
 
-        for(j = 0; j < tilesArr[i].length; j++){
+        for(var j = 0; j < tilesArr[i].length; j++){
             
             centerX = tilesArr[i][j].cx;
 
@@ -353,11 +362,12 @@ function initVertices(){
 
 
     //loop through all tiles again now that vertices exist and link each vertex to adjacent tiles
-    for(i = 0; i < 5; i++){
-        for(j = 0; j < tilesArr[i].length; j++){
+    for(var i = 0; i < 5; i++){
+        for(var j = 0; j < tilesArr[i].length; j++){
 
             
             //link all 6 adjacent vertices to tile
+            //south and north change coordinates if they're on the top or bottom half of board
 
             //north
             if(i < 3){
@@ -410,7 +420,7 @@ function drawTiles(){
     ctx.textAlign = "center"
     ctx.font = "20px Arial";
 
-    for(i = 0; i < 5; i++){
+    for(var i = 0; i < 5; i++){
         //centerY = ((2 + i) * (canvas.height / 7)) - radius;
 
         //some circle packing magic thats like a 30-60-90 triangle
@@ -434,7 +444,7 @@ function drawTiles(){
             times = 5;
         }
 
-        for(j = 0; j < times; j++){
+        for(var j = 0; j < times; j++){
 
             //draw hexagon
             var hexAngle = ((2 * Math.PI) / 6)
@@ -506,7 +516,7 @@ function drawTiles(){
                 //this makes sure the dots are centered
                 var offSetX = 2.5 * (dots-1.25)
 
-                for(k = 0; k < dots; k++){
+                for(var k = 0; k < dots; k++){
                     ctx.beginPath();
                     ctx.arc(centerX + 5*k - offSetX, centerY + 12, 1.5, 0, 2 * Math.PI, false);
                     ctx.lineWidth = 1;
@@ -539,7 +549,7 @@ function drawBank(){
     ctx.fill()
     
     //draw numbers for resources
-    for(i=0; i < 6; i++){
+    for(var i = 0; i < 6; i++){
         ctx.fillStyle = "black"
         ctx.font = "15px Arial"
         if(i<5){
@@ -570,7 +580,30 @@ function drawRoads(){
 
 //write me
 function drawSettlements(){
+    
+    // ctx.lineWidth = 3;
+    // ctx.strokeStyle = 'black';
+    // ctx.fillStyle = "white";
+    // ctx.font = "15px Arial"
 
+    for(var i = 0; i < 12; i++){
+
+        for(var j = 0; j < verticesArr[i].length; j++){
+            
+            //draw the settlement
+            if(verticesArr[i][j].settlement != null){
+                
+                //change color to color of player who owns it
+                ctx.fillStyle = "red";
+                ctx.fill(verticesArr[i][j].hitbox)
+                ctx.stroke(verticesArr[i][j].hitbox)
+
+                //console.log(verticesArr[i][j])
+            }
+            
+        }
+
+    }
 }
 
 //write me
@@ -596,6 +629,9 @@ function drawRobber(){
 function drawCanvas(){
 
     //draw the background maybe here
+    ctx.rect(0, 0, canvas.width, canvas.height)
+    ctx.fillStyle = "#B0E0E6"
+    ctx.fill()
 
     //draw the tiles
     if(textured){
@@ -607,7 +643,7 @@ function drawCanvas(){
     drawDice()
     drawBank()
 
-    drawVertices()
+    //drawVertices()
     drawRoads()
     drawSettlements()
     drawRobber()

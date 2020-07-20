@@ -20,6 +20,8 @@ var playedDevCards = {knight: 0, vp: 0, monopoly: 0, road: 0, plenty: 0}
 //array to store resource cards in bank
 var bank = [19, 19, 19, 19, 19];
 
+var buildingSettlement = false;
+
 var turnNumber = 0
 
 //maybe this should point to a tile
@@ -53,16 +55,26 @@ var verticesArr = [
     [],
 ]
 
+
+function Settlement(vertex){
+    this.isCity = false;
+    this.location = vertex;
+    this.player = null;
+}
+
+
 function Vertex(cx, cy, hitbox){
     this.cx = cx;
     this.cy = cy;
     this.hitbox = hitbox;
-    this.adjTiles = []
+    this.adjTiles = [];
+    this.dead = false;
+    this.settlement = null;
 }
 Vertex.prototype.toString = function(){
     var string = "";
 
-    for(i = 0; i < this.adjTiles.length; i++){    
+    for(var i = 0; i < this.adjTiles.length; i++){    
         string += "("
         
         if(this.adjTiles[i].blocked == true){
@@ -189,7 +201,7 @@ function setUpTiles(){
     var resourceTypes = []
     var resourceImgs = []
 
-    for(i = 0; i < colorNums.length; i++){
+    for(var i = 0; i < colorNums.length; i++){
         if(colorNums[i] === "green"){
             resourceTypes.push(resourceCard.WOOD)
             resourceImgs.push("assets/WoodTexture.png")
@@ -213,7 +225,7 @@ function setUpTiles(){
 
     //assemble things into tiles
     var tempTiles = []
-    for(i = 0; i < colorNums.length; i++){
+    for(var i = 0; i < colorNums.length; i++){
         tempTiles[i] = new Tile(resourceTypes[i], resourceNums[i], colorNums[i], resourceImgs[i])
         if(tempTiles[i].number == 7){
             tempTiles[i].block()
@@ -226,7 +238,7 @@ function setUpTiles(){
     counter = 0;
 
     //go down left side first
-    for(i = 0; i < 5; i++){
+    for(var i = 0; i < 5; i++){
         tilesArr[i].push( tempTiles[counter]);
         counter++;
     }
@@ -235,19 +247,19 @@ function setUpTiles(){
     counter++;
 
     //put these ones in the wrong spot but we fix it later
-    for(i = 4; i >= 0; i--){
+    for(var i = 4; i >= 0; i--){
         tilesArr[i].push( tempTiles[counter]);
         counter++;
     }
 
     //go down next part of spiral on inside
-    for(i = 0; i < 4; i++){
+    for(var i = 0; i < 4; i++){
         tilesArr[i].splice(1,0,( tempTiles[counter]))
         counter++;
     }
 
     //go up next part of spiral on inside
-    for(i = 3; i > 0; i--){
+    for(var i = 3; i > 0; i--){
         tilesArr[i].splice(2,0,( tempTiles[counter]));
         counter++;
     }
@@ -258,8 +270,8 @@ function setUpTiles(){
 
 
     //find location of robber and record it
-    for(i = 0; i < 5; i++){
-        for(j = 0; j < tilesArr[i].length; j++){
+    for(var i = 0; i < 5; i++){
+        for(var j = 0; j < tilesArr[i].length; j++){
             if(tilesArr[i][j].blocked == true){
                 robberLocation = tilesArr[i][j]
             }
@@ -401,14 +413,62 @@ function moveRobber(){
 
 }
 
+function buildSettlement(vertex){
+
+    //do not build settlement somewhere that you can't
+    if(vertex.dead == true || vertex.settlement != null){
+        console.log("cannot build a settlement here")
+        return;
+    }
+
+    //console.log("building a Settlement at " + vertex)
+
+    //add settlement reference to vertex
+    vertex.settlement = new Settlement(vertex);
+
+    //add settlement reference to each adjacent tile
+    for(var i = 0; i < vertex.adjTiles.length; i++){
+        vertex.adjTiles[i].settlements.push(vertex.settlement)
+    }
+
+    //TODO make any adjacent vertecies dead so that settlements cannot be built on them
+
+
+    buildingSettlement = false;
+    unfreeze()
+}
+
+function settlementButton(){
+
+    buildingSettlement = true;
+    freeze()
+    document.getElementById("cancelButton").disabled = false;
+    drawVertices()
+
+}
+
+function cancelAction(){
+
+    document.getElementById("cancelButton").disabled = true;
+    unfreeze()
+    drawCanvas()
+
+}
+
+
 function freeze(){
     document.getElementById("diceButton").disabled = true;
     document.getElementById("devButton").disabled = true;
+    document.getElementById("settlementButton").disabled = true;
 }
 
 function unfreeze(){
     document.getElementById("diceButton").disabled = false;
     document.getElementById("devButton").disabled = false;
+    document.getElementById("settlementButton").disabled = false;
+    document.getElementById("cancelButton").disabled = true;
+
+    drawCanvas()
 }
 
 //--------------------------------------------------
@@ -487,8 +547,8 @@ function graphicButton(){
 //where does this belong??
 //sums up dot values for each resource by checking all tiles
 function calcProduction(){
-    for(i = 0; i < tilesArr.length; i++){
-        for(j = 0; j < tilesArr[i].length; j++){
+    for(var i = 0; i < tilesArr.length; i++){
+        for(var j = 0; j < tilesArr[i].length; j++){
 
             if(tilesArr[i][j].resourceCard === "wood"){
                 productionCapacity[0] += (6 - Math.abs(7 - tilesArr[i][j].number))

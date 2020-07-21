@@ -234,7 +234,10 @@ async function loadTiles(){
     //console.log("time 2")
     drawTiles()
     drawRobber()
-    //drawVertices()
+    if(buildingSettlement){
+        drawVertices()
+    }
+    drawSettlements()
 
 }
 
@@ -249,7 +252,7 @@ function drawVertices(){
 
         for(var j = 0; j < verticesArr[i].length; j++){
             
-            if(verticesArr[i][j].settlement == null){
+            if(verticesArr[i][j].settlement == null && verticesArr[i][j].dead != true){
                 ctx.fillStyle = "white";
                 ctx.fill(verticesArr[i][j].hitbox)
                 ctx.stroke(verticesArr[i][j].hitbox)
@@ -397,6 +400,52 @@ function initVertices(){
 
         }
     }
+
+
+    //link vertices to adjacent vertices
+    for(var i = 0; i < 12; i++){
+        for(var j = 0; j < verticesArr[i].length; j++){
+            
+            //vertical
+            //1 3 5 7 and 9 link down 
+            //2 4 6 8 and 10 link upwards
+            //0s and 11s have no vertical link
+            if(i == 1 || i ==3 || i == 5 || i==7 || i == 9){
+                verticesArr[i][j].adjVerts.push(verticesArr[i + 1][j]);
+                verticesArr[i + 1][j].adjVerts.push(verticesArr[i][j]);
+            }
+
+            //rule for top half of evens
+            if(i < 5 && i%2 == 0){
+
+                //push left
+                verticesArr[i][j].adjVerts.push(verticesArr[i + 1][j]);
+                verticesArr[i + 1][j].adjVerts.push(verticesArr[i][j]);
+
+                //push right
+                verticesArr[i][j].adjVerts.push(verticesArr[i + 1][j + 1]);
+                verticesArr[i + 1][j + 1].adjVerts.push(verticesArr[i][j]);
+
+
+            }
+
+            //similar rule for bottom half of evens
+            if(i > 6 && i%2 == 1){
+
+                //push left
+                verticesArr[i][j].adjVerts.push(verticesArr[i - 1][j]);
+                verticesArr[i - 1][j].adjVerts.push(verticesArr[i][j]);
+
+                //push right
+                verticesArr[i][j].adjVerts.push(verticesArr[i - 1][j + 1]);
+                verticesArr[i - 1][j + 1].adjVerts.push(verticesArr[i][j]);
+
+            }
+        }
+    }
+
+    
+
 
     console.log(verticesArr)
 

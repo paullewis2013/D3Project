@@ -68,6 +68,7 @@ function Vertex(cx, cy, hitbox){
     this.cy = cy;
     this.hitbox = hitbox;
     this.adjTiles = [];
+    this.adjVerts = [];
     this.dead = false;
     this.settlement = null;
 }
@@ -86,6 +87,15 @@ Vertex.prototype.toString = function(){
     //string += this.adjTiles.length
 
     return string
+}
+Vertex.prototype.build = function(settlement){
+    this.settlement = settlement;
+
+    //loop through adjacent verts and make them unbuildable
+    for(var i = 0; i < this.adjVerts.length; i++){
+        this.adjVerts[i].dead = true;
+    }
+
 }
 
 //define dice object
@@ -432,6 +442,7 @@ function buildSettlement(vertex){
     }
 
     //TODO make any adjacent vertecies dead so that settlements cannot be built on them
+    vertex.build(vertex.settlement);
 
 
     buildingSettlement = false;

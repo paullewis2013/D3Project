@@ -4,8 +4,12 @@
 var canvas = document.getElementById('canvas')
 var canvasDiv = document.getElementById('canvasDiv')
 canvas.style.background = 'powderblue'
+
+console.log(document.getElementById("left").height)
+canvasDiv.height = document.getElementById("left").clientHeight
+
 canvas.width  = canvasDiv.clientWidth;
-canvas.height = canvasDiv.clientHeight;
+canvas.height = document.getElementById("left").clientHeight - document.getElementById("controls").clientHeight
 
 var ctx = canvas.getContext('2d')
 ctx.font= "30px Arial";
@@ -23,6 +27,8 @@ var colorVals = ["green", "firebrick", "lightgreen", "#ffff99", "slategrey", "bl
 
 
 canvas.addEventListener('click', function(e) {
+
+    console.log(document.getElementById("left").clientHeight)
 
     //loop through all vertices
     for(var i = 0; i < 12; i++){
@@ -105,7 +111,7 @@ function drawDice(){
   
         //this thing is called a closure but idk how it works tbh
         (function (i) {
-            var xPos = ((i * 65) + 10);
+            var xPos = ((i * 65) + 25);
             var yPos = 10;
             diceImgs[i] = new Image();
             diceImgs[i].src = diceArr[i].getImg();
@@ -234,9 +240,6 @@ async function loadTiles(){
     //console.log("time 2")
     drawTiles()
     drawRobber()
-    if(buildingSettlement){
-        drawVertices()
-    }
     drawSettlements()
 
 }
@@ -457,7 +460,9 @@ function initVertices(){
 function drawTiles(){
     var centerX = canvas.width /2;
     var centerY = 2 * (canvas.height / 7) - 50;
-    var radius = canvas.height/11.5;
+    //var radius = canvas.height/11.5;
+    var radius = 60;
+    
 
     //how to draw a circle in case I forget
     // ctx.beginPath();

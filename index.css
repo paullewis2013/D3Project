@@ -10,15 +10,22 @@ body {
     outline-width: 1px;
 }
 
-#controls{
-    height: 100px;
+.col-8 {
+    padding: 0px;
+    padding-right: 15px;
 }
 
-body {
+#canvasDiv {
+    padding-left: 0px;
+}
+
+#controls{
+    height: 100px;
     padding: 5px;
 }
 
 html, body {
+    padding: 0px;
     margin: 0px;
     height: 100vh;
     overflow-y: scroll;

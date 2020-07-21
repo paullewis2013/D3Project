@@ -4,15 +4,18 @@ body {
 
 .row{
     padding: 0px;
-    border-collapse: collapse;
-    outline: double;
-    outline-color: black;
-    outline-width: 1px;
 }
 
 .col-8 {
     padding: 0px;
-    padding-right: 15px;
+    padding-right: 15px;   
+}
+
+.col-4{
+    border-collapse: collapse;
+    outline: double;
+    outline-color: black;
+    outline-width: 1px;
 }
 
 #canvasDiv {
@@ -22,6 +25,11 @@ body {
 #controls{
     height: 100px;
     padding: 5px;
+    margin-bottom: 1px;
+    border-collapse: collapse;
+    outline: double;
+    outline-color: black;
+    outline-width: 1px;
 }
 
 html, body {

@@ -3,12 +3,16 @@
 //basic setup to work with canvas element
 var canvas = document.getElementById('canvas')
 var canvasDiv = document.getElementById('canvasDiv')
-canvas.style.background = 'powderblue'
 
-console.log(document.getElementById("left").height)
 canvasDiv.height = document.getElementById("left").clientHeight
 
-canvas.width  = canvasDiv.clientWidth;
+canvas.width  = canvasDiv.clientWidth //- 1;
+
+//console.log(canvasDiv.clientWidth)
+//canvasDiv.style.width = 5;
+//console.log(canvasDiv.clientWidth)
+
+//canvasDiv.style.outlineWidth = "1px";
 canvas.height = document.getElementById("left").clientHeight - document.getElementById("controls").clientHeight
 
 var ctx = canvas.getContext('2d')
@@ -111,8 +115,8 @@ function drawDice(){
   
         //this thing is called a closure but idk how it works tbh
         (function (i) {
-            var xPos = ((i * 65) + 25);
-            var yPos = 10;
+            var xPos = ((i * 65) + 20);
+            var yPos = 5;
             diceImgs[i] = new Image();
             diceImgs[i].src = diceArr[i].getImg();
 
@@ -133,7 +137,8 @@ function drawTileTextures(){
 
     var centerX = canvas.width /2;
     var centerY = 2 * (canvas.height / 7) - 50;
-    var radius = canvas.height/11.5;
+    //var radius = canvas.height/11.5;
+    var radius = 60
 
     texturesLoaded = 0;
 
@@ -447,10 +452,7 @@ function initVertices(){
         }
     }
 
-    
-
-
-    console.log(verticesArr)
+    //console.log(verticesArr)
 
 }
 
@@ -590,6 +592,7 @@ function drawTiles(){
         }
 
     }
+
     //console.log(tilesArr)
 }
 

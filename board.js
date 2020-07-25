@@ -55,6 +55,22 @@ var verticesArr = [
     [],
 ]
 
+//2d array to store roads
+var roadsArr = [
+    [],
+    [],
+    [],
+    [],
+    [],
+
+    [],
+    [],
+    [],
+    [],
+    [],
+
+    [],
+]
 
 //create an array of 2 dice to be rolled
 var diceArr = new Array(new Dice(), new Dice());
@@ -197,6 +213,7 @@ function setup(){
     drawTiles()
     calcProduction()
     initVertices()
+    initRoads()
     drawCanvas()
 }
 

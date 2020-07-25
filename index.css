@@ -22,6 +22,12 @@ body {
     padding-left: 0px;
 }
 
+.button-row {
+    margin-left: 5px;
+    margin-bottom: 5px;
+    display:inline-block;
+}
+
 #controls{
     height: 100px;
     padding: 5px;

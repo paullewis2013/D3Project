@@ -274,6 +274,165 @@ function drawVertices(){
     }
 }
 
+function initRoads(){
+
+    var radius = 60;
+    var centerX;
+    var centerY;
+    var hexRad = radius * 7/6.5
+    var hexAngle = ((2 * Math.PI) / 6)
+
+    //loop through all edges
+    for(var i = 0; i < 11; i++){
+
+        //all rows of vertical edges
+        if(i % 2 != 0){
+
+            for(var j = 0; j < tilesArr[0.5 * (i - 1)].length; j++){
+
+                centerX = tilesArr[0.5 * (i - 1)][j].cx
+                centerY = tilesArr[0.5 * (i - 1)][j].cy
+
+                //draw a road on left side of each tile
+                hitbox = new Path2D()
+
+                ctx.beginPath()
+                hitbox.moveTo(centerX + hexRad * Math.cos(3.5*hexAngle), centerY + hexRad * Math.sin(3.5*hexAngle))
+                hitbox.lineTo(centerX + hexRad * Math.cos(2.5*hexAngle), centerY + hexRad * Math.sin(2.5*hexAngle))
+                hitbox.lineTo(centerX + hexRad * Math.cos(2.5*hexAngle) - 8, centerY + hexRad * Math.sin(2.5*hexAngle))
+                hitbox.lineTo(centerX + hexRad * Math.cos(3.5*hexAngle) - 8, centerY + hexRad * Math.sin(3.5*hexAngle))
+                hitbox.lineTo(centerX + hexRad * Math.cos(3.5*hexAngle), centerY + hexRad * Math.sin(3.5*hexAngle))
+
+                ctx.closePath()
+
+                roadsArr[i].push(new Road(null, hitbox))
+
+
+                //last road goes on right side of final tile in row
+                if(j == tilesArr[0.5 * (i - 1)].length - 1){
+                    
+                    hitbox = new Path2D()
+
+                    ctx.beginPath()
+                    hitbox.moveTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
+                    hitbox.lineTo(centerX + hexRad * Math.cos(0.5*hexAngle), centerY + hexRad * Math.sin(0.5*hexAngle))
+                    hitbox.lineTo(centerX + hexRad * Math.cos(0.5*hexAngle) + 8, centerY + hexRad * Math.sin(0.5*hexAngle))
+                    hitbox.lineTo(centerX + hexRad * Math.cos(5.5*hexAngle) + 8, centerY + hexRad * Math.sin(5.5*hexAngle))
+                    hitbox.lineTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
+
+                    ctx.closePath()
+
+                    roadsArr[i].push(new Road(null, hitbox))
+                }
+
+            }
+
+        }
+        //rows of horizontal edges on top half of board
+        else if(i < 5){
+
+            for(var j = 0; j < tilesArr[0.5 * i].length; j++){
+
+                //these paths need to move in direction normal to side of hexagon that the road is on
+                //in order to form a right angle
+                //thats why the points get a little messy
+
+                //upslope
+                centerX = tilesArr[0.5 * (i)][j].cx
+                centerY = tilesArr[0.5 * (i)][j].cy
+
+                //draw a road on upper left side of each tile
+                hitbox = new Path2D()
+
+                ctx.beginPath()
+                hitbox.moveTo(centerX + hexRad * Math.cos(4.5*hexAngle), centerY + hexRad * Math.sin(4.5*hexAngle))
+                hitbox.lineTo(centerX + hexRad * Math.cos(3.5*hexAngle), centerY + hexRad * Math.sin(3.5*hexAngle))
+                hitbox.lineTo(centerX + hexRad * Math.cos(3.5*hexAngle) + 8 * Math.cos(4*hexAngle), centerY + hexRad * Math.sin(3.5*hexAngle) + 8 * Math.sin(4*hexAngle))
+                hitbox.lineTo(centerX + hexRad * Math.cos(4.5*hexAngle) + 8 * Math.cos(4*hexAngle), centerY + hexRad * Math.sin(4.5*hexAngle) + 8 * Math.sin(4*hexAngle))
+                hitbox.lineTo(centerX + hexRad * Math.cos(4.5*hexAngle), centerY + hexRad * Math.sin(4.5*hexAngle))
+
+                ctx.closePath()
+
+                roadsArr[i].push(new Road(null, hitbox))
+
+
+                //downslope
+                
+                //draw a road on upper right side of each tile
+                hitbox = new Path2D()
+
+                ctx.beginPath()
+                hitbox.moveTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
+                hitbox.lineTo(centerX + hexRad * Math.cos(4.5*hexAngle), centerY + hexRad * Math.sin(4.5*hexAngle))
+                hitbox.lineTo(centerX + hexRad * Math.cos(4.5*hexAngle) + 8 * Math.cos(5*hexAngle), centerY + hexRad * Math.sin(4.5*hexAngle) + 8 * Math.sin(5*hexAngle))
+                hitbox.lineTo(centerX + hexRad * Math.cos(5.5*hexAngle) + 8 * Math.cos(5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle) + 8 * Math.sin(5*hexAngle))
+                hitbox.lineTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
+
+                ctx.closePath()
+
+                roadsArr[i].push(new Road(null, hitbox))
+
+
+            }
+
+        }
+        
+        //rows of horizontal edges on bottom half of board
+        else{
+
+            for(var j = 0; j < tilesArr[0.5 * (i - 2)].length; j++){
+
+                //these paths need to move in direction normal to side of hexagon that the road is on
+                //in order to form a right angle
+                //thats why the points get a little messy
+
+                centerX = tilesArr[0.5 * (i - 2)][j].cx
+                centerY = tilesArr[0.5 * (i - 2)][j].cy
+
+                //downslope
+                
+                //draw a road on upper right side of each tile
+                hitbox = new Path2D()
+
+                ctx.beginPath()
+                hitbox.moveTo(centerX + hexRad * Math.cos(2.5*hexAngle), centerY + hexRad * Math.sin(2.5*hexAngle))
+                hitbox.lineTo(centerX + hexRad * Math.cos(1.5*hexAngle), centerY + hexRad * Math.sin(1.5*hexAngle))
+                hitbox.lineTo(centerX + hexRad * Math.cos(1.5*hexAngle) + 8 * Math.cos(2*hexAngle), centerY + hexRad * Math.sin(1.5*hexAngle) + 8 * Math.sin(2*hexAngle))
+                hitbox.lineTo(centerX + hexRad * Math.cos(2.5*hexAngle) + 8 * Math.cos(2*hexAngle), centerY + hexRad * Math.sin(2.5*hexAngle) + 8 * Math.sin(2*hexAngle))
+                hitbox.lineTo(centerX + hexRad * Math.cos(2.5*hexAngle), centerY + hexRad * Math.sin(2.5*hexAngle))
+
+                ctx.closePath()
+
+                roadsArr[i].push(new Road(null, hitbox))
+
+
+                //upslope
+                //draw a road on upper left side of each tile
+                hitbox = new Path2D()
+
+                ctx.beginPath()
+                hitbox.moveTo(centerX + hexRad * Math.cos(1.5*hexAngle), centerY + hexRad * Math.sin(1.5*hexAngle))
+                hitbox.lineTo(centerX + hexRad * Math.cos(0.5*hexAngle), centerY + hexRad * Math.sin(0.5*hexAngle))
+                hitbox.lineTo(centerX + hexRad * Math.cos(0.5*hexAngle) + 8 * Math.cos(1*hexAngle), centerY + hexRad * Math.sin(0.5*hexAngle) + 8 * Math.sin(1*hexAngle))
+                hitbox.lineTo(centerX + hexRad * Math.cos(1.5*hexAngle) + 8 * Math.cos(1*hexAngle), centerY + hexRad * Math.sin(1.5*hexAngle) + 8 * Math.sin(1*hexAngle))
+                hitbox.lineTo(centerX + hexRad * Math.cos(1.5*hexAngle), centerY + hexRad * Math.sin(1.5*hexAngle))
+
+                ctx.closePath()
+
+                roadsArr[i].push(new Road(null, hitbox))
+
+
+                
+
+
+            }
+
+
+        }
+
+    }
+}
+
 function initVertices(){
 
     var radius = canvas.height/11.5;
@@ -633,6 +792,23 @@ function drawBank(){
 //write me
 function drawRoads(){
 
+    for(var i = 0; i < 11; i++){
+
+        for(var j = 0; j < roadsArr[i].length; j++){
+            
+            //draw the road
+            if(roadsArr[i][j].player == null){
+                
+                //change color to color of player who owns it
+                ctx.fillStyle = "white";
+                ctx.fill(roadsArr[i][j].hitbox)
+                ctx.stroke(roadsArr[i][j].hitbox)
+
+            }
+            
+        }
+
+    }
 }
 
 //write me

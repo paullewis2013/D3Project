@@ -46,6 +46,13 @@ Vertex.prototype.build = function (settlement) {
 }
 
 
+//define road object
+function Road(player, hitbox){
+    this.player = player;
+    this.hitbox = hitbox;
+}
+
+
 //define dice object
 function Dice() {
     this.value = 1;

@@ -22,10 +22,17 @@
                     <div class="row" id="controls">
                         
                         <div class="col-6" id="buttons">
-                            <button class="btn btn-primary" onclick="diceButton()" id="diceButton">Roll Dice</button>
-                            <button class="btn btn-primary" onclick="devButton()" id="devButton">Draw Dev</button>
-                            <button class="btn btn-primary" onclick="settlementButton()" id="settlementButton">Build Settlement</button>
-                            <button class="btn btn-danger" onclick="cancelAction()" id="cancelButton" disabled="disabled">Cancel</button>
+                            <div class="row button-row">
+                                <button class="btn btn-primary" onclick="diceButton()" id="diceButton">Roll Dice</button>
+                                <button class="btn btn-primary" onclick="devButton()" id="devButton">Draw Dev</button>
+                                <button class="btn btn-primary" onclick="settlementButton()" id="settlementButton">Build Settlement</button>
+                                <button class="btn btn-danger" onclick="cancelAction()" id="cancelButton" disabled="disabled">Cancel</button>
+                            </div>
+
+                            <div class="row button-row">
+                                <button class="btn btn-primary" onclick="roadButton()" id="roadButton">Build Road</button>
+                            </div>
+                           
                         </div>
                         
                         <!-- <div class="col">
@@ -111,9 +118,6 @@
         <script src=canvas.js></script>
         <script src=infoDisplay.js></script>
         <script src=board.js></script>
-        
-
-        
 
 
     </body>

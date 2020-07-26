@@ -24,6 +24,7 @@ var texturesLoaded = 0;
 
 var robberImage = new Image();
 robberImage.src = "assets/robber.svg"
+
 var robberLoaded = false;
 var movingRobber = false;
 var showRoads = false;
@@ -44,7 +45,7 @@ canvas.addEventListener('click', function(e) {
             //if click occurred in vertex hitbox do something
             if (ctx.isPointInPath(verticesArr[i][j].hitbox, e.offsetX, e.offsetY)){
                 
-                console.log(verticesArr[i][j].toString())
+                console.log(verticesArr[i][j])
 
                 if(buildingSettlement){
                     //console.log("attempting to build settlement at " + verticesArr[i][j].toString())
@@ -634,6 +635,46 @@ function initVertices(){
 
 }
 
+
+function initPorts(){
+
+    var radius = 60;
+    var hexRad = 6.5/6 * radius
+
+    //I'm just picking a vertex below or above the port to use as an anchor for positioning the port
+
+    portsArr[0].cx = verticesArr[1][0].cx;
+    portsArr[0].cy = verticesArr[1][0].cy - hexRad;
+
+    portsArr[1].cx = verticesArr[1][2].cx;
+    portsArr[1].cy = verticesArr[1][2].cy - hexRad;
+
+    portsArr[2].cx = verticesArr[3][4].cx;
+    portsArr[2].cy = verticesArr[3][4].cy - hexRad;
+
+    portsArr[3].cx = verticesArr[5][0].cx;
+    portsArr[3].cy = verticesArr[5][0].cy - hexRad;
+
+    //this one is weird I need to use a tile because there isn't a convenient vertex
+    portsArr[4].cx = tilesArr[2][4].cx + 2 * hexRad;
+    portsArr[4].cy = tilesArr[2][4].cy;
+
+    //these ones are back to normal
+    portsArr[5].cx = verticesArr[6][0].cx;
+    portsArr[5].cy = verticesArr[6][0].cy + hexRad;
+
+    portsArr[6].cx = verticesArr[8][4].cx;
+    portsArr[6].cy = verticesArr[8][4].cy + hexRad;
+
+    portsArr[7].cx = verticesArr[10][0].cx;
+    portsArr[7].cy = verticesArr[10][0].cy + hexRad;
+
+    portsArr[8].cx = verticesArr[10][2].cx;
+    portsArr[8].cy = verticesArr[10][2].cy + hexRad;
+
+}
+
+
 //this actually draws hexagons now but it could do circles or whatever else involves visiting 
 //center point of each tile
 //this function should be called drawTiles lol
@@ -724,8 +765,6 @@ function drawTiles(){
             // ctx.stroke();
             
             //dont draw a num tile on the desert
-            //console.log(tilesArr[i][j].number)
-
             if(tilesArr[i][j].number != 7){
                 //draw inner circle
                 ctx.beginPath();
@@ -809,7 +848,59 @@ function drawBank(){
 }
 
 
+function drawPorts(){
+
+    for(var i = 0; i < portsArr.length; i++){
+
+        ctx.strokeStyle = "#DEB887"
+        ctx.lineWidth = 8;
+
+        //draw lines to ports
+        ctx.beginPath();
+        ctx.moveTo(portsArr[i].cx, portsArr[i].cy)
+        ctx.lineTo(portsArr[i].vertices[0].cx, portsArr[i].vertices[0].cy)
+        ctx.stroke()
+
+        ctx.beginPath();
+        ctx.moveTo(portsArr[i].cx, portsArr[i].cy)
+        ctx.lineTo(portsArr[i].vertices[1].cx, portsArr[i].vertices[1].cy)
+        ctx.stroke()
+
+        ctx.lineWidth = 3
+
+        //draw port itself
+        ctx.beginPath();
+        ctx.arc(portsArr[i].cx, portsArr[i].cy, 20, 0, 2 * Math.PI, false);
+        ctx.lineWidth = 0;
+        ctx.strokeStyle = 'black';
+        ctx.closePath()
+        ctx.stroke();
+        ctx.fillStyle = "white"
+        ctx.fill()
+
+        //draw text on top
+        ctx.fillStyle = "black"
+        ctx.fillText(portsArr[i].trade, portsArr[i].cx, portsArr[i].cy + 5)
+
+    }
+}
+
+function initIslandPath(){
+
+}
+
+function drawIsland(){
+
+    ctx.fillStyle = "#DEB887"
+
+
+}
+
+
 function drawRoads(){
+
+    ctx.lineWidth = 1;
+
 
     for(var i = 0; i < 11; i++){
 
@@ -902,10 +993,10 @@ function drawCanvas(){
     drawBank()
 
     //drawVertices()
+    drawPorts()
     drawRoads()
     drawSettlements()
     drawRobber()
-
 
 
     //this one can be uncommented when it exists

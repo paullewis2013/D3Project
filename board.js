@@ -73,6 +73,8 @@ var roadsArr = [
     [],
 ]
 
+var portsArr = [];
+
 //create an array of 2 dice to be rolled
 var diceArr = new Array(new Dice(), new Dice());
 
@@ -218,6 +220,8 @@ function setup(){
     calcProduction()
     initVertices()
     initRoads()
+    generatePorts()
+    initPorts()
     drawCanvas()
 }
 
@@ -250,6 +254,51 @@ function populateDiceResultsArr(){
             frequency: 0
         })
     }
+}
+
+function generatePorts(){
+
+    //4 3:1 ports and a 2:1 for every resource
+    var tradesArr = [
+        "3:1",
+        "3:1",
+        "3:1",
+        "3:1",
+
+        "wood",
+        "brick",
+        "sheep",
+        "wheat",
+        "ore",
+    ]
+
+    var portLocations = [
+        [verticesArr[1][0], verticesArr[0][0]],
+        [verticesArr[0][1], verticesArr[1][2]],
+        [verticesArr[2][3], verticesArr[3][4]],
+
+        [verticesArr[3][0], verticesArr[4][0]],
+        [verticesArr[5][5], verticesArr[6][5]],
+        [verticesArr[7][0], verticesArr[8][0]],
+
+        [verticesArr[9][3], verticesArr[8][4]],
+        [verticesArr[10][0], verticesArr[11][0]],
+        [verticesArr[11][1], verticesArr[10][2]],
+    ]
+
+
+    //randomize port trades
+    tradesArr = _.shuffle(tradesArr)
+
+    for (var i = 0; i < 9; i++){
+        portsArr.push(new Port(tradesArr[i], portLocations[i]))
+
+        portsArr[i].vertices[0].port = portsArr[i]
+        portsArr[i].vertices[1].port = portsArr[i]
+    }
+
+    console.log(portsArr)
+
 }
 
 

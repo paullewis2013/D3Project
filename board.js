@@ -222,6 +222,7 @@ function setup(){
     initRoads()
     generatePorts()
     initPorts()
+    initIslandPath()
     drawCanvas()
 }
 

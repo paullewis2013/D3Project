@@ -31,6 +31,8 @@ var showRoads = false;
 
 var colorVals = ["green", "firebrick", "lightgreen", "#ffff99", "slategrey", "blue"]
 
+var islandPath; 
+
 
 canvas.addEventListener('click', function(e) {
 
@@ -885,14 +887,54 @@ function drawPorts(){
     }
 }
 
+//defines a path around the perimeter of the island
 function initIslandPath(){
+
+    islandPath = new Path2D();
+
+    ctx.beginPath();
+    islandPath.moveTo(verticesArr[0][0].cx, verticesArr[0][0].cy);
+    islandPath.lineTo(verticesArr[1][1].cx, verticesArr[1][1].cy);
+    islandPath.lineTo(verticesArr[0][1].cx, verticesArr[0][1].cy);
+    islandPath.lineTo(verticesArr[1][2].cx, verticesArr[1][2].cy);
+    islandPath.lineTo(verticesArr[0][2].cx, verticesArr[0][2].cy);
+    islandPath.lineTo(verticesArr[1][3].cx, verticesArr[1][3].cy);
+    islandPath.lineTo(verticesArr[2][3].cx, verticesArr[2][3].cy);
+    islandPath.lineTo(verticesArr[3][4].cx, verticesArr[3][4].cy);
+    islandPath.lineTo(verticesArr[4][4].cx, verticesArr[4][4].cy);
+    islandPath.lineTo(verticesArr[5][5].cx, verticesArr[5][5].cy);
+    islandPath.lineTo(verticesArr[6][5].cx, verticesArr[6][5].cy);
+    islandPath.lineTo(verticesArr[7][4].cx, verticesArr[7][4].cy);
+    islandPath.lineTo(verticesArr[8][4].cx, verticesArr[8][4].cy);
+    islandPath.lineTo(verticesArr[9][3].cx, verticesArr[9][3].cy);
+    islandPath.lineTo(verticesArr[10][3].cx, verticesArr[10][3].cy);
+    islandPath.lineTo(verticesArr[11][2].cx, verticesArr[11][2].cy);
+    islandPath.lineTo(verticesArr[10][2].cx, verticesArr[10][2].cy);
+    islandPath.lineTo(verticesArr[11][1].cx, verticesArr[11][1].cy);
+    islandPath.lineTo(verticesArr[10][1].cx, verticesArr[10][1].cy);
+    islandPath.lineTo(verticesArr[11][0].cx, verticesArr[11][0].cy);
+    islandPath.lineTo(verticesArr[10][0].cx, verticesArr[10][0].cy);
+    islandPath.lineTo(verticesArr[9][0].cx, verticesArr[9][0].cy);
+    islandPath.lineTo(verticesArr[8][0].cx, verticesArr[8][0].cy);
+    islandPath.lineTo(verticesArr[7][0].cx, verticesArr[7][0].cy);
+    islandPath.lineTo(verticesArr[6][0].cx, verticesArr[6][0].cy);
+    islandPath.lineTo(verticesArr[5][0].cx, verticesArr[5][0].cy);
+    islandPath.lineTo(verticesArr[4][0].cx, verticesArr[4][0].cy);
+    islandPath.lineTo(verticesArr[3][0].cx, verticesArr[3][0].cy);
+    islandPath.lineTo(verticesArr[2][0].cx, verticesArr[2][0].cy);
+    islandPath.lineTo(verticesArr[1][0].cx, verticesArr[1][0].cy);
+    islandPath.lineTo(verticesArr[0][0].cx, verticesArr[0][0].cy);
+    ctx.closePath();
 
 }
 
 function drawIsland(){
 
     ctx.fillStyle = "#DEB887"
-
+    ctx.lineWidth = 8;
+    ctx.strokeStyle = "#DEB887"
+    ctx.stroke(islandPath);
+    ctx.fill(islandPath);
 
 }
 
@@ -982,6 +1024,12 @@ function drawCanvas(){
     ctx.fillStyle = "#B0E0E6"
     ctx.fill()
 
+    drawDice()
+    drawBank()
+
+    drawPorts()
+    drawIsland();
+
     //draw the tiles
     if(textured){
         drawTileTextures()
@@ -989,11 +1037,7 @@ function drawCanvas(){
         drawTiles()
     }
 
-    drawDice()
-    drawBank()
-
     //drawVertices()
-    drawPorts()
     drawRoads()
     drawSettlements()
     drawRobber()

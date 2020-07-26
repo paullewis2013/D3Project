@@ -26,13 +26,15 @@ var robberImage = new Image();
 robberImage.src = "assets/robber.svg"
 var robberLoaded = false;
 var movingRobber = false;
+var showRoads = false;
 
 var colorVals = ["green", "firebrick", "lightgreen", "#ffff99", "slategrey", "blue"]
 
 
 canvas.addEventListener('click', function(e) {
 
-    console.log(document.getElementById("left").clientHeight)
+    //debugging help
+    //console.log(p1)
 
     //loop through all vertices
     for(var i = 0; i < 12; i++){
@@ -46,7 +48,7 @@ canvas.addEventListener('click', function(e) {
 
                 if(buildingSettlement){
                     //console.log("attempting to build settlement at " + verticesArr[i][j].toString())
-                    buildSettlement(verticesArr[i][j])
+                    buildSettlement(verticesArr[i][j], p1)
                 }
                 
                 //if this isn't here things absolutely shit themselves and the page crashes
@@ -99,8 +101,25 @@ canvas.addEventListener('click', function(e) {
         }
     }
 
+    //loop through all roads
+    for(var i = 0; i < 11; i++){
 
-    return;
+        for(var j = 0; j < roadsArr[i].length; j++){
+
+            if(ctx.isPointInPath(roadsArr[i][j].hitbox, e.offsetX, e.offsetY)){
+                console.log(roadsArr[i][j])
+
+
+                if(buildingRoad){
+                    buildRoad(roadsArr[i][j], p1)
+                }
+
+            }
+
+        }
+
+    }
+
 });
 
 function toggleTexture(){
@@ -234,7 +253,7 @@ function drawTileTextures(){
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
- }
+}
 
 async function loadTiles(){
 
@@ -435,7 +454,7 @@ function initRoads(){
 
 function initVertices(){
 
-    var radius = canvas.height/11.5;
+    var radius = 60;
     var centerX;
     var centerY;
     var hexRad = radius * 7/6
@@ -789,7 +808,7 @@ function drawBank(){
     }
 }
 
-//write me
+
 function drawRoads(){
 
     for(var i = 0; i < 11; i++){
@@ -797,10 +816,16 @@ function drawRoads(){
         for(var j = 0; j < roadsArr[i].length; j++){
             
             //draw the road
-            if(roadsArr[i][j].player == null){
+            if(roadsArr[i][j].player == null && showRoads){
                 
                 //change color to color of player who owns it
                 ctx.fillStyle = "white";
+                ctx.fill(roadsArr[i][j].hitbox)
+                ctx.stroke(roadsArr[i][j].hitbox)
+
+            }else if(roadsArr[i][j].player != null){
+
+                ctx.fillStyle = roadsArr[i][j].player.color;
                 ctx.fill(roadsArr[i][j].hitbox)
                 ctx.stroke(roadsArr[i][j].hitbox)
 
@@ -844,7 +869,7 @@ function drawTimer(){
 
 }
 
-//write me
+
 function drawRobber(){
 
     if(!robberLoaded){

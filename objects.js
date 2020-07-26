@@ -2,7 +2,7 @@
 
 
 //define settlement object
-function Settlement(vertex) {
+function Settlement(vertex, player) {
     this.isCity = false;
     this.location = vertex;
     this.player = null;
@@ -18,6 +18,7 @@ function Vertex(cx, cy, hitbox) {
     this.adjVerts = [];
     this.dead = false;
     this.settlement = null;
+    this.port = null;
 }
 Vertex.prototype.toString = function () {
     var string = "";
@@ -50,6 +51,21 @@ Vertex.prototype.build = function (settlement) {
 function Road(player, hitbox){
     this.player = player;
     this.hitbox = hitbox;
+}
+
+
+//define player object
+function Player(color){
+    this.VP = 0;
+    this.resources = [];
+    this.devCards = [];
+    this.roadsRemaining = 15;
+    this.settlementsRemaining = 5;
+    this.citiesRemaining = 4;
+    this.longestRoad = 0;
+    this.knightsPlayed = 0;
+    this.color = color;
+    this.tradecost = [4, 4, 4, 4, 4];
 }
 
 

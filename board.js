@@ -21,6 +21,7 @@ var playedDevCards = {knight: 0, vp: 0, monopoly: 0, road: 0, plenty: 0}
 var bank = [19, 19, 19, 19, 19];
 
 var buildingSettlement = false;
+var buildingRoad = false;
 
 var turnNumber = 0
 
@@ -201,8 +202,11 @@ function setUpTiles(){
 
 }
 
+var p1 = new Player("Red");
+
 //important!
 setup()
+
 
 //sets all game conditions initally
 function setup(){
@@ -335,7 +339,7 @@ function moveRobber(){
 
 }
 
-function buildSettlement(vertex){
+function buildSettlement(vertex, player){
 
     //do not build settlement somewhere that you can't
     if(vertex.dead == true || vertex.settlement != null){
@@ -346,16 +350,15 @@ function buildSettlement(vertex){
     //console.log("building a Settlement at " + vertex)
 
     //add settlement reference to vertex
-    vertex.settlement = new Settlement(vertex);
+    vertex.settlement = new Settlement(vertex, player);
 
     //add settlement reference to each adjacent tile
     for(var i = 0; i < vertex.adjTiles.length; i++){
         vertex.adjTiles[i].settlements.push(vertex.settlement)
     }
 
-    //TODO make any adjacent vertecies dead so that settlements cannot be built on them
+    //make any adjacent vertecies dead so that settlements cannot be built on them
     vertex.build(vertex.settlement);
-
 
     buildingSettlement = false;
     unfreeze()
@@ -364,17 +367,50 @@ function buildSettlement(vertex){
 function settlementButton(){
 
     buildingSettlement = true;
-    freeze()
+    freeze();
     document.getElementById("cancelButton").disabled = false;
-    drawVertices()
+    drawVertices();
+
+}
+
+function buildRoad(road, player){
+
+    //do not build a road somewhere where one already exists
+    if(road.player != null){
+        console.log("Cannot build a road here");
+        return;
+    }
+
+    road.player = player;
+
+    buildingRoad = false;
+    showRoads = false;
+    unfreeze();
+
+}
+
+function roadButton(){
+
+    showRoads = true;
+    buildingRoad = true;
+    freeze();
+    document.getElementById("cancelButton").disabled = false;
+    drawRoads();
+    drawSettlements();
 
 }
 
 function cancelAction(){
 
+    showRoads = false;
+
     document.getElementById("cancelButton").disabled = true;
     unfreeze()
     drawCanvas()
+
+    movingRobber = false;
+    buildingSettlement = false;
+    buildingRoad = false;
 
 }
 
@@ -383,12 +419,14 @@ function freeze(){
     document.getElementById("diceButton").disabled = true;
     document.getElementById("devButton").disabled = true;
     document.getElementById("settlementButton").disabled = true;
+    document.getElementById("roadButton").disabled = true;
 }
 
 function unfreeze(){
     document.getElementById("diceButton").disabled = false;
     document.getElementById("devButton").disabled = false;
     document.getElementById("settlementButton").disabled = false;
+    document.getElementById("roadButton").disabled = false;
     document.getElementById("cancelButton").disabled = true;
 
     drawCanvas()

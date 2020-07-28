@@ -110,10 +110,10 @@ function drawUnplayedDevCards(){
 
     d3.selectAll("svg > *").remove();
 
-     // set the dimensions and margins of the graph
-     const margin = 50
-     const width = svgWidth;
-     const height = svgHeight;
+    // set the dimensions and margins of the graph
+    const margin = 50
+    const width = svgWidth;
+    const height = svgHeight;
 
     // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
     var radius = Math.min(width, height) / 2 - margin

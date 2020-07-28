@@ -355,6 +355,8 @@ function rollDice(){
 
     }
 
+    drawPlayerInfo();
+
     return result;
 }
 
@@ -368,11 +370,12 @@ function drawDevCard(){
 
 
         //need to remove this line later because these dev cards are not actually being played yet
-        playDevCard(card)
+        currPlayer.devCards.push(card)
     }else{
         console.log("deck empty")
     }
     drawBank()
+    drawPlayerInfo()
     
 }
 
@@ -393,6 +396,9 @@ function generateResources(result){
                 var r = tiles[i].resourceCard;
 
                 if(p != null){
+
+                    //TODO make sure bank is not out of given resource
+                    //TODO if two players get a resource and the bank doesn't have enough for both then neither player gets it
                     p.resources.push(r);
                     console.log(p.resources)
 
@@ -420,6 +426,9 @@ function generateResources(result){
                         default:
 
                     }
+                    //TODO sort player resources
+
+                    //redraw bank to update with what has changed
                     drawBank();
                 }
 

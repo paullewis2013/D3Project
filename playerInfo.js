@@ -30,6 +30,50 @@ function drawPlayerInfo(){
     p_ctx.fillText("VP: " + p1.VP, 50, 110)
     //console.log(p1.VP)
 
+    //resource cards
+    p_ctx.rect(120, 30, 25, 40);
+    p_ctx.stroke()
+
+    p_ctx.fillStyle = "black"
+    p_ctx.fillText("R", 132.5, 60)
+
+    p_ctx.fillStyle = "black"
+    p_ctx.fillText(p1.resources.length, 132.5, 100)
+
+    //dev cards
+    p_ctx.rect(160, 30, 25, 40);
+    p_ctx.stroke()
+
+    p_ctx.fillStyle = "black"
+    p_ctx.fillText("D", 172.5, 60)
+
+    p_ctx.fillStyle = "black"
+    p_ctx.fillText(p1.devCards.length, 172.5, 100)
+
+
+
+
+    p_ctx.font = "15px Arial";
+    p_ctx.textAlign = "right";
+
+    //road length
+    p_ctx.fillText("Longest Road: " + p1.longestRoad, p_canvas.width - 150, 30)
+
+    //army size
+    p_ctx.fillText("Army Size: " + p1.knightsPlayed, p_canvas.width - 150, 70)
+
+
+    //roads
+    p_ctx.fillText("Roads: " + p1.roadsRemaining, p_canvas.width - 10, 30)
+
+    //settlements
+    p_ctx.fillText("Settlements: " + p1.settlementsRemaining, p_canvas.width - 10, 70)
+
+    //cities
+    p_ctx.fillText("Cities: " + p1.citiesRemaining, p_canvas.width - 10, 110)
+
+
+    
 
 
 

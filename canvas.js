@@ -822,7 +822,7 @@ function drawBank(){
 
     //draw box for bank to go in
     ctx.beginPath()
-    ctx.rect(canvas.width - 330, 10, 320, 100);
+    ctx.rect(canvas.width - 325, 5, 320, 70);
     ctx.stroke();
     ctx.fillStyle = "antiquewhite"
     ctx.fill()
@@ -833,20 +833,20 @@ function drawBank(){
         ctx.font = "15px Arial"
         if(i<5){
             ctx.beginPath()
-            ctx.rect(canvas.width - 316 + (i*320/6), 30, 25, 25)
+            ctx.rect(canvas.width - 311 + (i*320/6), 15, 25, 25)
             ctx.stroke()
             ctx.fillStyle = colorVals[i]
             ctx.fill()
             ctx.fillStyle = "black"
-            ctx.fillText(bank[i], canvas.width - 305 + (i*320/6), 95)
+            ctx.fillText(bank[i], canvas.width - 300 + (i*320/6), 65)
         }else{
             ctx.beginPath()
-            ctx.rect(canvas.width - 316 + (i*320/6), 30, 25, 25)
+            ctx.rect(canvas.width - 311 + (i*320/6), 15, 25, 25)
             ctx.stroke()
             ctx.fillStyle = colorVals[i]
             ctx.fill()
             ctx.fillStyle = "black"
-            ctx.fillText(devCardArray.length, canvas.width - 305 + (i*320/6), 95)
+            ctx.fillText(devCardArray.length, canvas.width - 300 + (i*320/6), 65)
         }
         
     }

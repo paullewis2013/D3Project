@@ -75,6 +75,9 @@ var roadsArr = [
 
 var portsArr = [];
 
+var playersArr = [];
+var currPlayer = null;
+
 //create an array of 2 dice to be rolled
 var diceArr = new Array(new Dice(), new Dice());
 
@@ -100,7 +103,21 @@ const resourceCard = {
 //another weird statistical thing to track
 var productionCapacity = [0, 0, 0, 0, 0]
 
+var numTilePointers = [
+    [],
+    [],
+    [],
+    [],
+    [],
 
+    [], //7
+
+    [],
+    [],
+    [],
+    [],
+    [],
+]
 
 //--------------------------------------------------
 //end of instance fields
@@ -202,9 +219,18 @@ function setUpTiles(){
         }
     }
 
+    //find location of robber and record it
+    for(var i = 0; i < 5; i++){
+        for(var j = 0; j < tilesArr[i].length; j++){
+            numTilePointers[tilesArr[i][j].number - 2].push(tilesArr[i][j])
+        }
+    }
+
 }
 
 var p1 = new Player("Red");
+playersArr.push(p1);
+var currPlayer = playersArr[0];
 
 //important!
 setup()
@@ -298,8 +324,6 @@ function generatePorts(){
         portsArr[i].vertices[1].port = portsArr[i]
     }
 
-    console.log(portsArr)
-
 }
 
 
@@ -318,13 +342,17 @@ function rollDice(){
 
     dice_results_arr[result - 2].frequency += 1;
 
-    if(result ==7){
+    if(result == 7){
         //discard resources over 7 first
+        //loop through all players
 
         //move robber after resources discarded
-        moveRobber()
+        moveRobber();
     }else{
         //generate resources
+
+        generateResources(result);
+
     }
 
     return result;
@@ -346,6 +374,61 @@ function drawDevCard(){
     }
     drawBank()
     
+}
+
+function generateResources(result){
+
+    //get array of tiles rolled
+    var tiles = numTilePointers[result - 2]
+
+    for(var i = 0; i < tiles.length; i++){
+        
+        //don't generate resources for blocked tiles
+        if(tiles[i].blocked != true){
+
+            console.log("here")
+
+            for(var j = 0; j < tiles[i].settlements.length; j++){
+                var p = tiles[i].settlements[j].player;
+                var r = tiles[i].resourceCard;
+
+                if(p != null){
+                    p.resources.push(r);
+                    console.log(p.resources)
+
+                    switch(r){
+                        case "wood":
+                            bank[0]--;
+                            break;
+                        
+                        case "brick":
+                            bank[1]--;
+                            break;
+
+                        case "sheep":
+                            bank[2]--;
+                            break;
+
+                        case "wheat":
+                            bank[3]--;
+                            break;
+
+                        case "ore":
+                            bank[4]--;
+                            break;
+                        
+                        default:
+
+                    }
+                    drawBank();
+                }
+
+               
+            }
+
+        }
+    }
+
 }
 
 function playDevCard(card){
@@ -392,7 +475,7 @@ function moveRobber(){
 function buildSettlement(vertex, player){
 
     //do not build settlement somewhere that you can't
-    if(vertex.dead == true || vertex.settlement != null){
+    if(vertex.dead == true || vertex.settlement != null || player.settlementsRemaining <= 0){
         console.log("cannot build a settlement here")
         return;
     }
@@ -401,6 +484,8 @@ function buildSettlement(vertex, player){
 
     //add settlement reference to vertex
     vertex.settlement = new Settlement(vertex, player);
+
+    player.buildSettlement()
 
     //add settlement reference to each adjacent tile
     for(var i = 0; i < vertex.adjTiles.length; i++){
@@ -576,11 +661,4 @@ function calcProduction(){
         }
     }
 }
-
-
-
-
-//--------------------------------------------------
-//Draw functions (moved to other files now sorry just ignore this)
-//--------------------------------------------------
 

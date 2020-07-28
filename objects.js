@@ -5,7 +5,7 @@
 function Settlement(vertex, player) {
     this.isCity = false;
     this.location = vertex;
-    this.player = null;
+    this.player = player;
 }
 
 
@@ -66,6 +66,10 @@ function Player(color){
     this.knightsPlayed = 0;
     this.color = color;
     this.tradecost = [4, 4, 4, 4, 4];
+}
+Player.prototype.buildSettlement = function(){
+    this.VP++;
+    this.settlementsRemaining--;
 }
 
 

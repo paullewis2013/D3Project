@@ -51,7 +51,7 @@ canvas.addEventListener('click', function(e) {
 
                 if(buildingSettlement){
                     //console.log("attempting to build settlement at " + verticesArr[i][j].toString())
-                    buildSettlement(verticesArr[i][j], p1)
+                    buildSettlement(verticesArr[i][j], currPlayer)
                 }
                 
                 //if this isn't here things absolutely shit themselves and the page crashes
@@ -114,7 +114,7 @@ canvas.addEventListener('click', function(e) {
 
 
                 if(buildingRoad){
-                    buildRoad(roadsArr[i][j], p1)
+                    buildRoad(roadsArr[i][j], currPlayer)
                 }
 
             }
@@ -817,6 +817,9 @@ function drawTiles(){
 
 function drawBank(){
 
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 1;
+
     //draw box for bank to go in
     ctx.beginPath()
     ctx.rect(canvas.width - 330, 10, 320, 100);
@@ -854,7 +857,7 @@ function drawPorts(){
 
     for(var i = 0; i < portsArr.length; i++){
 
-        ctx.strokeStyle = "#DEB887"
+        ctx.strokeStyle = "PERU"
         ctx.lineWidth = 8;
 
         //draw lines to ports
@@ -924,15 +927,22 @@ function initIslandPath(){
     islandPath.lineTo(verticesArr[2][0].cx, verticesArr[2][0].cy);
     islandPath.lineTo(verticesArr[1][0].cx, verticesArr[1][0].cy);
     islandPath.lineTo(verticesArr[0][0].cx, verticesArr[0][0].cy);
+    islandPath.lineTo(verticesArr[1][1].cx, verticesArr[1][1].cy);
     ctx.closePath();
 
 }
 
 function drawIsland(){
 
-    ctx.fillStyle = "#DEB887"
+    var gradient = ctx.createRadialGradient(canvas.width/2 - 90,canvas.height/2, 150, canvas.width/2 - 90,canvas.height/2, 200);
+    gradient.addColorStop(0, "#DEB887");
+    gradient.addColorStop(1, 'wheat');
+
+
+    //this color is called burly wood
+    ctx.fillStyle = gradient
     ctx.lineWidth = 8;
-    ctx.strokeStyle = "#DEB887"
+    ctx.strokeStyle = "wheat"
     ctx.stroke(islandPath);
     ctx.fill(islandPath);
 
@@ -942,6 +952,7 @@ function drawIsland(){
 function drawRoads(){
 
     ctx.lineWidth = 1;
+    ctx.strokeStyle = "black"
 
 
     for(var i = 0; i < 11; i++){
@@ -1030,7 +1041,6 @@ function drawCanvas(){
     drawPorts()
     drawIsland();
 
-    //draw the tiles
     if(textured){
         drawTileTextures()
     }else{
@@ -1047,5 +1057,7 @@ function drawCanvas(){
     // if(showTime){
     //     drawTimer()
     // }
+
+    drawPlayerInfo()
 
 }

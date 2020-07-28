@@ -48,31 +48,6 @@
                             <input type="checkbox" id="textureCheck" unchecked onclick="toggleTexture()">
                             <label for="textureCheck">Textures</label>
                         </div>
-
-                        <!-- <div class="col" id="bankTableDiv">
-                            <table id="bankTable" class="table table-bordered table-light">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th>wood</th>
-                                        <th>brick</th>
-                                        <th>sheep</th>
-                                        <th>wheat</th>
-                                        <th>ore</th>
-                                        <th>dev</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>19</td>
-                                        <td>19</td>
-                                        <td>19</td>
-                                        <td>19</td>
-                                        <td>19</td>
-                                        <td id="devCardsRemaining">25</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div> -->
                         
                     </div>
 
@@ -106,7 +81,7 @@
                     </div>
                     
                     <div class="row left-row" id="playerDiv">
-                        Player info in this row
+                        <canvas id="playerInfo"></canvas>
                     </div>
                     
                     
@@ -118,6 +93,7 @@
         <script src="objects.js"></script>
         <script src=canvas.js></script>
         <script src=infoDisplay.js></script>
+        <script src="playerInfo.js"></script>
         <script src=board.js></script>
 
 

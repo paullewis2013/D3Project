@@ -53,10 +53,6 @@ html, body {
     height: 100%
 } 
 
-/* #canvasDiv {
-    height: 100%
-} */
-
 #bankTable {
     line-height: 23px;
 }
@@ -70,8 +66,5 @@ td, th {
     flex-direction: column;
 }
 
-#playerDiv{
-    padding: 4px;
-    flex-grow: 1;
-}
+
 

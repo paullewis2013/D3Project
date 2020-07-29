@@ -21,7 +21,7 @@ function drawPlayerInfo(){
     p_ctx.fill()
 
     p_ctx.beginPath();
-    p_ctx.arc(50, 45, 25, 0, 2 * Math.PI, false);
+    p_ctx.arc(50, 45, 20, 0, 2 * Math.PI, false);
     p_ctx.closePath();
     p_ctx.fillStyle = p1.color;
     p_ctx.fill()
@@ -43,7 +43,7 @@ function drawPlayerInfo(){
     p_ctx.fillText("R", 132.5, 60)
 
     p_ctx.fillStyle = "black"
-    p_ctx.fillText(p1.resources.length, 132.5, 100)
+    p_ctx.fillText(p1.totalResources(), 132.5, 100)
 
     //dev cards
     p_ctx.beginPath();

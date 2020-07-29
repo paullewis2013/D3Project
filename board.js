@@ -399,28 +399,42 @@ function generateResources(result){
 
                     //TODO make sure bank is not out of given resource
                     //TODO if two players get a resource and the bank doesn't have enough for both then neither player gets it
-                    p.resources.push(r);
                     console.log(p.resources)
 
                     switch(r){
                         case "wood":
-                            bank[0]--;
+                            if(bank[0] > 0){
+                                bank[0]--;
+                                p.resources[0]++;
+                            }
                             break;
                         
                         case "brick":
-                            bank[1]--;
+                            if(bank[1] > 0){
+                                bank[1]--;
+                                p.resources[1]++;
+                            }
                             break;
 
                         case "sheep":
-                            bank[2]--;
+                            if(bank[2] > 0){
+                                bank[2]--;
+                                p.resources[2]++;
+                            }
                             break;
 
                         case "wheat":
-                            bank[3]--;
+                            if(bank[3] > 0){
+                                bank[3]--;
+                                p.resources[3]++;
+                            }
                             break;
 
                         case "ore":
-                            bank[4]--;
+                            if(bank[4] > 0){
+                                bank[4]--;
+                                p.resources[4]++;
+                            }
                             break;
                         
                         default:

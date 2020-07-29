@@ -60,7 +60,7 @@ function Road(player, hitbox){
 //define player object
 function Player(color){
     this.VP = 0;
-    this.resources = [];
+    this.resources = [0, 0, 0, 0, 0];
     this.devCards = [];
     this.roadsRemaining = 15;
     this.settlementsRemaining = 5;
@@ -76,6 +76,16 @@ Player.prototype.buildSettlement = function(){
 }
 Player.prototype.buildRoad = function(){
     this.roadsRemaining--;
+}
+Player.prototype.totalResources = function(){
+    
+    var sum = 0
+
+    for(var i = 0; i < 5; i++){
+        sum += this.resources[i];
+    }
+
+    return sum;
 }
 
 

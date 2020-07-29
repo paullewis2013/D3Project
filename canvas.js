@@ -874,7 +874,7 @@ function drawTiles(){
             //draw hexagon
             var hexAngle = ((2 * Math.PI) / 6)
 
-            //7/6 makes the hexagons flushhh 6.9/6 looks nicer anything below leaves a gap
+            //7/6 makes the hexagons flush 6.9/6 looks nicer anything below leaves a gap
             var hexRad = radius * 6.5/6
 
             tilesArr[i][j].cx = centerX;
@@ -901,9 +901,6 @@ function drawTiles(){
                 
                 ctx.fillStyle = tilesArr[i][j].color
                 ctx.fill(tilesArr[i][j].hitbox)
-            }else{
-
-                
             }
 
             //outer circle of size radius

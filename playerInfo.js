@@ -31,8 +31,13 @@ function drawPlayerInfo(){
     //console.log(p1.VP)
 
     //resource cards
+    p_ctx.beginPath();
     p_ctx.rect(120, 30, 25, 40);
-    p_ctx.stroke()
+    p_ctx.closePath();
+    p_ctx.strokeStyle = "black"
+    p_ctx.stroke();
+    p_ctx.fillStyle = "lightgrey"
+    p_ctx.fill();
 
     p_ctx.fillStyle = "black"
     p_ctx.fillText("R", 132.5, 60)
@@ -41,8 +46,13 @@ function drawPlayerInfo(){
     p_ctx.fillText(p1.resources.length, 132.5, 100)
 
     //dev cards
+    p_ctx.beginPath();
     p_ctx.rect(160, 30, 25, 40);
-    p_ctx.stroke()
+    p_ctx.closePath();
+    p_ctx.strokeStyle = "black"
+    p_ctx.stroke();
+    p_ctx.fillStyle = "lightgrey"
+    p_ctx.fill();
 
     p_ctx.fillStyle = "black"
     p_ctx.fillText("D", 172.5, 60)

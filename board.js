@@ -168,7 +168,7 @@ function setUpTiles(){
     var tempTiles = []
     for(var i = 0; i < colorNums.length; i++){
         tempTiles[i] = new Tile(resourceTypes[i], resourceNums[i], colorNums[i], resourceImgs[i])
-        if(tempTiles[i].number == 7){
+        if(tempTiles[i].number === 7){
             tempTiles[i].block()
         }
     }
@@ -213,7 +213,7 @@ function setUpTiles(){
     //find location of robber and record it
     for(var i = 0; i < 5; i++){
         for(var j = 0; j < tilesArr[i].length; j++){
-            if(tilesArr[i][j].blocked == true){
+            if(tilesArr[i][j].blocked === true){
                 robberLocation = tilesArr[i][j]
             }
         }
@@ -342,7 +342,7 @@ function rollDice(){
 
     dice_results_arr[result - 2].frequency += 1;
 
-    if(result == 7){
+    if(result === 7){
         //discard resources over 7 first
         //loop through all players
 
@@ -355,7 +355,7 @@ function rollDice(){
 
     }
 
-    drawPlayerInfo();
+    drawCanvas()
 
     return result;
 }
@@ -387,7 +387,7 @@ function generateResources(result){
     for(var i = 0; i < tiles.length; i++){
         
         //don't generate resources for blocked tiles
-        if(tiles[i].blocked != true){
+        if(tiles[i].blocked !== true){
 
             console.log("here")
 
@@ -395,7 +395,7 @@ function generateResources(result){
                 var p = tiles[i].settlements[j].player;
                 var r = tiles[i].resourceCard;
 
-                if(p != null){
+                if(p !== null){
 
                     //TODO make sure bank is not out of given resource
                     //TODO if two players get a resource and the bank doesn't have enough for both then neither player gets it
@@ -484,7 +484,7 @@ function moveRobber(){
 function buildSettlement(vertex, player){
 
     //do not build settlement somewhere that you can't
-    if(vertex.dead == true || vertex.settlement != null || player.settlementsRemaining <= 0){
+    if(vertex.dead === true || vertex.settlement !== null || player.settlementsRemaining <= 0){
         console.log("cannot build a settlement here")
         return;
     }
@@ -520,10 +520,12 @@ function settlementButton(){
 function buildRoad(road, player){
 
     //do not build a road somewhere where one already exists
-    if(road.player != null){
+    if(road.player !== null || player.roadsRemaining <= 0){
         console.log("Cannot build a road here");
         return;
     }
+
+    player.buildRoad()
 
     road.player = player;
 
@@ -599,7 +601,7 @@ function diceButton(){
     graphicButton()
 
     turnNumber++;
-    document.getElementById("turnNumber").innerHTML = "Turn number: " + turnNumber;
+    //document.getElementById("turnNumber").innerHTML = "Turn number: " + turnNumber;
 }
 
 //event called when dev card button is clicked

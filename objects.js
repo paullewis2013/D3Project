@@ -51,6 +51,9 @@ Vertex.prototype.build = function (settlement) {
 function Road(player, hitbox){
     this.player = player;
     this.hitbox = hitbox;
+    this.adjRoads = [];
+    this.i;
+    this.j;
 }
 
 
@@ -70,6 +73,9 @@ function Player(color){
 Player.prototype.buildSettlement = function(){
     this.VP++;
     this.settlementsRemaining--;
+}
+Player.prototype.buildRoad = function(){
+    this.roadsRemaining--;
 }
 
 

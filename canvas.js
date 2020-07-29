@@ -282,7 +282,7 @@ function drawVertices(){
 
         for(var j = 0; j < verticesArr[i].length; j++){
             
-            if(verticesArr[i][j].settlement == null && verticesArr[i][j].dead != true){
+            if(verticesArr[i][j].settlement === null && verticesArr[i][j].dead !== true){
                 ctx.fillStyle = "white";
                 ctx.fill(verticesArr[i][j].hitbox)
                 ctx.stroke(verticesArr[i][j].hitbox)
@@ -331,7 +331,7 @@ function initRoads(){
 
 
                 //last road goes on right side of final tile in row
-                if(j == tilesArr[0.5 * (i - 1)].length - 1){
+                if(j === tilesArr[0.5 * (i - 1)].length - 1){
                     
                     hitbox = new Path2D()
 
@@ -453,6 +453,154 @@ function initRoads(){
         }
 
     }
+
+    //loop through roads again to connect adjacent roads
+    for(var i = 0; i < 11; i++){
+
+        for(var j = 0; j < roadsArr[i].length; j++){
+
+            //"horizontal" rows
+            if(i % 2 === 0){
+
+                //add road on left if not the first road in row
+                if(j > 0){
+                    roadsArr[i][j].adjRoads.push(roadsArr[i][j-1]);
+                }
+
+                //add road on right if not the last road in row
+                if(j < roadsArr[i].length - 1){
+                    roadsArr[i][j].adjRoads.push(roadsArr[i][j+1]);
+                }
+            }
+
+            //"vertical" rows
+            else{
+                //first two vertical rows
+                if(i < 4){
+                    //edge cases
+                    if(j === 0){
+                        //above right
+                        roadsArr[i][j].adjRoads.push(roadsArr[i-1][j*2]);
+                        roadsArr[i-1][j*2].adjRoads.push(roadsArr[i][j]);
+
+                    }else if(j === roadsArr[i].length - 1){
+                        //above left
+                        roadsArr[i][j].adjRoads.push(roadsArr[i-1][(j*2) - 1]);
+                        roadsArr[i-1][(j*2) - 1].adjRoads.push(roadsArr[i][j]);
+
+                    }
+                    //regular ones
+                    else{
+                        
+                        //above left
+                        roadsArr[i][j].adjRoads.push(roadsArr[i-1][(j*2) - 1]);
+                        roadsArr[i-1][(j*2) - 1].adjRoads.push(roadsArr[i][j]); 
+                        
+                        //above right
+                        roadsArr[i][j].adjRoads.push(roadsArr[i-1][j*2]);
+                        roadsArr[i-1][j*2].adjRoads.push(roadsArr[i][j]);
+                    }
+
+                    //below left
+                    roadsArr[i][j].adjRoads.push(roadsArr[i+1][j*2]);
+                    roadsArr[i+1][j*2].adjRoads.push(roadsArr[i][j]);
+
+                    //below right
+                    roadsArr[i][j].adjRoads.push(roadsArr[i+1][(j*2) + 1]);
+                    roadsArr[i+1][(j*2) + 1].adjRoads.push(roadsArr[i][j]);
+
+
+                }
+                //middle vertical row
+                else if(i == 5){
+
+                    //edge cases
+                    if(j === 0){
+                        //above
+                        roadsArr[i][j].adjRoads.push(roadsArr[i-1][j]);
+                        roadsArr[i-1][j].adjRoads.push(roadsArr[i][j]);
+
+                        //below
+                        roadsArr[i][j].adjRoads.push(roadsArr[i+1][j]);
+                        roadsArr[i+1][j].adjRoads.push(roadsArr[i][j]);
+                    }
+                    else if(j === 5){
+                        //above
+                        roadsArr[i][j].adjRoads.push(roadsArr[i-1][(j*2) - 1]);
+                        roadsArr[i-1][(j*2) - 1].adjRoads.push(roadsArr[i][j]);
+
+                        //below
+                        roadsArr[i][j].adjRoads.push(roadsArr[i+1][(j*2) - 1]);
+                        roadsArr[i+1][(j*2) - 1].adjRoads.push(roadsArr[i][j]);
+                    }
+
+                    //middle roads of middle row
+                    else{
+                        //above left 
+                        roadsArr[i][j].adjRoads.push(roadsArr[i-1][(j*2) - 1]);
+                        roadsArr[i-1][(j*2) - 1].adjRoads.push(roadsArr[i][j]);
+
+                        //below left 
+                        roadsArr[i][j].adjRoads.push(roadsArr[i+1][(j*2) - 1]);
+                        roadsArr[i+1][(j*2) - 1].adjRoads.push(roadsArr[i][j]);
+                    
+
+                        //above right 
+                        roadsArr[i][j].adjRoads.push(roadsArr[i-1][(j*2)]);
+                        roadsArr[i-1][(j*2)].adjRoads.push(roadsArr[i][j]);
+
+                        //below right
+                        roadsArr[i][j].adjRoads.push(roadsArr[i+1][(j*2)]);
+                        roadsArr[i+1][(j*2)].adjRoads.push(roadsArr[i][j]);
+                    }
+
+
+                }
+                //last two vertical rows
+                else if(i > 6){
+
+                    //edge cases
+                    if(j === 0){
+                        //below right
+                        roadsArr[i][j].adjRoads.push(roadsArr[i+1][j*2]);
+                        roadsArr[i+1][j*2].adjRoads.push(roadsArr[i][j]);
+
+                    }else if(j === roadsArr[i].length - 1){
+                        //below left
+                        roadsArr[i][j].adjRoads.push(roadsArr[i+1][(j*2) - 1]);
+                        roadsArr[i+1][(j*2) - 1].adjRoads.push(roadsArr[i][j]);
+
+                    }
+                    //regular ones
+                    else{
+                        
+                        //below left
+                        roadsArr[i][j].adjRoads.push(roadsArr[i+1][(j*2) - 1]);
+                        roadsArr[i+1][(j*2) - 1].adjRoads.push(roadsArr[i][j]); 
+                        
+                        //below right
+                        roadsArr[i][j].adjRoads.push(roadsArr[i+1][j*2]);
+                        roadsArr[i+1][j*2].adjRoads.push(roadsArr[i][j]);
+                    }
+
+                    //above left
+                    roadsArr[i][j].adjRoads.push(roadsArr[i-1][j*2]);
+                    roadsArr[i-1][j*2].adjRoads.push(roadsArr[i][j]);
+
+                    //above right
+                    roadsArr[i][j].adjRoads.push(roadsArr[i-1][(j*2) + 1]);
+                    roadsArr[i-1][(j*2) + 1].adjRoads.push(roadsArr[i][j]);
+
+
+                }
+            }
+
+            roadsArr[i][j].i = i;
+            roadsArr[i][j].j = j;
+
+        }
+    }
+
 }
 
 function initVertices(){
@@ -502,7 +650,7 @@ function initVertices(){
             }
 
             //draw southwest vertex on first tile of rows with less tiles than row above them 
-            if(i > 1 && j == 0){
+            if(i > 1 && j === 0){
 
                 hitbox = new Path2D()
                 //draw a circle at vertex southwest of tile
@@ -526,7 +674,7 @@ function initVertices(){
             }
 
             //draw south vertex and south east vertex on bottom row of tiles
-            if(i == 4){
+            if(i === 4){
 
                 hitbox = new Path2D()
                 //draw a circle at vertex south of tile
@@ -599,13 +747,13 @@ function initVertices(){
             //1 3 5 7 and 9 link down 
             //2 4 6 8 and 10 link upwards
             //0s and 11s have no vertical link
-            if(i == 1 || i ==3 || i == 5 || i==7 || i == 9){
+            if(i === 1 || i === 3 || i === 5 || i === 7 || i === 9){
                 verticesArr[i][j].adjVerts.push(verticesArr[i + 1][j]);
                 verticesArr[i + 1][j].adjVerts.push(verticesArr[i][j]);
             }
 
             //rule for top half of evens
-            if(i < 5 && i%2 == 0){
+            if(i < 5 && i%2 === 0){
 
                 //push left
                 verticesArr[i][j].adjVerts.push(verticesArr[i + 1][j]);
@@ -779,7 +927,7 @@ function drawTiles(){
                 ctx.fill()
 
                 ctx.fillStyle = "black"
-                if(tilesArr[i][j].number == 6 || tilesArr[i][j].number == 8){
+                if(tilesArr[i][j].number === 6 || tilesArr[i][j].number === 8){
                     ctx.fillStyle = "red"
                 }
 
@@ -799,7 +947,7 @@ function drawTiles(){
                     ctx.closePath()
                     ctx.stroke();
                     ctx.fillStyle = "black"
-                    if(dots == 5){
+                    if(dots === 5){
                         ctx.fillStyle = "red"
                     }
                     ctx.fill()
@@ -838,7 +986,7 @@ function drawBank(){
             ctx.fillStyle = colorVals[i]
             ctx.fill()
             ctx.fillStyle = "black"
-            ctx.fillText(bank[i], canvas.width - 300 + (i*320/6), 65)
+            ctx.fillText(bank[i], canvas.width - 300 + (i*320/6) + i/2, 65)
         }else{
             ctx.beginPath()
             ctx.rect(canvas.width - 311 + (i*320/6), 15, 25, 25)
@@ -846,7 +994,7 @@ function drawBank(){
             ctx.fillStyle = colorVals[i]
             ctx.fill()
             ctx.fillStyle = "black"
-            ctx.fillText(devCardArray.length, canvas.width - 300 + (i*320/6), 65)
+            ctx.fillText(devCardArray.length, canvas.width - 300 + (i*320/6) + i/2, 65)
         }
         
     }
@@ -857,6 +1005,7 @@ function drawPorts(){
 
     for(var i = 0; i < portsArr.length; i++){
 
+        ctx.textAlign = "center"
         ctx.strokeStyle = "PERU"
         ctx.lineWidth = 8;
 
@@ -960,7 +1109,7 @@ function drawRoads(){
         for(var j = 0; j < roadsArr[i].length; j++){
             
             //draw the road
-            if(roadsArr[i][j].player == null && showRoads){
+            if(roadsArr[i][j].player === null && showRoads){
                 
                 //change color to color of player who owns it
                 ctx.fillStyle = "white";
@@ -1013,6 +1162,12 @@ function drawTimer(){
 
 }
 
+function drawTurnNum(){
+    ctx.textAlign = "right"
+    ctx.font = "Arial 15px"
+    ctx.fillText("Turn #" + turnNumber, canvas.width - 5, 100)
+}
+
 
 function drawRobber(){
 
@@ -1037,6 +1192,7 @@ function drawCanvas(){
 
     drawDice()
     drawBank()
+    drawTurnNum()
 
     drawPorts()
     drawIsland();

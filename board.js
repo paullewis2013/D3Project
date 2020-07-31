@@ -20,8 +20,10 @@ var playedDevCards = {knight: 0, vp: 0, monopoly: 0, road: 0, plenty: 0}
 //array to store resource cards in bank
 var bank = [19, 19, 19, 19, 19];
 
-var buildingSettlement = false;
+
 var buildingRoad = false;
+var buildingSettlement = false;
+var buildingCity = false;
 
 var turnNumber = 0
 
@@ -389,51 +391,53 @@ function generateResources(result){
         //don't generate resources for blocked tiles
         if(tiles[i].blocked !== true){
 
-            console.log("here")
-
             for(var j = 0; j < tiles[i].settlements.length; j++){
                 var p = tiles[i].settlements[j].player;
                 var r = tiles[i].resourceCard;
 
+                var amount = 1;
+                if(tiles[i].settlements[j].isCity){
+                    amount = 2;
+                }
+
                 if(p !== null){
 
-                    //TODO make sure bank is not out of given resource
                     //TODO if two players get a resource and the bank doesn't have enough for both then neither player gets it
                     console.log(p.resources)
 
                     switch(r){
                         case "wood":
                             if(bank[0] > 0){
-                                bank[0]--;
-                                p.resources[0]++;
+                                bank[0] -= amount;
+                                p.resources[0] += amount;
                             }
                             break;
                         
                         case "brick":
                             if(bank[1] > 0){
-                                bank[1]--;
-                                p.resources[1]++;
+                                bank[1] -= amount;
+                                p.resources[1] += amount;
                             }
                             break;
 
                         case "sheep":
                             if(bank[2] > 0){
-                                bank[2]--;
-                                p.resources[2]++;
+                                bank[2] -= amount;
+                                p.resources[2] += amount;
                             }
                             break;
 
                         case "wheat":
                             if(bank[3] > 0){
-                                bank[3]--;
-                                p.resources[3]++;
+                                bank[3] -= amount;
+                                p.resources[3] += amount;
                             }
                             break;
 
                         case "ore":
                             if(bank[4] > 0){
-                                bank[4]--;
-                                p.resources[4]++;
+                                bank[4] -= amount;
+                                p.resources[4] += amount;
                             }
                             break;
                         
@@ -495,41 +499,7 @@ function moveRobber(){
 
 }
 
-function buildSettlement(vertex, player){
 
-    //do not build settlement somewhere that you can't
-    if(vertex.dead === true || vertex.settlement !== null || player.settlementsRemaining <= 0){
-        console.log("cannot build a settlement here")
-        return;
-    }
-
-    //console.log("building a Settlement at " + vertex)
-
-    //add settlement reference to vertex
-    vertex.settlement = new Settlement(vertex, player);
-
-    player.buildSettlement()
-
-    //add settlement reference to each adjacent tile
-    for(var i = 0; i < vertex.adjTiles.length; i++){
-        vertex.adjTiles[i].settlements.push(vertex.settlement)
-    }
-
-    //make any adjacent vertecies dead so that settlements cannot be built on them
-    vertex.build(vertex.settlement);
-
-    buildingSettlement = false;
-    unfreeze()
-}
-
-function settlementButton(){
-
-    buildingSettlement = true;
-    freeze();
-    document.getElementById("cancelButton").disabled = false;
-    drawVertices();
-
-}
 
 function buildRoad(road, player){
 
@@ -549,14 +519,41 @@ function buildRoad(road, player){
 
 }
 
-function roadButton(){
+function buildSettlement(vertex, player){
 
-    showRoads = true;
-    buildingRoad = true;
-    freeze();
-    document.getElementById("cancelButton").disabled = false;
-    drawRoads();
-    drawSettlements();
+    //do not build settlement somewhere that you can't
+    if(vertex.dead === true || vertex.settlement !== null || player.settlementsRemaining <= 0){
+        console.log("cannot build a settlement here")
+        return;
+    }
+
+    //console.log("building a Settlement at " + vertex)
+
+    //add settlement reference to vertex
+    vertex.settlement = new Settlement(vertex, player);
+
+    player.buildSettlement(vertex.settlement)
+
+    //add settlement reference to each adjacent tile
+    for(var i = 0; i < vertex.adjTiles.length; i++){
+        vertex.adjTiles[i].settlements.push(vertex.settlement)
+    }
+
+    //make any adjacent vertecies dead so that settlements cannot be built on them
+    vertex.build(vertex.settlement);
+
+    buildingSettlement = false;
+    unfreeze();
+}
+
+
+function buildCity(settlement, player){
+
+    settlement.isCity = true;
+    player.buildCity();
+
+    buildingCity = false;
+    unfreeze();
 
 }
 
@@ -569,8 +566,9 @@ function cancelAction(){
     drawCanvas()
 
     movingRobber = false;
-    buildingSettlement = false;
     buildingRoad = false;
+    buildingSettlement = false;
+    buildingCity = false;
 
 }
 
@@ -578,15 +576,17 @@ function cancelAction(){
 function freeze(){
     document.getElementById("diceButton").disabled = true;
     document.getElementById("devButton").disabled = true;
-    document.getElementById("settlementButton").disabled = true;
     document.getElementById("roadButton").disabled = true;
+    document.getElementById("settlementButton").disabled = true;
+    document.getElementById("cityButton").disabled = true;
 }
 
 function unfreeze(){
     document.getElementById("diceButton").disabled = false;
     document.getElementById("devButton").disabled = false;
-    document.getElementById("settlementButton").disabled = false;
     document.getElementById("roadButton").disabled = false;
+    document.getElementById("settlementButton").disabled = false;
+    document.getElementById("cityButton").disabled = false;
     document.getElementById("cancelButton").disabled = true;
 
     drawCanvas()
@@ -626,6 +626,37 @@ function devButton(){
     graphicButton()
 }
 
+function roadButton(){
+
+    showRoads = true;
+    buildingRoad = true;
+    freeze();
+    document.getElementById("cancelButton").disabled = false;
+    drawRoads();
+    drawSettlements();
+
+}
+
+function settlementButton(){
+
+    buildingSettlement = true;
+    freeze();
+    document.getElementById("cancelButton").disabled = false;
+    drawVertices();
+
+}
+
+
+//TODO
+function cityButton(){
+
+    buildingCity = true;
+    freeze();
+    document.getElementById("cancelButton").disabled = false;
+    //drawVertices(currPlayer);
+
+}
+
 //eventually move this and other button functions to a seperate js file
 function graphicButton(){
 
@@ -658,6 +689,8 @@ function graphicButton(){
     }
     
 }
+
+
 
 //--------------------------------------------------
 //End of button controls

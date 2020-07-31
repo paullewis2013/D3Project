@@ -69,10 +69,13 @@ function Player(color){
     this.knightsPlayed = 0;
     this.color = color;
     this.tradecost = [4, 4, 4, 4, 4];
+    this.settlements = [];
+    this.roads = [];
 }
-Player.prototype.buildSettlement = function(){
+Player.prototype.buildSettlement = function(settlement){
     this.VP++;
     this.settlementsRemaining--;
+    this.settlements.push(settlement);
 }
 Player.prototype.buildRoad = function(){
     this.roadsRemaining--;
@@ -86,6 +89,11 @@ Player.prototype.totalResources = function(){
     }
 
     return sum;
+}
+Player.prototype.buildCity = function(){
+    this.settlementsRemaining++;
+    this.citiesRemaining--;
+    this.VP++;
 }
 
 

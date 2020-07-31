@@ -64,6 +64,22 @@ canvas.addEventListener('click', function(e) {
         }
     }
 
+    if(buildingCity){
+
+        //loop through all of currPlayer's Settlements
+        for(var i = 0; i < currPlayer.settlements.length; i++){
+
+            if(ctx.isPointInPath(currPlayer.settlements[i].location.hitbox, e.offsetX, e.offsetY)){
+
+                buildCity(currPlayer.settlements[i], currPlayer);
+                i = currPlayer.settlements.length;
+                
+            }
+
+        }
+
+    }
+
     //loop through all tiles
     for(var i = 0; i < 5; i++){
 
@@ -122,6 +138,8 @@ canvas.addEventListener('click', function(e) {
         }
 
     }
+
+
 
 });
 
@@ -978,20 +996,20 @@ function drawBank(){
         ctx.font = "15px Arial"
         if(i<5){
             ctx.beginPath()
-            ctx.rect(canvas.width - 311 + (i*320/6), 15, 25, 25)
+            ctx.rect(canvas.width - 311 + (i*320/6), 15, 25, 35)
             ctx.stroke()
             ctx.fillStyle = colorVals[i]
             ctx.fill()
             ctx.fillStyle = "black"
-            ctx.fillText(bank[i], canvas.width - 300 + (i*320/6) + i/2, 65)
+            ctx.fillText(bank[i], canvas.width - 300 + (i*320/6) + i/2, 68)
         }else{
             ctx.beginPath()
-            ctx.rect(canvas.width - 311 + (i*320/6), 15, 25, 25)
+            ctx.rect(canvas.width - 311 + (i*320/6), 15, 25, 35)
             ctx.stroke()
             ctx.fillStyle = colorVals[i]
             ctx.fill()
             ctx.fillStyle = "black"
-            ctx.fillText(devCardArray.length, canvas.width - 300 + (i*320/6) + i/2, 65)
+            ctx.fillText(devCardArray.length, canvas.width - 300 + (i*320/6) + i/2, 68)
         }
         
     }
@@ -1142,12 +1160,28 @@ function drawSettlements(){
             if(verticesArr[i][j].settlement != null){
                 
                 //change color to color of player who owns it
-                ctx.fillStyle = "red";
+                ctx.fillStyle = verticesArr[i][j].settlement.player.color;
                 ctx.fill(verticesArr[i][j].hitbox)
                 ctx.stroke(verticesArr[i][j].hitbox)
 
                 //console.log(verticesArr[i][j])
+
+                if(verticesArr[i][j].settlement.isCity){
+
+                    let cx = verticesArr[i][j].cx;
+                    let cy = verticesArr[i][j].cy;
+
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, 5, 0, Math.PI * 2, false);
+                    ctx.closePath();
+                    ctx.stroke()
+                    ctx.fillStyle = "black"
+                    ctx.fill();
+
+                }
             }
+
+
             
         }
 

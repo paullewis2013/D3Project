@@ -16,6 +16,7 @@ function Vertex(cx, cy, hitbox) {
     this.hitbox = hitbox;
     this.adjTiles = [];
     this.adjVerts = [];
+    this.adjRoads = [];
     this.dead = false;
     this.settlement = null;
     this.port = null;
@@ -71,14 +72,25 @@ function Player(color){
     this.tradecost = [4, 4, 4, 4, 4];
     this.settlements = [];
     this.roads = [];
+
+    this.settlementA = null;
+    this.settlementB = null;
 }
 Player.prototype.buildSettlement = function(settlement){
+    
+    if(this.VP === 0){
+        this.settlementA = settlement;
+    }else if(this.VP === 1){
+        this.settlementB = settlement;
+    }
+
     this.VP++;
     this.settlementsRemaining--;
     this.settlements.push(settlement);
 }
-Player.prototype.buildRoad = function(){
+Player.prototype.buildRoad = function(r){
     this.roadsRemaining--;
+    this.roads.push(r)
 }
 Player.prototype.totalResources = function(){
     
@@ -94,6 +106,46 @@ Player.prototype.buildCity = function(){
     this.settlementsRemaining++;
     this.citiesRemaining--;
     this.VP++;
+}
+Player.prototype.getBuildableRoads = function(){
+
+    let buildableRoads = [];
+
+    //loop through settlements (might not be necessary)
+    // for(let i = 0; i < this.settlements.length; i++){
+    //     for(let j = 0; j < this.settlements[i].location.adjRoads.length; j++){
+    //         buildableRoads.push(this.settlements[i].location.adjRoads[j])
+    //     }
+    // }
+
+    //first and second settlements during initial placement have special rules for road placement
+    if(this.VP === 1){
+        if(this.roadsRemaining === 15){
+            return this.settlementA.location.adjRoads;
+        }
+        return [];
+    }else if(this.VP === 2){
+        if(this.roadsRemaining === 14){
+            return this.settlementB.location.adjRoads;
+        }
+    }
+    
+    //loop through roads
+    for(let i = 0; i < this.roads.length; i++){
+        for(let j = 0; j < this.roads[i].adjRoads.length; j++){
+            
+            console.log(this.roads[i].adjRoads[j])
+
+            //check if road is already there
+            if(this.roads[i].adjRoads[j].player === null){
+                console.log(this.roads[i].adjRoads[j])
+                buildableRoads.push(this.roads[i].adjRoads[j])
+            }
+        }
+    }
+    
+    return buildableRoads;
+
 }
 
 

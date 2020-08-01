@@ -509,7 +509,7 @@ function buildRoad(road, player){
         return;
     }
 
-    player.buildRoad()
+    player.buildRoad(road)
 
     road.player = player;
 

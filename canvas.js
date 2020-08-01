@@ -121,6 +121,19 @@ canvas.addEventListener('click', function(e) {
     }
 
     //loop through all roads
+    let roads = currPlayer.getBuildableRoads()
+    console.log(roads);
+
+    for(let i = 0; i < roads.length; i++){
+        if(ctx.isPointInPath(roads[i].hitbox, e.offsetX, e.offsetY)){
+
+            if(buildingRoad){
+                buildRoad(roads[i], currPlayer);
+            }
+        }
+
+    }
+
     for(var i = 0; i < 11; i++){
 
         for(var j = 0; j < roadsArr[i].length; j++){
@@ -129,9 +142,9 @@ canvas.addEventListener('click', function(e) {
                 console.log(roadsArr[i][j])
 
 
-                if(buildingRoad){
-                    buildRoad(roadsArr[i][j], currPlayer)
-                }
+                // if(buildingRoad){
+                //     buildRoad(roadsArr[i][j], currPlayer)
+                // }
 
             }
 
@@ -472,6 +485,7 @@ function initRoads(){
 
     }
 
+
     //loop through roads again to connect adjacent roads
     for(var i = 0; i < 11; i++){
 
@@ -615,6 +629,75 @@ function initRoads(){
 
             roadsArr[i][j].i = i;
             roadsArr[i][j].j = j;
+
+        }
+    }
+
+    //loop through all vertices and add adjacent roads
+    for(let i = 0; i < verticesArr.length; i++){
+        for(let j = 0; j < verticesArr[i].length; j++){
+
+            //vertical adjacent road
+            if(i !== 0 && i !== 11){
+
+                //in even rows road goes down
+                if(i%2 === 0){
+                    verticesArr[i][j].adjRoads.push(roadsArr[i-1][j]);
+                }else{
+                    verticesArr[i][j].adjRoads.push(roadsArr[i][j]);
+                }
+
+            }
+
+            //right road is added if road is not on rightside border
+            if(!((i === 1 || i === 3 || i === 5 || i === 6 || i === 8 || i === 10) && j === verticesArr[i].length)){
+
+                //top half of board
+                if(i <= 5){
+                    if(i%2 === 0){
+                        verticesArr[i][j].adjRoads.push(roadsArr[i][(j*2) + 1]);
+                    }else{
+                        verticesArr[i][j].adjRoads.push(roadsArr[i-1][j*2]);
+                    }
+                }
+
+                //bottom half of board
+                else{
+                    if(i%2 === 0){
+                        verticesArr[i][j].adjRoads.push(roadsArr[i][j*2]);
+                    }else{
+                        verticesArr[i][j].adjRoads.push(roadsArr[i-1][(j*2) + 1]);
+                    }
+                }
+                
+
+            }
+
+            //left road is added if road is not on leftside border
+            if(!((i === 1 || i === 3 || i === 5 || i === 6 || i === 8 || i === 10) && j === 0)){
+
+                //top half of board
+                if(i <= 5){
+                    if(i%2 === 0){
+                        verticesArr[i][j].adjRoads.push(roadsArr[i][j*2]);
+                    }else{
+                        verticesArr[i][j].adjRoads.push(roadsArr[i-1][(j*2) - 1]);
+                    }
+                }
+
+                //bottom half of board
+                else{
+                    if(i%2 === 0){
+                        verticesArr[i][j].adjRoads.push(roadsArr[i][(j*2) - 1]);
+                    }else{
+                        verticesArr[i][j].adjRoads.push(roadsArr[i-1][j*2]);
+                    }
+                }
+                
+
+            }
+
+
 
         }
     }
@@ -1123,16 +1206,9 @@ function drawRoads(){
 
         for(var j = 0; j < roadsArr[i].length; j++){
             
-            //draw the road
-            if(roadsArr[i][j].player === null && showRoads){
-                
+            if(roadsArr[i][j].player != null){
+
                 //change color to color of player who owns it
-                ctx.fillStyle = "white";
-                ctx.fill(roadsArr[i][j].hitbox)
-                ctx.stroke(roadsArr[i][j].hitbox)
-
-            }else if(roadsArr[i][j].player != null){
-
                 ctx.fillStyle = roadsArr[i][j].player.color;
                 ctx.fill(roadsArr[i][j].hitbox)
                 ctx.stroke(roadsArr[i][j].hitbox)
@@ -1142,6 +1218,22 @@ function drawRoads(){
         }
 
     }
+    if(showRoads){
+        let adjRoads = currPlayer.getBuildableRoads();
+
+        //show buildable roads
+        for(let i = 0; i < adjRoads.length; i++){
+            //draw the road
+            if(adjRoads[i].player === null){
+                            
+                ctx.fillStyle = "white";
+                ctx.fill(adjRoads[i].hitbox)
+                ctx.stroke(adjRoads[i].hitbox)
+
+            }
+        }
+    }
+    
 }
 
 //write me
@@ -1175,8 +1267,8 @@ function drawSettlements(){
                     ctx.arc(cx, cy, 5, 0, Math.PI * 2, false);
                     ctx.closePath();
                     ctx.stroke()
-                    ctx.fillStyle = "black"
-                    ctx.fill();
+                    // ctx.fillStyle = "black"
+                    // ctx.fill();
 
                 }
             }

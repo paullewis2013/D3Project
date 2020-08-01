@@ -51,14 +51,26 @@ canvas.addEventListener('click', function(e) {
 
                 if(buildingSettlement){
                     //console.log("attempting to build settlement at " + verticesArr[i][j].toString())
-                    buildSettlement(verticesArr[i][j], currPlayer)
+                    if(currPlayer.VP < 2){
+                        buildSettlement(verticesArr[i][j], currPlayer)
+                    }else{
+
+                        let buildable = false;
+
+                        for(let k = 0; k < verticesArr[i][j].adjRoads.length; k++){
+                            if(verticesArr[i][j].adjRoads[k].player == currPlayer){
+                                buildable = true;
+                            }
+                        }
+
+                        if(buildable){
+                            buildSettlement(verticesArr[i][j], currPlayer)
+                        }
+
+                    }
+                    
                 }
                 
-                //if this isn't here things absolutely shit themselves and the page crashes
-                //I have literally no idea why
-                //haha nevermind I fixed it
-                //I had some undefined behavior because i and j somehow became global variables outside my for loops
-                //return;
             }
 
         }
@@ -122,7 +134,7 @@ canvas.addEventListener('click', function(e) {
 
     //loop through all roads
     let roads = currPlayer.getBuildableRoads()
-    console.log(roads);
+    //console.log(roads);
 
     for(let i = 0; i < roads.length; i++){
         if(ctx.isPointInPath(roads[i].hitbox, e.offsetX, e.offsetY)){

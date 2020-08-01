@@ -82,6 +82,59 @@ Player.prototype.buildSettlement = function(settlement){
         this.settlementA = settlement;
     }else if(this.VP === 1){
         this.settlementB = settlement;
+
+        //TODO player gets 1 of each resource for settlement B
+        let v = this.settlementB.location;
+        let amount = 1;
+
+        for(let i = 0; i < v.adjTiles.length; i++){
+
+            let r = v.adjTiles[i].resourceCard;
+
+            switch(r){
+
+                case "wood":
+                    if(bank[0] > 0){
+                        bank[0] -= amount;
+                        this.resources[0] += amount;
+                    }
+                    break;
+                
+                case "brick":
+                    if(bank[1] > 0){
+                        bank[1] -= amount;
+                        this.resources[1] += amount;
+                    }
+                    break;
+
+                case "sheep":
+                    if(bank[2] > 0){
+                        bank[2] -= amount;
+                        this.resources[2] += amount;
+                    }
+                    break;
+
+                case "wheat":
+                    if(bank[3] > 0){
+                        bank[3] -= amount;
+                        this.resources[3] += amount;
+                    }
+                    break;
+
+                case "ore":
+                    if(bank[4] > 0){
+                        bank[4] -= amount;
+                        this.resources[4] += amount;
+                    }
+                    break;
+                
+                default:
+
+            
+            }
+
+        }
+
     }
 
     this.VP++;
@@ -111,13 +164,6 @@ Player.prototype.getBuildableRoads = function(){
 
     let buildableRoads = [];
 
-    //loop through settlements (might not be necessary)
-    // for(let i = 0; i < this.settlements.length; i++){
-    //     for(let j = 0; j < this.settlements[i].location.adjRoads.length; j++){
-    //         buildableRoads.push(this.settlements[i].location.adjRoads[j])
-    //     }
-    // }
-
     //first and second settlements during initial placement have special rules for road placement
     if(this.VP === 1){
         if(this.roadsRemaining === 15){
@@ -134,11 +180,11 @@ Player.prototype.getBuildableRoads = function(){
     for(let i = 0; i < this.roads.length; i++){
         for(let j = 0; j < this.roads[i].adjRoads.length; j++){
             
-            console.log(this.roads[i].adjRoads[j])
+            // console.log(this.roads[i].adjRoads[j])
 
             //check if road is already there
             if(this.roads[i].adjRoads[j].player === null){
-                console.log(this.roads[i].adjRoads[j])
+                //console.log(this.roads[i].adjRoads[j])
                 buildableRoads.push(this.roads[i].adjRoads[j])
             }
         }

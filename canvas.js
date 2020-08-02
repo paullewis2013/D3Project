@@ -1080,10 +1080,14 @@ function drawBank(){
 
     //draw box for bank to go in
     ctx.beginPath()
-    ctx.rect(canvas.width - 325, 5, 320, 70);
+    ctx.rect(canvas.width - 325, 5, 320, 80);
     ctx.stroke();
     ctx.fillStyle = "antiquewhite"
     ctx.fill()
+
+    ctx.font = "15px Arial"
+    ctx.fillStyle = "black"
+    ctx.fillText("Bank", canvas.width - 325/2, 20)
     
     //draw numbers for resources
     for(var i = 0; i < 6; i++){
@@ -1091,20 +1095,20 @@ function drawBank(){
         ctx.font = "15px Arial"
         if(i<5){
             ctx.beginPath()
-            ctx.rect(canvas.width - 311 + (i*320/6), 15, 25, 35)
+            ctx.rect(canvas.width - 311 + (i*320/6), 25, 25, 35)
             ctx.stroke()
             ctx.fillStyle = colorVals[i]
             ctx.fill()
             ctx.fillStyle = "black"
-            ctx.fillText(bank[i], canvas.width - 300 + (i*320/6) + i/2, 68)
+            ctx.fillText(bank[i], canvas.width - 300 + (i*320/6) + i/2, 78)
         }else{
             ctx.beginPath()
-            ctx.rect(canvas.width - 311 + (i*320/6), 15, 25, 35)
+            ctx.rect(canvas.width - 311 + (i*320/6), 25, 25, 35)
             ctx.stroke()
             ctx.fillStyle = colorVals[i]
             ctx.fill()
             ctx.fillStyle = "black"
-            ctx.fillText(devCardArray.length, canvas.width - 300 + (i*320/6) + i/2, 68)
+            ctx.fillText(devCardArray.length, canvas.width - 300 + (i*320/6) + i/2, 78)
         }
         
     }
@@ -1306,15 +1310,15 @@ function drawTurnNum(){
 
 function drawRobber(){
 
-    if(!robberLoaded){
-        robberImage.onload = function(){
-            ctx.drawImage(robberImage, robberLocation.cx - 55, robberLocation.cy - 20, 40, 40);
-            //console.log("drawing at " + robberLocation.cx + "," + robberLocation.cy)
-            robberLoaded = true;
-        }
-    }else{
+    // if(!robberLoaded){
+    //     robberImage.onload = function(){
+    //         ctx.drawImage(robberImage, robberLocation.cx - 55, robberLocation.cy - 20, 40, 40);
+    //         //console.log("drawing at " + robberLocation.cx + "," + robberLocation.cy)
+    //         robberLoaded = true;
+    //     }
+    // }else{
         ctx.drawImage(robberImage, robberLocation.cx - 55, robberLocation.cy - 20, 40, 40);
-    }
+    //}
     
 }
 

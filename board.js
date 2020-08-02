@@ -20,7 +20,6 @@ var playedDevCards = {knight: 0, vp: 0, monopoly: 0, road: 0, plenty: 0}
 //array to store resource cards in bank
 var bank = [19, 19, 19, 19, 19];
 
-
 var buildingRoad = false;
 var buildingSettlement = false;
 var buildingCity = false;

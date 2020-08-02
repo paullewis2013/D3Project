@@ -144,6 +144,9 @@ Player.prototype.buildSettlement = function(settlement){
 Player.prototype.buildRoad = function(r){
     this.roadsRemaining--;
     this.roads.push(r)
+
+    //calculate longest road here
+    this.calcLongestRoad();
 }
 Player.prototype.totalResources = function(){
     
@@ -191,6 +194,11 @@ Player.prototype.getBuildableRoads = function(){
     }
     
     return buildableRoads;
+
+}
+Player.prototype.calcLongestRoad = function(){
+
+    //TODO
 
 }
 

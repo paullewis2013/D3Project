@@ -993,22 +993,22 @@ function drawTiles(){
             tilesArr[i][j].cx = centerX;
             tilesArr[i][j].cy = centerY;
             
+            tilesArr[i][j].hitbox = new Path2D()
+
+            //makes hexagon with color
+            ctx.beginPath();
+            tilesArr[i][j].hitbox.moveTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
+            tilesArr[i][j].hitbox.lineTo(centerX + hexRad * Math.cos(0.5*hexAngle), centerY + hexRad * Math.sin(0.5*hexAngle))
+            tilesArr[i][j].hitbox.lineTo(centerX + hexRad * Math.cos(1.5*hexAngle), centerY + hexRad * Math.sin(1.5*hexAngle))
+            tilesArr[i][j].hitbox.lineTo(centerX + hexRad * Math.cos(2.5*hexAngle), centerY + hexRad * Math.sin(2.5*hexAngle))
+            tilesArr[i][j].hitbox.lineTo(centerX + hexRad * Math.cos(3.5*hexAngle), centerY + hexRad * Math.sin(3.5*hexAngle))
+            tilesArr[i][j].hitbox.lineTo(centerX + hexRad * Math.cos(4.5*hexAngle), centerY + hexRad * Math.sin(4.5*hexAngle))
+            tilesArr[i][j].hitbox.lineTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = 'black';
+            ctx.closePath()
+            
             if(!textured){
-
-                tilesArr[i][j].hitbox = new Path2D()
-
-                //makes hexagon with color
-                ctx.beginPath();
-                tilesArr[i][j].hitbox.moveTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
-                tilesArr[i][j].hitbox.lineTo(centerX + hexRad * Math.cos(0.5*hexAngle), centerY + hexRad * Math.sin(0.5*hexAngle))
-                tilesArr[i][j].hitbox.lineTo(centerX + hexRad * Math.cos(1.5*hexAngle), centerY + hexRad * Math.sin(1.5*hexAngle))
-                tilesArr[i][j].hitbox.lineTo(centerX + hexRad * Math.cos(2.5*hexAngle), centerY + hexRad * Math.sin(2.5*hexAngle))
-                tilesArr[i][j].hitbox.lineTo(centerX + hexRad * Math.cos(3.5*hexAngle), centerY + hexRad * Math.sin(3.5*hexAngle))
-                tilesArr[i][j].hitbox.lineTo(centerX + hexRad * Math.cos(4.5*hexAngle), centerY + hexRad * Math.sin(4.5*hexAngle))
-                tilesArr[i][j].hitbox.lineTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
-                ctx.lineWidth = 1;
-                ctx.strokeStyle = 'black';
-                ctx.closePath()
                 ctx.stroke(tilesArr[i][j].hitbox)
                 
                 
@@ -1089,9 +1089,15 @@ function drawBank(){
     ctx.fillStyle = "antiquewhite"
     ctx.fill()
 
+    ctx.beginPath()
+    ctx.rect(canvas.width - 325/2 - 30, 0, 60, 20);
+    ctx.stroke();
+    ctx.fillStyle = "antiquewhite"
+    ctx.fill()
+
     ctx.font = "15px Arial"
     ctx.fillStyle = "black"
-    ctx.fillText("Bank", canvas.width - 325/2, 20)
+    ctx.fillText("Bank", canvas.width - 325/2, 15)
     
     //draw numbers for resources
     for(var i = 0; i < 6; i++){
@@ -1308,7 +1314,7 @@ function drawTimer(){
 function drawTurnNum(){
     ctx.textAlign = "right"
     ctx.font = "Arial 15px"
-    ctx.fillText("Turn #" + turnNumber, canvas.width - 5, 100)
+    ctx.fillText("Turn: " + turnNumber, canvas.width - 5, 100)
 }
 
 

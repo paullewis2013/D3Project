@@ -402,7 +402,7 @@ function generateResources(result){
                 if(p !== null){
 
                     //TODO if two players get a resource and the bank doesn't have enough for both then neither player gets it
-                    console.log(p.resources)
+                    //console.log(p.resources)
 
                     switch(r){
                         case "wood":

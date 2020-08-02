@@ -234,7 +234,7 @@ playersArr.push(p1);
 var currPlayer = playersArr[0];
 
 //important!
-setup()
+//setup()
 
 
 //sets all game conditions initally
@@ -443,7 +443,6 @@ function generateResources(result){
                         default:
 
                     }
-                    //TODO sort player resources
 
                     //redraw bank to update with what has changed
                     drawBank();

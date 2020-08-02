@@ -6,21 +6,13 @@ var canvasDiv = document.getElementById('canvasDiv')
 
 canvasDiv.height = document.getElementById("left").clientHeight
 
-canvas.width  = canvasDiv.clientWidth //- 1;
-
-//console.log(canvasDiv.clientWidth)
-//canvasDiv.style.width = 5;
-//console.log(canvasDiv.clientWidth)
-
-//canvasDiv.style.outlineWidth = "1px";
+canvas.width  = canvasDiv.clientWidth 
 canvas.height = document.getElementById("left").clientHeight - document.getElementById("controls").clientHeight
 
 var ctx = canvas.getContext('2d')
-ctx.font= "30px Arial";
 
-var textured = false;
-
-var texturesLoaded = 0;
+//determines if images are drawn
+var textured = true;
 
 var robberImage = new Image();
 robberImage.src = "assets/robber.svg"
@@ -168,6 +160,44 @@ canvas.addEventListener('click', function(e) {
 
 });
 
+//––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+//preloading images code
+//––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
+function preloadImages(srcs, imgs) {
+    var img;
+    var remaining = srcs.length;
+    for (var i = 0; i < srcs.length; i++) {
+        img = new Image();
+        img.onload = function() {
+            --remaining;
+            if (remaining <= 0) {
+                setup();
+            }
+        };
+        img.src = srcs[i];
+        imgs.push(img);
+    }
+}
+
+//any new image has to be added here 
+var imageSrcs = ["assets/robber.svg", 
+                "assets/WoodTexture.png", 
+                "assets/BrickTexture.png", 
+                "assets/SheepTexture.png", 
+                "assets/WheatTexture.png",
+                "assets/OreTexture.png",
+                "assets/DesertTexture.png",];
+
+var images = [];
+
+preloadImages(imageSrcs, images);
+
+//––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+//end of preloading images code
+//––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
+
 function toggleTexture(){
     textured = !textured
     drawCanvas()
@@ -197,15 +227,11 @@ function drawDice(){
 }
 
 function drawTileTextures(){
-    
-    //setTimeout(drawTiles(), 5000);
 
     var centerX = canvas.width /2;
     var centerY = 2 * (canvas.height / 7) - 50;
     //var radius = canvas.height/11.5;
     var radius = 60
-
-    texturesLoaded = 0;
 
     for(var i = 0; i < 5; i++){
         //centerY = ((2 + i) * (canvas.height / 7)) - radius;
@@ -236,82 +262,64 @@ function drawTileTextures(){
             //draw hexagon
             var hexAngle = ((2 * Math.PI) / 6)
 
-            //7/6 makes the hexagons flushhh 6.9/6 looks nicer anything below leaves a gap
+            //7/6 makes the hexagons flush 6.9/6 looks nicer anything below leaves a gap
             var hexRad = radius * 6.5/6
             
-            tilesArr[i][j].img = new Image();
-            tilesArr[i][j].img.src = tilesArr[i][j].getPath()
+            let r = tilesArr[i][j].resourceCard;
 
-            //console.log(tilesArr[i][j].img)
-
-            
-            //this is a miracle
-            var drawTheImage = function(ctx, tilesArr, i, j, centerX, centerY) {
-                return function() {
-
-                    //save state of canvas define a closed path on canvas
-                    ctx.save();
-                    ctx.beginPath()
-                    ctx.moveTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
-                    ctx.lineTo(centerX + hexRad * Math.cos(0.5*hexAngle), centerY + hexRad * Math.sin(0.5*hexAngle))
-                    ctx.lineTo(centerX + hexRad * Math.cos(1.5*hexAngle), centerY + hexRad * Math.sin(1.5*hexAngle))
-                    ctx.lineTo(centerX + hexRad * Math.cos(2.5*hexAngle), centerY + hexRad * Math.sin(2.5*hexAngle))
-                    ctx.lineTo(centerX + hexRad * Math.cos(3.5*hexAngle), centerY + hexRad * Math.sin(3.5*hexAngle))
-                    ctx.lineTo(centerX + hexRad * Math.cos(4.5*hexAngle), centerY + hexRad * Math.sin(4.5*hexAngle))
-                    ctx.lineTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
-                    ctx.closePath()
-                    ctx.clip();
-                    
-                    //draw image(inside of path only)
-                    ctx.drawImage(tilesArr[i][j].img, centerX - (hexRad), centerY - (hexRad), 300, 300);
-
-                    //remove path and restore canvas to normal
-                    ctx.restore();
-
-                    texturesLoaded++
-
-
-                    //pay attention to this here because it is wrong
-                    //this will immediately start drawing tiles
-                    //any number of the image functions could have finished but none are guaranteed to
-
-                    //accidental race condition
-                    // if(i == 4 && j == 2){
-                    //     drawCircles()
-                    //     //console.log("boop")
-                    // }
-                }
+            switch(r){
+                case "wood":
+                    tilesArr[i][j].img = images[1];
+                    break;
                 
+                case "brick":
+                    tilesArr[i][j].img = images[2];
+                    break;
+
+                case "sheep":
+                    tilesArr[i][j].img = images[3];
+                    break;
+
+                case "wheat":
+                    tilesArr[i][j].img = images[4];
+                    break;
+
+                case "ore":
+                    tilesArr[i][j].img = images[5];
+                    break;
+                
+                default:
+                    tilesArr[i][j].img = images[6];
+                    break;
             }
 
-            tilesArr[i][j].img.onload = drawTheImage(ctx, tilesArr, i, j, centerX, centerY);
+            //save state of canvas define a closed path on canvas
+            ctx.save();
+            ctx.beginPath()
+            ctx.moveTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
+            ctx.lineTo(centerX + hexRad * Math.cos(0.5*hexAngle), centerY + hexRad * Math.sin(0.5*hexAngle))
+            ctx.lineTo(centerX + hexRad * Math.cos(1.5*hexAngle), centerY + hexRad * Math.sin(1.5*hexAngle))
+            ctx.lineTo(centerX + hexRad * Math.cos(2.5*hexAngle), centerY + hexRad * Math.sin(2.5*hexAngle))
+            ctx.lineTo(centerX + hexRad * Math.cos(3.5*hexAngle), centerY + hexRad * Math.sin(3.5*hexAngle))
+            ctx.lineTo(centerX + hexRad * Math.cos(4.5*hexAngle), centerY + hexRad * Math.sin(4.5*hexAngle))
+            ctx.lineTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
+            ctx.closePath()
+            ctx.clip();
+            
+            //draw image(inside of path only)
+            ctx.drawImage(tilesArr[i][j].img, centerX - (hexRad), centerY - (hexRad), 300, 300);
+
+            //remove path and restore canvas to normal
+            ctx.restore();
 
             centerX += radius * 2 
             
         }
 
-
     } 
-    loadTiles()
-   
-
-}
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-async function loadTiles(){
-
-    //waste time until tiles load
-
-    //console.log("time 1")
-    await sleep(1)
-    //console.log("time 2")
+    
+    //draw rest of tile on top of image
     drawTiles()
-    drawRobber()
-    drawSettlements()
-
 }
 
 function drawVertices(){
@@ -946,14 +954,6 @@ function drawTiles(){
     var centerY = 2 * (canvas.height / 7) - 50;
     //var radius = canvas.height/11.5;
     var radius = 60;
-    
-
-    //how to draw a circle in case I forget
-    // ctx.beginPath();
-    // ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-    // ctx.lineWidth = 5;
-    // ctx.strokeStyle = '#003300';
-    // ctx.stroke();
 
     ctx.textAlign = "center"
     ctx.font = "20px Arial";
@@ -1024,18 +1024,21 @@ function drawTiles(){
             // ctx.closePath()
             // ctx.stroke();
             
+            ctx.lineWidth = 2;
+
             //dont draw a num tile on the desert
             if(tilesArr[i][j].number != 7){
+                
                 //draw inner circle
                 ctx.beginPath();
                 ctx.arc(centerX, centerY, 20, 0, 2 * Math.PI, false);
-                ctx.lineWidth = 0;
                 ctx.strokeStyle = 'black';
                 ctx.closePath()
                 ctx.stroke();
                 ctx.fillStyle = "white"
                 ctx.fill()
 
+                //6 and 8 tiles are red all else are black
                 ctx.fillStyle = "black"
                 if(tilesArr[i][j].number === 6 || tilesArr[i][j].number === 8){
                     ctx.fillStyle = "red"
@@ -1049,6 +1052,7 @@ function drawTiles(){
                 //this makes sure the dots are centered
                 var offSetX = 2.5 * (dots-1.25)
 
+                //draw each dot
                 for(var k = 0; k < dots; k++){
                     ctx.beginPath();
                     ctx.arc(centerX + 5*k - offSetX, centerY + 12, 1.5, 0, 2 * Math.PI, false);
@@ -1310,15 +1314,7 @@ function drawTurnNum(){
 
 function drawRobber(){
 
-    // if(!robberLoaded){
-    //     robberImage.onload = function(){
-    //         ctx.drawImage(robberImage, robberLocation.cx - 55, robberLocation.cy - 20, 40, 40);
-    //         //console.log("drawing at " + robberLocation.cx + "," + robberLocation.cy)
-    //         robberLoaded = true;
-    //     }
-    // }else{
-        ctx.drawImage(robberImage, robberLocation.cx - 55, robberLocation.cy - 20, 40, 40);
-    //}
+    ctx.drawImage(images[0], robberLocation.cx - 55, robberLocation.cy - 20, 40, 40);
     
 }
 

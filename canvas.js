@@ -993,6 +993,7 @@ function drawTiles(){
             tilesArr[i][j].cx = centerX;
             tilesArr[i][j].cy = centerY;
             
+            //TODO don't recreate the hitbox every time you draw the tiles
             tilesArr[i][j].hitbox = new Path2D()
 
             //makes hexagon with color

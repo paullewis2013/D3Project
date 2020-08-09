@@ -230,7 +230,13 @@ function setUpTiles(){
 }
 
 var p1 = new Player("Red");
+var p2 = new Player("Orange");
+var p3 = new Player("Blue");
+var p4 = new Player("Black");
 playersArr.push(p1);
+playersArr.push(p2);
+playersArr.push(p3);
+playersArr.push(p4);
 var currPlayer = playersArr[0];
 
 //important!

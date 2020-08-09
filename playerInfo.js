@@ -22,6 +22,12 @@ function drawPlayerInfo(){
 
         p_ctx.rect(0, offset * i, p_canvas.width, offset);
         p_ctx.fillStyle = "floralwhite"
+        
+        //used to show which players turn it is
+        if(playersArr[i] == currPlayer){
+            p_ctx.fillStyle = "#9dd9b8"
+        }
+
         p_ctx.fill()
         p_ctx.stroke()
 

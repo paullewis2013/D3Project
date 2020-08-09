@@ -237,7 +237,7 @@ playersArr.push(p1);
 playersArr.push(p2);
 playersArr.push(p3);
 playersArr.push(p4);
-var currPlayer = playersArr[0];
+var currPlayer = playersArr[Math.floor(Math.random() * 4)];
 
 //important!
 //setup()

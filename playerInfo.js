@@ -41,7 +41,7 @@ function drawPlayerInfo(){
         p_ctx.fillText("VP: " + playersArr[i].VP, 50, offset * i + offset * .8)
         //console.log(p1.VP)
 
-        var cardTop = offset * i + offset * .35;
+        var cardTop = offset * i + offset * .25;
 
         let cardPath = new Path2D();
 
@@ -55,7 +55,7 @@ function drawPlayerInfo(){
         p_ctx.fill(cardPath);
 
         p_ctx.fillStyle = "black"
-        p_ctx.fillText("R", 132.5, cardTop + 25)
+        p_ctx.fillText("R", 132.5, cardTop + 28)
 
         p_ctx.fillStyle = "black"
         p_ctx.fillText(playersArr[i].totalResources(), 132.5, cardTop + 60)
@@ -73,31 +73,32 @@ function drawPlayerInfo(){
         p_ctx.fill(devPath);
 
         p_ctx.fillStyle = "black"
-        p_ctx.fillText("D", 172.5, cardTop + 25)
+        p_ctx.fillText("D", 172.5, cardTop + 28)
 
         p_ctx.fillStyle = "black"
         p_ctx.fillText(playersArr[i].devCards.length, 172.5, cardTop + 60)
 
 
-
-        p_ctx.font = "15px Arial";
+        let fontH = offset/7;
+        p_ctx.font = fontH + "px Arial";
         p_ctx.textAlign = "right";
 
+        //7.5 is half the height of the font
         //road length
-        p_ctx.fillText("Longest Road: " + playersArr[i].longestRoad, p_canvas.width - 150, offset * i + offset * 1/3)
+        p_ctx.fillText("Longest Road: " + playersArr[i].longestRoad, p_canvas.width - 150, offset * i + offset * 1/3 + fontH/2)
 
         //army size
-        p_ctx.fillText("Army Size: " + playersArr[i].knightsPlayed, p_canvas.width - 150, offset * i + offset * 2/3)
+        p_ctx.fillText("Army Size: " + playersArr[i].knightsPlayed, p_canvas.width - 150, offset * i + offset * 2/3 + fontH/2)
 
 
         //roads
-        p_ctx.fillText("Roads: " + playersArr[i].roadsRemaining, p_canvas.width - 10, offset * i + offset * 1/4)
+        p_ctx.fillText("Roads: " + playersArr[i].roadsRemaining, p_canvas.width - 10, offset * i + offset * 1/4 + fontH/2)
 
         //settlements
-        p_ctx.fillText("Settlements: " + playersArr[i].settlementsRemaining, p_canvas.width - 10, offset * i + offset * 2/4)
+        p_ctx.fillText("Settlements: " + playersArr[i].settlementsRemaining, p_canvas.width - 10, offset * i + offset * 2/4 + fontH/2)
 
         //cities
-        p_ctx.fillText("Cities: " + playersArr[i].citiesRemaining, p_canvas.width - 10, offset * i + offset * 3/4)
+        p_ctx.fillText("Cities: " + playersArr[i].citiesRemaining, p_canvas.width - 10, offset * i + offset * 3/4 + fontH/2)
     }
 
 

@@ -78,6 +78,7 @@ var portsArr = [];
 
 var playersArr = [];
 var currPlayer = null;
+var currPlayerIndex;
 
 //create an array of 2 dice to be rolled
 var diceArr = new Array(new Dice(), new Dice());
@@ -237,13 +238,14 @@ playersArr.push(p1);
 playersArr.push(p2);
 playersArr.push(p3);
 playersArr.push(p4);
-var currPlayer = playersArr[Math.floor(Math.random() * 4)];
 
-//important!
-//setup()
+currPlayerIndex = Math.floor(Math.random() * 4);
+var currPlayer = playersArr[currPlayerIndex];
 
+//currplayer = ++currPlayer%(number of players)
 
 //sets all game conditions initally
+//called when last image finishes loading
 function setup(){
     populateDevCardDeck()
     populateDiceResultsArr()
@@ -257,6 +259,114 @@ function setup(){
     initPorts()
     initIslandPath()
     drawCanvas()
+
+    //enter initial settlement placement phase
+    initialSettlements()
+}
+
+async function initialSettlements(){
+
+    //disable all buttons
+    document.getElementById("diceButton").disabled = true;
+    document.getElementById("devButton").disabled = true;
+    document.getElementById("roadButton").disabled = true;
+    document.getElementById("settlementButton").disabled = true;
+    document.getElementById("cityButton").disabled = true;
+
+    //go through players in order
+    for(let i = 0; i < playersArr.length; i++){
+
+        drawCanvas()
+
+        settlementButton();
+        document.getElementById("cancelButton").disabled = true;
+
+
+        //create a function that waits for settlement to be built before continuing
+        await waitForSettlment(1);
+
+
+        roadButton();
+        document.getElementById("cancelButton").disabled = true;
+
+
+        //create a function that waits for road to be built before continuing
+        await waitForRoad(1);
+
+
+        if(i < playersArr.length - 1){
+            currPlayerIndex = ++currPlayerIndex%(playersArr.length);
+            currPlayer = playersArr[currPlayerIndex]
+        }
+    }
+
+
+    //snake backwards through players
+    for(let i = 0; i < playersArr.length; i++){
+
+        drawCanvas()
+
+        settlementButton();
+        document.getElementById("cancelButton").disabled = true;
+
+
+        //create a function that waits for settlement to be built before continuing
+        await waitForSettlment(2);
+
+
+        roadButton();
+        document.getElementById("cancelButton").disabled = true;
+
+
+        //create a function that waits for road to be built before continuing
+        await waitForRoad(2);
+
+        if(i < playersArr.length - 1){
+            currPlayerIndex = (currPlayerIndex + 3)%(playersArr.length);
+            currPlayer = playersArr[currPlayerIndex]
+        }
+    }
+
+
+    //TODO enter main game loop here
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function waitForSettlment(num){
+
+    let built = false;
+
+    while(!built){
+
+        if(5 - currPlayer.settlementsRemaining >= num){
+            built = true
+            console.log("built")
+        }else{
+            await sleep(100)
+        }
+
+    }
+
+}
+
+async function waitForRoad(num){
+
+    let built = false;
+
+    while(!built){
+
+        if(15 - currPlayer.roadsRemaining >= num){
+            built = true
+            console.log("built")
+        }else{
+            await sleep(100)
+        }
+
+    }
+
 }
 
 //populate dev card array and unplayed dev card array then shuffle the dev card array 

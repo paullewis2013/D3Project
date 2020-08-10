@@ -247,6 +247,8 @@ var currPlayer = playersArr[currPlayerIndex];
 //sets all game conditions initally
 //called when last image finishes loading
 function setup(){
+    console.log("entering set up method")
+
     populateDevCardDeck()
     populateDiceResultsArr()
     graphicButton()
@@ -265,6 +267,8 @@ function setup(){
 }
 
 async function initialSettlements(){
+
+    console.log("entering Initial Settlements Loop")
 
     //disable all buttons
     document.getElementById("diceButton").disabled = true;
@@ -328,7 +332,36 @@ async function initialSettlements(){
     }
 
 
-    //TODO enter main game loop here
+    //enter main game loop here
+    mainGameLoop()
+}
+
+function mainGameLoop(){
+    console.log("entering MainGameLoop")
+
+
+
+    //turn loop
+    while(false){
+
+        //preturn option to play knight card
+
+
+        //roll the dice
+
+        //if robber
+            //await each player choosing resources to discard
+            //await currPlayer moving robber
+
+        //switch statement in loop for main turn actions which can happen in any order
+
+        //await choice to end turn
+
+        //move to next players turn
+    }
+
+    //do something when end of game condition is reached
+
 }
 
 function sleep(ms) {
@@ -343,7 +376,6 @@ async function waitForSettlment(num){
 
         if(5 - currPlayer.settlementsRemaining >= num){
             built = true
-            console.log("built")
         }else{
             await sleep(100)
         }
@@ -360,7 +392,6 @@ async function waitForRoad(num){
 
         if(15 - currPlayer.roadsRemaining >= num){
             built = true
-            console.log("built")
         }else{
             await sleep(100)
         }

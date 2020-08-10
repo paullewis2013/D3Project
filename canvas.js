@@ -1,5 +1,8 @@
 //this file is to handle all of the code related to the canvas element
 
+
+//TODO move this setup to its own method
+
 //basic setup to work with canvas element
 var canvas = document.getElementById('canvas')
 var canvasDiv = document.getElementById('canvasDiv')
@@ -165,6 +168,9 @@ canvas.addEventListener('click', function(e) {
 //––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
 function preloadImages(srcs, imgs) {
+    
+    console.log("preloading Images")
+    
     var img;
     var remaining = srcs.length;
     for (var i = 0; i < srcs.length; i++) {
@@ -670,7 +676,7 @@ function initRoads(){
             }
 
             //right road is added if road is not on rightside border
-            if(!((i === 1 || i === 3 || i === 5 || i === 6 || i === 8 || i === 10) && j === verticesArr[i].length)){
+            if(  !((j === verticesArr[i].length - 1) && (i === 1 || i === 3 || i === 5 || i === 6 || i === 8 || i === 10))     ){
 
                 //top half of board
                 if(i <= 5){

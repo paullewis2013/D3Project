@@ -1327,20 +1327,20 @@ function drawBank(){
 
     //draw box for bank to go in
     ctx.beginPath()
-    ctx.rect(canvas.width - 325 - 100, 5, 320, 80);
+    ctx.rect(20, 10, 320, 80);
     ctx.stroke();
     ctx.fillStyle = "antiquewhite"
     ctx.fill()
 
     ctx.beginPath()
-    ctx.rect(canvas.width - 325/2 - 30 - 100, 0, 60, 20);
+    ctx.rect(20 + 320/2 - 30, 5, 60, 20);
     ctx.stroke();
     ctx.fillStyle = "antiquewhite"
     ctx.fill()
 
     ctx.font = "15px Arial"
     ctx.fillStyle = "black"
-    ctx.fillText("Bank", canvas.width - 325/2 - 100, 15)
+    ctx.fillText("Bank", 20 +  320/2, 20)
     
     //draw numbers for resources
     for(var i = 0; i < 6; i++){
@@ -1348,20 +1348,20 @@ function drawBank(){
         ctx.font = "15px Arial"
         if(i<5){
             ctx.beginPath()
-            ctx.rect(canvas.width - 311 + (i*320/6) - 100, 25, 25, 35)
+            ctx.rect(32 + (i*320/6), 30, 25, 35)
             ctx.stroke()
             ctx.fillStyle = colorVals[i]
             ctx.fill()
             ctx.fillStyle = "black"
-            ctx.fillText(bank[i], canvas.width - 300 + (i*320/6) + i/2 - 100, 78)
+            ctx.fillText(bank[i], 43 + (i*320/6) + i/2, 83)
         }else{
             ctx.beginPath()
-            ctx.rect(canvas.width - 311 + (i*320/6) - 100, 25, 25, 35)
+            ctx.rect(32 + (i*320/6), 30, 25, 35)
             ctx.stroke()
             ctx.fillStyle = colorVals[i]
             ctx.fill()
             ctx.fillStyle = "black"
-            ctx.fillText(devCardArray.length, canvas.width - 300 + (i*320/6) + i/2 - 100, 78)
+            ctx.fillText(devCardArray.length, 42 + (i*320/6) + i/2, 83)
         }
         
     }
@@ -1555,9 +1555,9 @@ function drawTimer(){
 }
 
 function drawTurnNum(){
-    ctx.textAlign = "right"
+    ctx.textAlign = "left"
     ctx.font = "Arial 15px"
-    ctx.fillText("Turn: " + turnNumber, canvas.width - 5 - 100, 100)
+    ctx.fillText("Turn: " + turnNumber, 20, 105)
 }
 
 
@@ -1571,22 +1571,21 @@ function drawHand(){
     ctx.strokeStyle = "black";
     ctx.lineWidth = 1;
 
-    //draw box for bank to go in
     ctx.beginPath()
-    ctx.rect(canvas.width - 325, canvas.height - 165, 320, 80);
+    ctx.rect(canvas.width - 320 - 100, 10, 320, 80);
     ctx.stroke();
     ctx.fillStyle = "antiquewhite"
     ctx.fill()
 
     ctx.beginPath()
-    ctx.rect(canvas.width - 325/2 - 30, canvas.height - 175, 60, 20);
+    ctx.rect(canvas.width - 320/2 - 30 - 100, 5, 60, 20);
     ctx.stroke();
     ctx.fillStyle = "antiquewhite"
     ctx.fill()
 
     ctx.font = "15px Arial"
     ctx.fillStyle = "black"
-    ctx.fillText("Cards", canvas.width - 325/2 + 15, canvas.height - 160)
+    ctx.fillText("Cards", canvas.width - 325/2 - 15 - 100, 20)
 
     let cardTypes = 0
     let cardWidth = 40
@@ -1602,7 +1601,7 @@ function drawHand(){
             let currCard = new Path2D
 
             ctx.beginPath()
-            currCard.rect(canvas.width - 320 + cardWidth * cardTypes + 5 * cardTypes, canvas.height - 160, cardWidth, cardHeight);
+            currCard.rect(canvas.width - 400 + cardWidth * cardTypes + 5 * cardTypes, 20, cardWidth, cardHeight);
             ctx.stroke(currCard);
 
             //get style for resource card
@@ -1654,8 +1653,9 @@ function drawHand(){
             
             //draw number to show how many the user has
             ctx.fillStyle = "black"
+            ctx.textAlign = "center"
             ctx.font = "15px Arial"
-            ctx.fillText(currPlayer.resources[i], canvas.width - 320 + cardWidth * cardTypes + 5 * cardTypes + cardWidth/2, canvas.height - 160 + cardHeight/2)
+            ctx.fillText(currPlayer.resources[i], canvas.width - 400 + cardWidth * cardTypes + 5 * cardTypes + cardWidth/2, 40 + cardHeight/2)
             
             
             cardTypes++;

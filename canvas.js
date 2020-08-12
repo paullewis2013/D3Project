@@ -17,10 +17,6 @@ var ctx = canvas.getContext('2d')
 //determines if images are drawn
 var textured = true;
 
-var robberImage = new Image();
-robberImage.src = "assets/robber.svg"
-
-var robberLoaded = false;
 var movingRobber = false;
 var showRoads = false;
 
@@ -48,6 +44,54 @@ canvas.addEventListener('click', function(e) {
             diceButton()
         }
         console.log("dice clicked")
+    }
+
+    //trade button
+    if(ctx.isPointInPath(tradeButtonPath, e.offsetX, e.offsetY)){
+        if(tradeButtonEnabled){
+            //tradeButton()
+        }
+        console.log("trade button clicked")
+    }
+
+    //dev button
+    if(ctx.isPointInPath(devButtonPath, e.offsetX, e.offsetY)){
+        if(devButtonEnabled){
+            //tradeButton()
+        }
+        console.log("dev button clicked")
+    }
+
+    //road button
+    if(ctx.isPointInPath(roadButtonPath, e.offsetX, e.offsetY)){
+        if(roadButtonEnabled){
+            //tradeButton()
+        }
+        console.log("road button clicked")
+    }
+
+    //settlement button
+    if(ctx.isPointInPath(settlementButtonPath, e.offsetX, e.offsetY)){
+        if(settlementButtonEnabled){
+            //tradeButton()
+        }
+        console.log("settlement button clicked")
+    }
+
+    //city Button
+    if(ctx.isPointInPath(cityButtonPath, e.offsetX, e.offsetY)){
+        if(cityButtonEnabled){
+            //tradeButton()
+        }
+        console.log("city button clicked")
+    }
+
+    //turn button
+    if(ctx.isPointInPath(turnButtonPath, e.offsetX, e.offsetY)){
+        if(turnButtonEnabled){
+            //tradeButton()
+        }
+        console.log("turn button clicked")
     }
 
 

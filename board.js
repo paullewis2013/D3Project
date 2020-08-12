@@ -10,6 +10,7 @@
 
 //inputs
 var diceButtonEnabled = false;
+var tradeButtonEnabled = false;
 var devButtonEnabled = false;
 var roadButtonEnabled = false;
 var settlementButtonEnabled = false;

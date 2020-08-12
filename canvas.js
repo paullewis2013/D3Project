@@ -10,7 +10,7 @@ var canvasDiv = document.getElementById('canvasDiv')
 canvasDiv.height = document.getElementById("left").clientHeight
 
 canvas.width  = canvasDiv.clientWidth 
-canvas.height = document.getElementById("left").clientHeight - document.getElementById("controls").clientHeight
+canvas.height = document.getElementById("left").clientHeight
 
 var ctx = canvas.getContext('2d')
 
@@ -27,12 +27,29 @@ var showRoads = false;
 var colorVals = ["green", "firebrick", "lightgreen", "#ffff99", "slategrey", "blue"]
 
 var islandPath; 
+var dicePath;
+var tradeButtonPath;
+var devButtonPath;
+var roadButtonPath;
+var settlementButtonPath;
+var cityButtonPath;
+var turnButtonPath;
 
 
 canvas.addEventListener('click', function(e) {
 
     //debugging help
     //console.log(p1)
+
+
+    //dice Button
+    if(ctx.isPointInPath(dicePath, e.offsetX, e.offsetY)){
+        if(diceButtonEnabled){
+            diceButton()
+        }
+        console.log("dice clicked")
+    }
+
 
     //loop through all vertices
     for(var i = 0; i < 12; i++){
@@ -216,8 +233,8 @@ function drawDice(){
   
         //this thing is called a closure but idk how it works tbh
         (function (i) {
-            var xPos = ((i * 65) + 20);
-            var yPos = 5;
+            var xPos = (canvas.width - ((i + 1) * 65) - 5);
+            var yPos = canvas.height - 70;
             diceImgs[i] = new Image();
             diceImgs[i].src = diceArr[i].getImg();
 
@@ -232,10 +249,188 @@ function drawDice(){
     //drawCircles()
 }
 
+function initDicePath(){
+    
+    dicePath = new Path2D();
+    
+    let lX = (canvas.width - ((2) * 65) - 5)
+    let rX = (canvas.width - ((2) * 65) - 5) + 125
+
+
+    ctx.beginPath();
+    dicePath.moveTo(lX, canvas.height - 70)
+    dicePath.lineTo(lX, canvas.height - 10)
+    dicePath.lineTo(rX, canvas.height - 10)
+    dicePath.lineTo(rX, canvas.height - 70)
+    dicePath.lineTo(lX, canvas.height - 70)
+    ctx.closePath()
+
+
+}
+
+function drawButtons(){
+    
+    //trade button
+    ctx.fillStyle = 'slategrey'
+    ctx.fill(tradeButtonPath)
+
+    //dev Button
+    ctx.fillStyle = 'slategrey'
+    ctx.fill(devButtonPath)
+
+    //road Button
+    ctx.fillStyle = 'slategrey'
+    ctx.fill(roadButtonPath)
+
+    //settlement Button
+    ctx.fillStyle = 'slategrey'
+    ctx.fill(settlementButtonPath)
+
+    //city Button
+    ctx.fillStyle = 'slategrey'
+    ctx.fill(cityButtonPath)
+
+    //turn Button
+    ctx.fillStyle = 'slategrey'
+    ctx.fill(turnButtonPath)
+
+
+}
+
+
+function initButtons(){
+
+    //x y width height and curve radius for rectangle path
+    let x = canvas.width - 90
+    let y = 10
+    let w = 80
+    let h = 80
+    let radius = 10
+
+    tradeButtonPath = new Path2D();
+
+
+    //rectangle with rounded corners
+    let r = x + w;
+    let b = y + h;
+    ctx.beginPath()
+    tradeButtonPath.moveTo(x+radius, y);
+    tradeButtonPath.lineTo(r-radius, y);
+    tradeButtonPath.quadraticCurveTo(r, y, r, y+radius);
+    tradeButtonPath.lineTo(r, y+h-radius);
+    tradeButtonPath.quadraticCurveTo(r, b, r-radius, b);
+    tradeButtonPath.lineTo(x+radius, b);
+    tradeButtonPath.quadraticCurveTo(x, b, x, b-radius);
+    tradeButtonPath.lineTo(x, y+radius);
+    tradeButtonPath.quadraticCurveTo(x, y, x+radius, y);
+    ctx.closePath()
+
+
+
+    devButtonPath = new Path2D();
+
+    //update y for new button
+    y = 100
+
+    r = x + w;
+    b = y + h;
+    ctx.beginPath()
+    devButtonPath.moveTo(x+radius, y);
+    devButtonPath.lineTo(r-radius, y);
+    devButtonPath.quadraticCurveTo(r, y, r, y+radius);
+    devButtonPath.lineTo(r, y+h-radius);
+    devButtonPath.quadraticCurveTo(r, b, r-radius, b);
+    devButtonPath.lineTo(x+radius, b);
+    devButtonPath.quadraticCurveTo(x, b, x, b-radius);
+    devButtonPath.lineTo(x, y+radius);
+    devButtonPath.quadraticCurveTo(x, y, x+radius, y);
+    ctx.closePath()
+
+
+    roadButtonPath = new Path2D();
+
+    //update y for new button
+    y = 190
+
+    r = x + w;
+    b = y + h;
+    ctx.beginPath()
+    roadButtonPath.moveTo(x+radius, y);
+    roadButtonPath.lineTo(r-radius, y);
+    roadButtonPath.quadraticCurveTo(r, y, r, y+radius);
+    roadButtonPath.lineTo(r, y+h-radius);
+    roadButtonPath.quadraticCurveTo(r, b, r-radius, b);
+    roadButtonPath.lineTo(x+radius, b);
+    roadButtonPath.quadraticCurveTo(x, b, x, b-radius);
+    roadButtonPath.lineTo(x, y+radius);
+    roadButtonPath.quadraticCurveTo(x, y, x+radius, y);
+    ctx.closePath()
+    
+    settlementButtonPath = new Path2D();
+
+    //update y for new button
+    y = 280
+
+    r = x + w;
+    b = y + h;
+    ctx.beginPath()
+    settlementButtonPath.moveTo(x+radius, y);
+    settlementButtonPath.lineTo(r-radius, y);
+    settlementButtonPath.quadraticCurveTo(r, y, r, y+radius);
+    settlementButtonPath.lineTo(r, y+h-radius);
+    settlementButtonPath.quadraticCurveTo(r, b, r-radius, b);
+    settlementButtonPath.lineTo(x+radius, b);
+    settlementButtonPath.quadraticCurveTo(x, b, x, b-radius);
+    settlementButtonPath.lineTo(x, y+radius);
+    settlementButtonPath.quadraticCurveTo(x, y, x+radius, y);
+    ctx.closePath()
+
+    cityButtonPath = new Path2D();
+
+    //update y for new button
+    y = 370
+
+    r = x + w;
+    b = y + h;
+    ctx.beginPath()
+    cityButtonPath.moveTo(x+radius, y);
+    cityButtonPath.lineTo(r-radius, y);
+    cityButtonPath.quadraticCurveTo(r, y, r, y+radius);
+    cityButtonPath.lineTo(r, y+h-radius);
+    cityButtonPath.quadraticCurveTo(r, b, r-radius, b);
+    cityButtonPath.lineTo(x+radius, b);
+    cityButtonPath.quadraticCurveTo(x, b, x, b-radius);
+    cityButtonPath.lineTo(x, y+radius);
+    cityButtonPath.quadraticCurveTo(x, y, x+radius, y);
+    ctx.closePath()
+    
+    turnButtonPath = new Path2D();
+
+    //update y for new button
+    y = 460
+
+    r = x + w;
+    b = y + h;
+    ctx.beginPath()
+    turnButtonPath.moveTo(x+radius, y);
+    turnButtonPath.lineTo(r-radius, y);
+    turnButtonPath.quadraticCurveTo(r, y, r, y+radius);
+    turnButtonPath.lineTo(r, y+h-radius);
+    turnButtonPath.quadraticCurveTo(r, b, r-radius, b);
+    turnButtonPath.lineTo(x+radius, b);
+    turnButtonPath.quadraticCurveTo(x, b, x, b-radius);
+    turnButtonPath.lineTo(x, y+radius);
+    turnButtonPath.quadraticCurveTo(x, y, x+radius, y);
+    ctx.closePath()
+
+}
+
+
+
 function drawTileTextures(){
 
-    var centerX = canvas.width /2;
-    var centerY = 2 * (canvas.height / 7) - 50;
+    var centerX;
+    var centerY;
     //var radius = canvas.height/11.5;
     var radius = 60
 
@@ -243,7 +438,7 @@ function drawTileTextures(){
         //centerY = ((2 + i) * (canvas.height / 7)) - radius;
 
         //some circle packing magic thats like a 30-60-90 triangle
-        centerY = (canvas.height / 2) - Math.sqrt(3)*radius*(2-i);
+        centerY = (canvas.height * 4/7) - Math.sqrt(3)*radius*(2-i);
 
         var times;
 
@@ -345,8 +540,8 @@ function drawVertices(){
                 ctx.stroke(verticesArr[i][j].hitbox)
 
                 //for debug
-                ctx.fillStyle = "black"
-                ctx.fillText(i + "," + j, verticesArr[i][j].cx, verticesArr[i][j].cy + 5)
+                // ctx.fillStyle = "black"
+                // ctx.fillText(i + "," + j, verticesArr[i][j].cx, verticesArr[i][j].cy + 5)
             }
         }
 
@@ -952,12 +1147,9 @@ function initPorts(){
 }
 
 
-//this actually draws hexagons now but it could do circles or whatever else involves visiting 
-//center point of each tile
-//this function should be called drawTiles lol
 function drawTiles(){
-    var centerX = canvas.width /2;
-    var centerY = 2 * (canvas.height / 7) - 50;
+    var centerX;
+    var centerY;
     //var radius = canvas.height/11.5;
     var radius = 60;
 
@@ -967,8 +1159,8 @@ function drawTiles(){
     for(var i = 0; i < 5; i++){
         //centerY = ((2 + i) * (canvas.height / 7)) - radius;
 
-        //some circle packing magic thats like a 30-60-90 triangle
-        centerY = (canvas.height / 2) - Math.sqrt(3)*radius*(2-i);
+        //some circle packing magic that makes a 30-60-90 triangle
+        centerY = (canvas.height * 4/7) - Math.sqrt(3)*radius*(2-i);
 
         var times;
 
@@ -1091,20 +1283,20 @@ function drawBank(){
 
     //draw box for bank to go in
     ctx.beginPath()
-    ctx.rect(canvas.width - 325, 5, 320, 80);
+    ctx.rect(canvas.width - 325 - 100, 5, 320, 80);
     ctx.stroke();
     ctx.fillStyle = "antiquewhite"
     ctx.fill()
 
     ctx.beginPath()
-    ctx.rect(canvas.width - 325/2 - 30, 0, 60, 20);
+    ctx.rect(canvas.width - 325/2 - 30 - 100, 0, 60, 20);
     ctx.stroke();
     ctx.fillStyle = "antiquewhite"
     ctx.fill()
 
     ctx.font = "15px Arial"
     ctx.fillStyle = "black"
-    ctx.fillText("Bank", canvas.width - 325/2, 15)
+    ctx.fillText("Bank", canvas.width - 325/2 - 100, 15)
     
     //draw numbers for resources
     for(var i = 0; i < 6; i++){
@@ -1112,20 +1304,20 @@ function drawBank(){
         ctx.font = "15px Arial"
         if(i<5){
             ctx.beginPath()
-            ctx.rect(canvas.width - 311 + (i*320/6), 25, 25, 35)
+            ctx.rect(canvas.width - 311 + (i*320/6) - 100, 25, 25, 35)
             ctx.stroke()
             ctx.fillStyle = colorVals[i]
             ctx.fill()
             ctx.fillStyle = "black"
-            ctx.fillText(bank[i], canvas.width - 300 + (i*320/6) + i/2, 78)
+            ctx.fillText(bank[i], canvas.width - 300 + (i*320/6) + i/2 - 100, 78)
         }else{
             ctx.beginPath()
-            ctx.rect(canvas.width - 311 + (i*320/6), 25, 25, 35)
+            ctx.rect(canvas.width - 311 + (i*320/6) - 100, 25, 25, 35)
             ctx.stroke()
             ctx.fillStyle = colorVals[i]
             ctx.fill()
             ctx.fillStyle = "black"
-            ctx.fillText(devCardArray.length, canvas.width - 300 + (i*320/6) + i/2, 78)
+            ctx.fillText(devCardArray.length, canvas.width - 300 + (i*320/6) + i/2 - 100, 78)
         }
         
     }
@@ -1269,7 +1461,7 @@ function drawRoads(){
     
 }
 
-//write me
+
 function drawSettlements(){
     
     // ctx.lineWidth = 3;
@@ -1321,7 +1513,7 @@ function drawTimer(){
 function drawTurnNum(){
     ctx.textAlign = "right"
     ctx.font = "Arial 15px"
-    ctx.fillText("Turn: " + turnNumber, canvas.width - 5, 100)
+    ctx.fillText("Turn: " + turnNumber, canvas.width - 5 - 100, 100)
 }
 
 
@@ -1331,37 +1523,133 @@ function drawRobber(){
     
 }
 
+function drawHand(){
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 1;
+
+    //draw box for bank to go in
+    ctx.beginPath()
+    ctx.rect(canvas.width - 325, canvas.height - 165, 320, 80);
+    ctx.stroke();
+    ctx.fillStyle = "antiquewhite"
+    ctx.fill()
+
+    ctx.beginPath()
+    ctx.rect(canvas.width - 325/2 - 30, canvas.height - 175, 60, 20);
+    ctx.stroke();
+    ctx.fillStyle = "antiquewhite"
+    ctx.fill()
+
+    ctx.font = "15px Arial"
+    ctx.fillStyle = "black"
+    ctx.fillText("Cards", canvas.width - 325/2 + 15, canvas.height - 160)
+
+    let cardTypes = 0
+    let cardWidth = 40
+    let cardHeight = 60
+
+    //loop through all of current players resources
+    for(let i = 0; i < currPlayer.resources.length; i++){
+        
+        //only draw resource types that the player actually has
+        if(currPlayer.resources[i] != 0){
+            
+            //define boundaries of resource card
+            let currCard = new Path2D
+
+            ctx.beginPath()
+            currCard.rect(canvas.width - 320 + cardWidth * cardTypes + 5 * cardTypes, canvas.height - 160, cardWidth, cardHeight);
+            ctx.stroke(currCard);
+
+            //get style for resource card
+            switch(i){
+                
+                //wood
+                case 0:
+
+                    ctx.fillStyle = "Green"
+                    ctx.fill(currCard)
+
+                    break;
+
+                //brick
+                case 1:
+
+                    ctx.fillStyle = "Firebrick"
+                    ctx.fill(currCard)
+
+                    break;
+
+                //sheep
+                case 2:
+
+                    ctx.fillStyle = "lightgreen"
+                    ctx.fill(currCard)
+
+                    break;
+                    
+                //wheat
+                case 3:
+
+                    ctx.fillStyle = "#ffff99"
+                    ctx.fill(currCard)
+
+                    break;
+
+                //ore
+                case 4:
+
+                    ctx.fillStyle = "slategrey"
+                    ctx.fill(currCard)
+
+                    break;
+
+                default:
+
+            }
+            
+            //draw number to show how many the user has
+            ctx.fillStyle = "black"
+            ctx.font = "15px Arial"
+            ctx.fillText(currPlayer.resources[i], canvas.width - 320 + cardWidth * cardTypes + 5 * cardTypes + cardWidth/2, canvas.height - 160 + cardHeight/2)
+            
+            
+            cardTypes++;
+        }
+    }
+}
+
 function drawCanvas(){
 
-    //draw the background maybe here
+    //draw the background
     ctx.rect(0, 0, canvas.width, canvas.height)
     ctx.fillStyle = "#B0E0E6"
     ctx.fill()
 
+    //elements unrelated to board
     drawDice()
+    drawButtons()
     drawBank()
     drawTurnNum()
+    drawHand()
 
+    //elements under board
     drawPorts()
     drawIsland();
 
+    //board itself
     if(textured){
         drawTileTextures()
     }else{
         drawTiles()
     }
 
-    //drawVertices()
+    //elements on top of board
     drawRoads()
     drawSettlements()
     drawRobber()
 
-
-    //this one can be uncommented when it exists
-    // if(showTime){
-    //     drawTimer()
-    // }
-
+    //player info in rightside column
     drawPlayerInfo()
 
 }

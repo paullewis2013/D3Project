@@ -7,6 +7,17 @@
 
 //TODO organize instance fields
 
+
+//inputs
+var diceButtonEnabled = false;
+var devButtonEnabled = false;
+var roadButtonEnabled = false;
+var settlementButtonEnabled = false;
+var cityButtonEnabled = false;
+var turnButtonEnabled = false;
+
+
+
 //an array to store value and frequency of dice rolls
 var dice_results_arr = [];
 
@@ -233,7 +244,7 @@ function setUpTiles(){
 var p1 = new Player("Red");
 var p2 = new Player("Orange");
 var p3 = new Player("Blue");
-var p4 = new Player("Black");
+var p4 = new Player("Purple");
 playersArr.push(p1);
 playersArr.push(p2);
 playersArr.push(p3);
@@ -260,6 +271,8 @@ function setup(){
     generatePorts()
     initPorts()
     initIslandPath()
+    initDicePath()
+    initButtons()
     drawCanvas()
 
     //enter initial settlement placement phase
@@ -271,11 +284,12 @@ async function initialSettlements(){
     console.log("entering Initial Settlements Loop")
 
     //disable all buttons
-    document.getElementById("diceButton").disabled = true;
-    document.getElementById("devButton").disabled = true;
-    document.getElementById("roadButton").disabled = true;
-    document.getElementById("settlementButton").disabled = true;
-    document.getElementById("cityButton").disabled = true;
+    diceButtonEnabled = false;
+    devButtonEnabled = false;
+    roadButtonEnabled = false;
+    settlementButtonEnabled = false;
+    cityButtonEnabled = false;
+    turnButtonEnabled = false;
 
     //go through players in order
     for(let i = 0; i < playersArr.length; i++){
@@ -283,15 +297,12 @@ async function initialSettlements(){
         drawCanvas()
 
         settlementButton();
-        document.getElementById("cancelButton").disabled = true;
-
 
         //create a function that waits for settlement to be built before continuing
         await waitForSettlment(1);
 
 
         roadButton();
-        document.getElementById("cancelButton").disabled = true;
 
 
         //create a function that waits for road to be built before continuing
@@ -311,16 +322,11 @@ async function initialSettlements(){
         drawCanvas()
 
         settlementButton();
-        document.getElementById("cancelButton").disabled = true;
-
 
         //create a function that waits for settlement to be built before continuing
         await waitForSettlment(2);
 
-
         roadButton();
-        document.getElementById("cancelButton").disabled = true;
-
 
         //create a function that waits for road to be built before continuing
         await waitForRoad(2);
@@ -342,23 +348,43 @@ function mainGameLoop(){
 
 
     //turn loop
-    while(false){
+    do {
+
+        ++turnNumber;
+        drawCanvas();
+        drawPlayerInfo();
+
+        //disable all moves except dice and robber
+
+
+
+        //cap dev cards played per turn
 
         //preturn option to play knight card
 
 
-        //roll the dice
+        //await player rolling the dice
 
         //if robber
             //await each player choosing resources to discard
             //await currPlayer moving robber
+
+
+        //disable all moves which aren't legal for player
+
 
         //switch statement in loop for main turn actions which can happen in any order
 
         //await choice to end turn
 
         //move to next players turn
-    }
+        currPlayerIndex = ++currPlayerIndex%(playersArr.length);
+        currPlayer = playersArr[currPlayerIndex];
+    
+        drawCanvas();
+        drawPlayerInfo();
+    
+    }while(false)
 
     //do something when end of game condition is reached
 
@@ -706,7 +732,6 @@ function cancelAction(){
 
     showRoads = false;
 
-    document.getElementById("cancelButton").disabled = true;
     unfreeze()
     drawCanvas()
 
@@ -719,20 +744,25 @@ function cancelAction(){
 
 
 function freeze(){
-    document.getElementById("diceButton").disabled = true;
-    document.getElementById("devButton").disabled = true;
-    document.getElementById("roadButton").disabled = true;
-    document.getElementById("settlementButton").disabled = true;
-    document.getElementById("cityButton").disabled = true;
+
+    diceButtonEnabled = false;
+    devButtonEnabled = false;
+    roadButtonEnabled = false;
+    settlementButtonEnabled = false;
+    cityButtonEnabled = false;
+    turnButtonEnabled = false;
+
+    drawCanvas()
 }
 
 function unfreeze(){
-    document.getElementById("diceButton").disabled = false;
-    document.getElementById("devButton").disabled = false;
-    document.getElementById("roadButton").disabled = false;
-    document.getElementById("settlementButton").disabled = false;
-    document.getElementById("cityButton").disabled = false;
-    document.getElementById("cancelButton").disabled = true;
+
+    diceButtonEnabled = true;
+    devButtonEnabled = true;
+    roadButtonEnabled = true;
+    settlementButtonEnabled = true;
+    cityButtonEnabled = true;
+    turnButtonEnabled = true;
 
     drawCanvas()
 }
@@ -752,7 +782,7 @@ function unfreeze(){
 
 //called when dice button is clicked
 function diceButton(){
-    //document.getElementById("rollResult").innerHTML = "Roll Result: " + rollDice();
+
     rollDice();
     drawDice()
     
@@ -760,7 +790,6 @@ function diceButton(){
     graphicButton()
 
     turnNumber++;
-    //document.getElementById("turnNumber").innerHTML = "Turn number: " + turnNumber;
 }
 
 //event called when dev card button is clicked
@@ -776,7 +805,6 @@ function roadButton(){
     showRoads = true;
     buildingRoad = true;
     freeze();
-    document.getElementById("cancelButton").disabled = false;
     drawRoads();
     drawSettlements();
 
@@ -786,7 +814,6 @@ function settlementButton(){
 
     buildingSettlement = true;
     freeze();
-    document.getElementById("cancelButton").disabled = false;
     drawVertices();
 
 }
@@ -797,7 +824,6 @@ function cityButton(){
 
     buildingCity = true;
     freeze();
-    document.getElementById("cancelButton").disabled = false;
     //drawVertices(currPlayer);
 
 }

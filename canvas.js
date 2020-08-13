@@ -57,7 +57,7 @@ canvas.addEventListener('click', function(e) {
     //dev button
     if(ctx.isPointInPath(devButtonPath, e.offsetX, e.offsetY)){
         if(devButtonEnabled){
-            //tradeButton()
+            devButton()
         }
         console.log("dev button clicked")
     }
@@ -65,7 +65,7 @@ canvas.addEventListener('click', function(e) {
     //road button
     if(ctx.isPointInPath(roadButtonPath, e.offsetX, e.offsetY)){
         if(roadButtonEnabled){
-            //tradeButton()
+            roadButton()
         }
         console.log("road button clicked")
     }
@@ -73,7 +73,7 @@ canvas.addEventListener('click', function(e) {
     //settlement button
     if(ctx.isPointInPath(settlementButtonPath, e.offsetX, e.offsetY)){
         if(settlementButtonEnabled){
-            //tradeButton()
+            settlementButton()
         }
         console.log("settlement button clicked")
     }
@@ -81,7 +81,7 @@ canvas.addEventListener('click', function(e) {
     //city Button
     if(ctx.isPointInPath(cityButtonPath, e.offsetX, e.offsetY)){
         if(cityButtonEnabled){
-            //tradeButton()
+            cityButton()
         }
         console.log("city button clicked")
     }
@@ -89,7 +89,7 @@ canvas.addEventListener('click', function(e) {
     //turn button
     if(ctx.isPointInPath(turnButtonPath, e.offsetX, e.offsetY)){
         if(turnButtonEnabled){
-            //tradeButton()
+            turnButton()
         }
         console.log("turn button clicked")
     }
@@ -314,31 +314,77 @@ function initDicePath(){
 
 function drawButtons(){
     
+    //the text isn't really linked to the locations of the buttons and must be updated separately if moved
+
+    let disabledColor = 'slategrey'
+    let enabledColor = 'black'
+
     //trade button
-    ctx.fillStyle = 'slategrey'
+    ctx.fillStyle = enabledColor
+    if(!tradeButtonEnabled){
+        ctx.fillStyle = disabledColor
+    }
     ctx.fill(tradeButtonPath)
 
+    ctx.textAlign = "center"
+    ctx.fillStyle = "white"
+    ctx.font = "20px Arial"
+    ctx.fillText("Trade", canvas.width - 50, 60, 70)
+
+
     //dev Button
-    ctx.fillStyle = 'slategrey'
+    ctx.fillStyle = enabledColor
+    if(!devButtonEnabled){
+        ctx.fillStyle = disabledColor
+    }
     ctx.fill(devButtonPath)
 
+    ctx.fillStyle = "white"
+    ctx.fillText("Dev Card", canvas.width - 50, 150, 70)
+
+
     //road Button
-    ctx.fillStyle = 'slategrey'
+    ctx.fillStyle = enabledColor
+    if(!roadButtonEnabled){
+        ctx.fillStyle = disabledColor
+    }
     ctx.fill(roadButtonPath)
 
+    ctx.fillStyle = "white"
+    ctx.fillText("road", canvas.width - 50, 240, 70)
+
+
     //settlement Button
-    ctx.fillStyle = 'slategrey'
+    ctx.fillStyle = enabledColor
+    if(!settlementButtonEnabled){
+        ctx.fillStyle = disabledColor
+    }
     ctx.fill(settlementButtonPath)
 
+    ctx.fillStyle = "white"
+    ctx.fillText("Settlement", canvas.width - 50, 330, 70)
+
+
     //city Button
-    ctx.fillStyle = 'slategrey'
+    ctx.fillStyle = enabledColor
+    if(!cityButtonEnabled){
+        ctx.fillStyle = disabledColor
+    }
     ctx.fill(cityButtonPath)
 
+    ctx.fillStyle = "white"
+    ctx.fillText("City", canvas.width - 50, 420, 70)
+
+
     //turn Button
-    ctx.fillStyle = 'slategrey'
+    ctx.fillStyle = enabledColor
+    if(!turnButtonEnabled){
+        ctx.fillStyle = disabledColor
+    }
     ctx.fill(turnButtonPath)
 
-
+    ctx.fillStyle = "white"
+    ctx.fillText("End Turn", canvas.width - 50, 510, 70)
 }
 
 
@@ -1327,20 +1373,20 @@ function drawBank(){
 
     //draw box for bank to go in
     ctx.beginPath()
-    ctx.rect(20, 10, 320, 80);
+    ctx.rect(25, 10, 320, 80);
     ctx.stroke();
     ctx.fillStyle = "antiquewhite"
     ctx.fill()
 
     ctx.beginPath()
-    ctx.rect(20 + 320/2 - 30, 5, 60, 20);
+    ctx.rect(25 + 320/2 - 30, 5, 60, 20);
     ctx.stroke();
     ctx.fillStyle = "antiquewhite"
     ctx.fill()
 
     ctx.font = "15px Arial"
     ctx.fillStyle = "black"
-    ctx.fillText("Bank", 20 +  320/2, 20)
+    ctx.fillText("Bank", 25 +  320/2, 20)
     
     //draw numbers for resources
     for(var i = 0; i < 6; i++){
@@ -1348,20 +1394,20 @@ function drawBank(){
         ctx.font = "15px Arial"
         if(i<5){
             ctx.beginPath()
-            ctx.rect(32 + (i*320/6), 30, 25, 35)
+            ctx.rect(37 + (i*320/6), 30, 25, 35)
             ctx.stroke()
             ctx.fillStyle = colorVals[i]
             ctx.fill()
             ctx.fillStyle = "black"
-            ctx.fillText(bank[i], 43 + (i*320/6) + i/2, 83)
+            ctx.fillText(bank[i], 48 + (i*320/6) + i/2, 83)
         }else{
             ctx.beginPath()
-            ctx.rect(32 + (i*320/6), 30, 25, 35)
+            ctx.rect(37 + (i*320/6), 30, 25, 35)
             ctx.stroke()
             ctx.fillStyle = colorVals[i]
             ctx.fill()
             ctx.fillStyle = "black"
-            ctx.fillText(devCardArray.length, 42 + (i*320/6) + i/2, 83)
+            ctx.fillText(devCardArray.length, 48 + (i*320/6) + i/2, 83)
         }
         
     }
@@ -1557,7 +1603,7 @@ function drawTimer(){
 function drawTurnNum(){
     ctx.textAlign = "left"
     ctx.font = "Arial 15px"
-    ctx.fillText("Turn: " + turnNumber, 20, 105)
+    ctx.fillText("Turn: " + turnNumber, 25, 105)
 }
 
 

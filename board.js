@@ -372,6 +372,7 @@ function mainGameLoop(){
 
 
         //disable all moves which aren't legal for player
+        setButtons()
 
 
         //switch statement in loop for main turn actions which can happen in any order
@@ -388,6 +389,45 @@ function mainGameLoop(){
     }while(false)
 
     //do something when end of game condition is reached
+
+}
+
+//disables buttons which the user cannot push
+function setButtons(){
+
+    //trade button
+    tradeButtonEnabled = false;
+
+    //dev button
+    if(devCardArray.length > 0 && (currPlayer.resources[2] > 0 && currPlayer.resources[3] > 0 && currPlayer.resources[4] > 0)){
+        devButtonEnabled = true;
+    }else{
+        devButtonEnabled = false;
+    }
+
+    //road
+    if(currPlayer.roadsRemaining > 0 && (currPlayer.resources[0] > 0 && currPlayer.resources[1] > 0) ){
+        roadButtonEnabled = true;
+    }else{
+        roadButtonEnabled = false;
+    }
+
+    //settlement
+    if(currPlayer.settlementsRemaining > 0 && (currPlayer.resources[0] > 0 && currPlayer.resources[1] > 0 && currPlayer.resources[2] > 0 && currPlayer.resources[3] > 0 ) ){
+        settlementButtonEnabled = true;
+    }else{
+        settlementButtonEnabled = false;
+    }
+
+    //city 
+    if(currPlayer.citiesRemaining > 0 && (currPlayer.resources[3] > 2 && currPlayer.resources[4] > 1) ){
+        settlementButtonEnabled = true;
+    }else{
+        settlementButtonEnabled = false;
+    }
+
+    //turn
+    turnButtonEnabled = false;
 
 }
 

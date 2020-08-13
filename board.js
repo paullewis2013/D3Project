@@ -17,7 +17,10 @@ var settlementButtonEnabled = false;
 var cityButtonEnabled = false;
 var turnButtonEnabled = false;
 
+var winCondition = false;
 
+var diceRolledThisTurn = false;
+var devCardPlayedThisTurn = false;
 
 //an array to store value and frequency of dice rolls
 var dice_results_arr = [];
@@ -343,20 +346,24 @@ async function initialSettlements(){
     mainGameLoop()
 }
 
-function mainGameLoop(){
+async function mainGameLoop(){
     console.log("entering MainGameLoop")
 
-
+    turnNumber = 1;
 
     //turn loop
     do {
-
-        ++turnNumber;
         drawCanvas();
         drawPlayerInfo();
 
-        //disable all moves except dice and robber
+        diceRolledThisTurn = false;
+        devCardPlayedThisTurn = false;
 
+        //disable all moves except dice and knight
+        freeze()
+        diceButtonEnabled = true;
+
+        
 
 
         //cap dev cards played per turn
@@ -365,28 +372,32 @@ function mainGameLoop(){
 
 
         //await player rolling the dice
+        await waitForDiceRoll()
+
 
         //if robber
             //await each player choosing resources to discard
             //await currPlayer moving robber
+            //await currPlayer choosing player to rob
 
+
+        //begin body of turn
 
         //disable all moves which aren't legal for player
-        setButtons()
+        drawButtons()
 
 
         //switch statement in loop for main turn actions which can happen in any order
 
         //await choice to end turn
+        await waitForTurnButton(turnNumber);
 
-        //move to next players turn
-        currPlayerIndex = ++currPlayerIndex%(playersArr.length);
-        currPlayer = playersArr[currPlayerIndex];
-    
+        //end of turn
+
         drawCanvas();
         drawPlayerInfo();
     
-    }while(false)
+    }while(!winCondition)
 
     //do something when end of game condition is reached
 
@@ -394,41 +405,66 @@ function mainGameLoop(){
 
 //disables buttons which the user cannot push
 function setButtons(){
+    
+    if(diceRolledThisTurn){
 
-    //trade button
-    tradeButtonEnabled = false;
+        //trade button
+        tradeButtonEnabled = false;
 
-    //dev button
-    if(devCardArray.length > 0 && (currPlayer.resources[2] > 0 && currPlayer.resources[3] > 0 && currPlayer.resources[4] > 0)){
-        devButtonEnabled = true;
+        //dev button
+        if(devCardArray.length > 0 && (currPlayer.resources[2] > 0 && currPlayer.resources[3] > 0 && currPlayer.resources[4] > 0)){
+            devButtonEnabled = true;
+        }else{
+            devButtonEnabled = false;
+        }
+
+        //road
+        if(currPlayer.roadsRemaining > 0 && (currPlayer.resources[0] > 0 && currPlayer.resources[1] > 0) ){
+            roadButtonEnabled = true;
+        }else{
+            roadButtonEnabled = false;
+        }
+
+        //settlement
+        if(currPlayer.settlementsRemaining > 0 && (currPlayer.resources[0] > 0 && currPlayer.resources[1] > 0 && currPlayer.resources[2] > 0 && currPlayer.resources[3] > 0 ) ){
+            settlementButtonEnabled = true;
+        }else{
+            settlementButtonEnabled = false;
+        }
+
+        //city 
+        if(currPlayer.citiesRemaining > 0 && (currPlayer.resources[3] > 2 && currPlayer.resources[4] > 1) ){
+            cityButtonEnabled = true;
+        }else{
+            cityButtonEnabled = false;
+        }
+
+        //turn
+        if(!movingRobber){
+            turnButtonEnabled = true
+        }else{
+            turnButtonEnabled = false;
+        }
+        
+
     }else{
+
+        tradeButtonEnabled = false;
         devButtonEnabled = false;
-    }
-
-    //road
-    if(currPlayer.roadsRemaining > 0 && (currPlayer.resources[0] > 0 && currPlayer.resources[1] > 0) ){
-        roadButtonEnabled = true;
-    }else{
         roadButtonEnabled = false;
-    }
-
-    //settlement
-    if(currPlayer.settlementsRemaining > 0 && (currPlayer.resources[0] > 0 && currPlayer.resources[1] > 0 && currPlayer.resources[2] > 0 && currPlayer.resources[3] > 0 ) ){
-        settlementButtonEnabled = true;
-    }else{
         settlementButtonEnabled = false;
-    }
+        cityButtonEnabled = false;
+        turnButtonEnabled = false;
 
-    //city 
-    if(currPlayer.citiesRemaining > 0 && (currPlayer.resources[3] > 2 && currPlayer.resources[4] > 1) ){
-        settlementButtonEnabled = true;
+    }
+    
+    
+    //dice
+    if(!diceRolledThisTurn){
+        diceButtonEnabled = true;
     }else{
-        settlementButtonEnabled = false;
+        diceButtonEnabled = false;
     }
-
-    //turn
-    turnButtonEnabled = false;
-
 }
 
 function sleep(ms) {
@@ -464,6 +500,39 @@ async function waitForRoad(num){
         }
 
     }
+
+}
+
+async function waitForTurnButton(currentTurn){
+
+    let ended = false;
+
+    while(!ended){
+
+        if(turnNumber > currentTurn){
+            ended = true
+        }else{
+            await sleep(100)
+        }
+
+    }
+
+}
+
+async function waitForDiceRoll(){
+
+    let diceRollFinished = false
+
+    while(!diceRollFinished){
+        
+        if(diceRolledThisTurn && !movingRobber){
+            diceRollFinished = true;
+        }else{
+            await sleep(100)
+        }
+        
+    }
+
 
 }
 
@@ -549,6 +618,8 @@ function generatePorts(){
 
 //generates a dice roll between 1 and 12 by summing two d6
 function rollDice(){
+
+    diceRolledThisTurn = true;
 
     diceArr[0].roll()
     diceArr[1].roll()
@@ -783,10 +854,20 @@ function cancelAction(){
 
 }
 
+function turnButton(){
+    
+    turnNumber++;
+
+    currPlayerIndex = ++currPlayerIndex%(playersArr.length);
+    currPlayer = playersArr[currPlayerIndex];
+
+    console.log("turn completed")
+}
 
 function freeze(){
 
     diceButtonEnabled = false;
+    tradeButtonEnabled = false;
     devButtonEnabled = false;
     roadButtonEnabled = false;
     settlementButtonEnabled = false;
@@ -829,8 +910,6 @@ function diceButton(){
     
     //updates dice results if they are visible
     graphicButton()
-
-    turnNumber++;
 }
 
 //event called when dev card button is clicked

@@ -88,6 +88,7 @@ canvas.addEventListener('click', function(e) {
 
     //turn button
     if(ctx.isPointInPath(turnButtonPath, e.offsetX, e.offsetY)){
+        console.log(turnButtonEnabled)
         if(turnButtonEnabled){
             turnButton()
         }
@@ -159,6 +160,7 @@ canvas.addEventListener('click', function(e) {
             if (ctx.isPointInPath(tilesArr[i][j].hitbox, e.offsetX, e.offsetY)) {
                 console.log(tilesArr[i][j]);
 
+                //TODO this should be a method
                 //moves robber to new tile if the robber is not already there
                 if(movingRobber && robberLocation != tilesArr[i][j]){
                     robberLocation = tilesArr[i][j]
@@ -174,12 +176,12 @@ canvas.addEventListener('click', function(e) {
 
                     //TODO select player to steal from if multiple are adjacent
 
-                    //reenable buttons to work
-                    unfreeze()
+                    //reenable buttons to work when drawButtons method is called in drawCanvas
+                    drawCanvas()
                     
-                    //if this isn't here I get an error but the error doesn't seem to cause any problems
-                    //it just makes me uncomfortable
-                    return;
+                    // //if this isn't here I get an error but the error doesn't seem to cause any problems
+                    // //it just makes me uncomfortable
+                    // return;
                 }
 
             }
@@ -335,6 +337,8 @@ function initDicePath(){
 
 function drawButtons(){
     
+    setButtons()
+
     //the text isn't really linked to the locations of the buttons and must be updated separately if moved
 
     let disabledColor = 'slategrey'

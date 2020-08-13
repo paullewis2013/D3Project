@@ -224,6 +224,27 @@ canvas.addEventListener('click', function(e) {
 
 });
 
+canvas.addEventListener('mousemove', function(e) {
+
+    if(     ctx.isPointInPath(dicePath, e.offsetX, e.offsetY) ||
+            ctx.isPointInPath(tradeButtonPath, e.offsetX, e.offsetY) ||
+            ctx.isPointInPath(devButtonPath, e.offsetX, e.offsetY) ||
+            ctx.isPointInPath(roadButtonPath, e.offsetX, e.offsetY) ||
+            ctx.isPointInPath(settlementButtonPath, e.offsetX, e.offsetY) ||
+            ctx.isPointInPath(cityButtonPath, e.offsetX, e.offsetY) ||
+            ctx.isPointInPath(turnButtonPath, e.offsetX, e.offsetY)){
+            
+        document.body.style.cursor = "pointer";
+
+    }else{
+        
+        document.body.style.cursor = "default";
+
+    }
+
+    
+});
+
 //––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 //preloading images code
 //––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––

@@ -1455,14 +1455,14 @@ function drawBank(){
     ctx.fill()
 
     ctx.beginPath()
-    ctx.rect(25 + 320/2 - 30, 5, 60, 20);
+    ctx.rect(25 + 320/2 - 30, 2, 60, 20);
     ctx.stroke();
     ctx.fillStyle = "antiquewhite"
     ctx.fill()
 
     ctx.font = "15px Arial"
     ctx.fillStyle = "black"
-    ctx.fillText("Bank", 25 +  320/2, 20)
+    ctx.fillText("Bank", 25 +  320/2, 17)
     
     //draw numbers for resources
     for(var i = 0; i < 6; i++){
@@ -1706,7 +1706,7 @@ function drawHand(){
     ctx.fill()
 
     ctx.beginPath()
-    ctx.rect(canvas.width - boxWidth/2 - 30 - 100, 5, 60, 20);
+    ctx.rect(canvas.width - boxWidth/2 - 30 - 100, 2, 60, 20);
     ctx.stroke();
     ctx.fillStyle = "antiquewhite"
     ctx.fill()
@@ -1714,7 +1714,7 @@ function drawHand(){
     ctx.font = "15px Arial"
     ctx.textAlign = "center"
     ctx.fillStyle = "black"
-    ctx.fillText("Cards", canvas.width - boxWidth/2 - 100, 20)
+    ctx.fillText("Cards", canvas.width - boxWidth/2 - 100, 17)
 
     
 
@@ -1728,7 +1728,7 @@ function drawHand(){
             let currCard = new Path2D
 
             ctx.beginPath()
-            currCard.rect(canvas.width - 400 + cardWidth * cardTypes + 5 * cardTypes, 20, cardWidth, cardHeight);
+            currCard.rect(canvas.width - boxWidth + cardWidth * cardTypes + 5 * (cardTypes + 1) - 100, 20, cardWidth, cardHeight);
             ctx.stroke(currCard);
 
             //get style for resource card
@@ -1782,7 +1782,7 @@ function drawHand(){
             ctx.fillStyle = "black"
             ctx.textAlign = "center"
             ctx.font = "15px Arial"
-            ctx.fillText(currPlayer.resources[i], canvas.width - 400 + cardWidth * cardTypes + 5 * cardTypes + cardWidth/2, 40 + cardHeight/2)
+            ctx.fillText(currPlayer.resources[i], canvas.width - boxWidth + cardWidth * cardTypes + 5 * cardTypes + cardWidth/2 - 100, 40 + cardHeight/2)
             
             
             cardTypes++;

@@ -408,41 +408,43 @@ async function mainGameLoop(){
 //disables buttons which the user cannot push
 function setButtons(){
     
+    let building = buildingRoad || buildingSettlement || buildingCity;
+
     if(diceRolledThisTurn && !movingRobber){
 
         //trade button
         tradeButtonEnabled = false;
 
         //dev button
-        if(devCardArray.length > 0 && (currPlayer.resources[2] > 0 && currPlayer.resources[3] > 0 && currPlayer.resources[4] > 0)){
+        if(!building && devCardArray.length > 0 && (currPlayer.resources[2] > 0 && currPlayer.resources[3] > 0 && currPlayer.resources[4] > 0)){
             devButtonEnabled = true;
         }else{
             devButtonEnabled = false;
         }
 
         //road
-        if(currPlayer.roadsRemaining > 0 && (currPlayer.resources[0] > 0 && currPlayer.resources[1] > 0) ){
+        if((!building || buildingRoad) && currPlayer.roadsRemaining > 0 && (currPlayer.resources[0] > 0 && currPlayer.resources[1] > 0) ){
             roadButtonEnabled = true;
         }else{
             roadButtonEnabled = false;
         }
 
         //settlement
-        if(currPlayer.settlementsRemaining > 0 && (currPlayer.resources[0] > 0 && currPlayer.resources[1] > 0 && currPlayer.resources[2] > 0 && currPlayer.resources[3] > 0 ) ){
+        if((!building || buildingSettlement) && currPlayer.settlementsRemaining > 0 && (currPlayer.resources[0] > 0 && currPlayer.resources[1] > 0 && currPlayer.resources[2] > 0 && currPlayer.resources[3] > 0 ) ){
             settlementButtonEnabled = true;
         }else{
             settlementButtonEnabled = false;
         }
 
         //city 
-        if(currPlayer.citiesRemaining > 0 && (currPlayer.resources[3] > 1 && currPlayer.resources[4] > 2) ){
+        if((!building || buildingCity) && currPlayer.citiesRemaining > 0 && (currPlayer.resources[3] > 1 && currPlayer.resources[4] > 2) ){
             cityButtonEnabled = true;
         }else{
             cityButtonEnabled = false;
         }
 
         //turn
-        if(!buildingRoad && !buildingSettlement && !buildingCity){
+        if(!building){
             turnButtonEnabled = true
         }else{
             turnButtonEnabled = false;

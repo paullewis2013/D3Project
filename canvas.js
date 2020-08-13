@@ -64,8 +64,10 @@ canvas.addEventListener('click', function(e) {
 
     //road button
     if(ctx.isPointInPath(roadButtonPath, e.offsetX, e.offsetY)){
-        if(roadButtonEnabled){
+        if(roadButtonEnabled && !buildingRoad){
             roadButton()
+        }else if(roadButtonEnabled && buildingRoad){
+            cancelAction();
         }
         console.log("road button clicked")
     }
@@ -88,7 +90,6 @@ canvas.addEventListener('click', function(e) {
 
     //turn button
     if(ctx.isPointInPath(turnButtonPath, e.offsetX, e.offsetY)){
-        console.log(turnButtonEnabled)
         if(turnButtonEnabled){
             turnButton()
         }
@@ -384,6 +385,12 @@ function drawButtons(){
         ctx.fillStyle = disabledColor
     }
     ctx.fill(roadButtonPath)
+
+    if(buildingRoad){
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = "white"
+        ctx.stroke(roadButtonPath)
+    }
 
     ctx.fillStyle = "white"
     ctx.fillText("road", canvas.width - 50, 240, 70)
@@ -1652,25 +1659,30 @@ function drawHand(){
     ctx.strokeStyle = "black";
     ctx.lineWidth = 1;
 
+    let cardTypes = 0
+    let cardWidth = 40
+    let cardHeight = 60
+    let buffer = 5
+    let boxWidth = 10 * cardWidth + 11 * buffer
+
     ctx.beginPath()
-    ctx.rect(canvas.width - 320 - 100, 10, 320, 80);
+    ctx.rect(canvas.width - boxWidth - 100, 10, boxWidth, 80);
     ctx.stroke();
     ctx.fillStyle = "antiquewhite"
     ctx.fill()
 
     ctx.beginPath()
-    ctx.rect(canvas.width - 320/2 - 30 - 100, 5, 60, 20);
+    ctx.rect(canvas.width - boxWidth/2 - 30 - 100, 5, 60, 20);
     ctx.stroke();
     ctx.fillStyle = "antiquewhite"
     ctx.fill()
 
     ctx.font = "15px Arial"
+    ctx.textAlign = "center"
     ctx.fillStyle = "black"
-    ctx.fillText("Cards", canvas.width - 325/2 - 15 - 100, 20)
+    ctx.fillText("Cards", canvas.width - boxWidth/2 - 100, 20)
 
-    let cardTypes = 0
-    let cardWidth = 40
-    let cardHeight = 60
+    
 
     //loop through all of current players resources
     for(let i = 0; i < currPlayer.resources.length; i++){
@@ -1742,6 +1754,9 @@ function drawHand(){
             cardTypes++;
         }
     }
+
+    //loop though all of current players dev Cards
+
 }
 
 function drawCanvas(){

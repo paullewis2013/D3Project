@@ -406,7 +406,7 @@ async function mainGameLoop(){
 //disables buttons which the user cannot push
 function setButtons(){
     
-    if(diceRolledThisTurn){
+    if(diceRolledThisTurn && !movingRobber){
 
         //trade button
         tradeButtonEnabled = false;
@@ -440,7 +440,7 @@ function setButtons(){
         }
 
         //turn
-        if(!movingRobber){
+        if(!buildingRoad && !buildingSettlement && !buildingCity){
             turnButtonEnabled = true
         }else{
             turnButtonEnabled = false;
@@ -842,15 +842,19 @@ function buildCity(settlement, player){
 
 function cancelAction(){
 
-    showRoads = false;
+    console.log("canceling")
 
-    unfreeze()
-    drawCanvas()
+    showRoads = false;
 
     movingRobber = false;
     buildingRoad = false;
     buildingSettlement = false;
     buildingCity = false;
+
+    //unfreeze()
+    drawCanvas()
+
+    
 
 }
 

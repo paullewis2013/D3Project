@@ -18,6 +18,7 @@ var cityButtonEnabled = false;
 var turnButtonEnabled = false;
 
 var winCondition = false;
+var initialPlacementsComplete = false;
 
 var diceRolledThisTurn = false;
 var devCardPlayedThisTurn = false;
@@ -341,6 +342,7 @@ async function initialSettlements(){
         }
     }
 
+    initialPlacementsComplete = true;
 
     //enter main game loop here
     mainGameLoop()

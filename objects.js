@@ -201,6 +201,37 @@ Player.prototype.calcLongestRoad = function(){
     //TODO
 
 }
+Player.prototype.getBuildableVertices = function(){
+
+    let buildableVerts = []
+
+    for(var i = 0; i < 12; i++){
+
+        for(var j = 0; j < verticesArr[i].length; j++){
+            
+            if(verticesArr[i][j].settlement === null && verticesArr[i][j].dead !== true){
+                // ctx.fillStyle = "white";
+                // ctx.fill(verticesArr[i][j].hitbox)
+                // ctx.stroke(verticesArr[i][j].hitbox)
+
+                // //for debug
+                // // ctx.fillStyle = "black"
+                // // ctx.fillText(i + "," + j, verticesArr[i][j].cx, verticesArr[i][j].cy + 5)
+
+                for(let k = 0; k < verticesArr[i][j].adjRoads.length; k++){
+                    if(verticesArr[i][j].adjRoads[k].player === currPlayer){
+                        buildableVerts.push(verticesArr[i][j])
+                    }
+                }
+
+            }
+        }
+
+    }
+
+    return buildableVerts
+
+}
 
 
 //define dice object

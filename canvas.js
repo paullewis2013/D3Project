@@ -74,16 +74,20 @@ canvas.addEventListener('click', function(e) {
 
     //settlement button
     if(ctx.isPointInPath(settlementButtonPath, e.offsetX, e.offsetY)){
-        if(settlementButtonEnabled){
+        if(settlementButtonEnabled && !buildingSettlement){
             settlementButton()
+        }else if(settlementButtonEnabled && buildingSettlement){
+            cancelAction()
         }
         console.log("settlement button clicked")
     }
 
     //city Button
     if(ctx.isPointInPath(cityButtonPath, e.offsetX, e.offsetY)){
-        if(cityButtonEnabled){
+        if(cityButtonEnabled && !buildingCity){
             cityButton()
+        }else if(cityButtonEnabled && buildingCity){
+            cancelAction()
         }
         console.log("city button clicked")
     }
@@ -403,6 +407,12 @@ function drawButtons(){
     }
     ctx.fill(settlementButtonPath)
 
+    if(buildingSettlement){
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = "white"
+        ctx.stroke(settlementButtonPath)
+    }
+
     ctx.fillStyle = "white"
     ctx.fillText("Settlement", canvas.width - 50, 330, 70)
 
@@ -413,6 +423,12 @@ function drawButtons(){
         ctx.fillStyle = disabledColor
     }
     ctx.fill(cityButtonPath)
+
+    if(buildingCity){
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = "white"
+        ctx.stroke(cityButtonPath)
+    }
 
     ctx.fillStyle = "white"
     ctx.fillText("City", canvas.width - 50, 420, 70)
@@ -662,22 +678,40 @@ function drawVertices(){
     ctx.fillStyle = "white";
     ctx.font = "15px Arial"
 
-    for(var i = 0; i < 12; i++){
+    //draw all vertices which could be built on 
+    if(!initialPlacementsComplete){
+        for(var i = 0; i < 12; i++){
 
-        for(var j = 0; j < verticesArr[i].length; j++){
-            
-            if(verticesArr[i][j].settlement === null && verticesArr[i][j].dead !== true){
-                ctx.fillStyle = "white";
-                ctx.fill(verticesArr[i][j].hitbox)
-                ctx.stroke(verticesArr[i][j].hitbox)
-
-                //for debug
-                // ctx.fillStyle = "black"
-                // ctx.fillText(i + "," + j, verticesArr[i][j].cx, verticesArr[i][j].cy + 5)
+            for(var j = 0; j < verticesArr[i].length; j++){
+                
+                if(verticesArr[i][j].settlement === null && verticesArr[i][j].dead !== true){
+                    ctx.fillStyle = "white";
+                    ctx.fill(verticesArr[i][j].hitbox)
+                    ctx.stroke(verticesArr[i][j].hitbox)
+    
+                    //for debug
+                    // ctx.fillStyle = "black"
+                    // ctx.fillText(i + "," + j, verticesArr[i][j].cx, verticesArr[i][j].cy + 5)
+                }
             }
+    
+        }
+    }
+
+    //draw only buildable vertices reachable by currPlayer
+    else{
+
+        let verts = currPlayer.getBuildableVertices();
+
+        for(var i = 0; i < verts.length; i++){
+            ctx.fillStyle = "white";
+            ctx.fill(verts[i].hitbox)
+            ctx.stroke(verts[i].hitbox)
         }
 
     }
+
+    
 }
 
 function initRoads(){

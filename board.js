@@ -433,7 +433,7 @@ function setButtons(){
         }
 
         //city 
-        if(currPlayer.citiesRemaining > 0 && (currPlayer.resources[3] > 2 && currPlayer.resources[4] > 1) ){
+        if(currPlayer.citiesRemaining > 0 && (currPlayer.resources[3] > 1 && currPlayer.resources[4] > 2) ){
             cityButtonEnabled = true;
         }else{
             cityButtonEnabled = false;

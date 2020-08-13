@@ -228,15 +228,25 @@ canvas.addEventListener('click', function(e) {
 
 canvas.addEventListener('mousemove', function(e) {
 
-    if(     ctx.isPointInPath(dicePath, e.offsetX, e.offsetY) ||
-            ctx.isPointInPath(tradeButtonPath, e.offsetX, e.offsetY) ||
-            ctx.isPointInPath(devButtonPath, e.offsetX, e.offsetY) ||
-            ctx.isPointInPath(roadButtonPath, e.offsetX, e.offsetY) ||
-            ctx.isPointInPath(settlementButtonPath, e.offsetX, e.offsetY) ||
-            ctx.isPointInPath(cityButtonPath, e.offsetX, e.offsetY) ||
-            ctx.isPointInPath(turnButtonPath, e.offsetX, e.offsetY)){
+    if(     (ctx.isPointInPath(dicePath, e.offsetX, e.offsetY) && diceButtonEnabled)||
+            (ctx.isPointInPath(tradeButtonPath, e.offsetX, e.offsetY) && tradeButtonEnabled)||
+            (ctx.isPointInPath(devButtonPath, e.offsetX, e.offsetY) && devButtonEnabled) ||
+            (ctx.isPointInPath(roadButtonPath, e.offsetX, e.offsetY) && roadButtonEnabled) ||
+            (ctx.isPointInPath(settlementButtonPath, e.offsetX, e.offsetY) && settlementButtonEnabled) ||
+            (ctx.isPointInPath(cityButtonPath, e.offsetX, e.offsetY) && cityButtonEnabled)||
+            (ctx.isPointInPath(turnButtonPath, e.offsetX, e.offsetY) && turnButtonEnabled)){
             
         document.body.style.cursor = "pointer";
+
+    }else if(   (ctx.isPointInPath(dicePath, e.offsetX, e.offsetY) && !diceButtonEnabled)||
+                (ctx.isPointInPath(tradeButtonPath, e.offsetX, e.offsetY) && !tradeButtonEnabled)||
+                (ctx.isPointInPath(devButtonPath, e.offsetX, e.offsetY) && !devButtonEnabled) ||
+                (ctx.isPointInPath(roadButtonPath, e.offsetX, e.offsetY) && !roadButtonEnabled) ||
+                (ctx.isPointInPath(settlementButtonPath, e.offsetX, e.offsetY) && !settlementButtonEnabled) ||
+                (ctx.isPointInPath(cityButtonPath, e.offsetX, e.offsetY) && !cityButtonEnabled)||
+                (ctx.isPointInPath(turnButtonPath, e.offsetX, e.offsetY) && !turnButtonEnabled)){
+
+        document.body.style.cursor = "not-allowed";
 
     }else{
         

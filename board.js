@@ -664,8 +664,7 @@ function drawDevCard(){
     }else{
         console.log("deck empty")
     }
-    drawBank()
-    drawPlayerInfo()
+    drawCanvas()
     
 }
 

@@ -137,6 +137,12 @@ Player.prototype.buildSettlement = function(settlement){
 
     }
 
+    if(initialPlacementsComplete){
+        //take players resources and give them to the bank
+        this.resources = [this.resources[0] - 1, this.resources[1] - 1, this.resources[2] - 1, this.resources[3] - 1, this.resources[4]];
+        bank = [bank[0] + 1, bank[1] + 1, bank[2] + 1, bank[3] + 1, bank[4]];
+    }
+    
     this.VP++;
     this.settlementsRemaining--;
     this.settlements.push(settlement);
@@ -144,6 +150,12 @@ Player.prototype.buildSettlement = function(settlement){
 Player.prototype.buildRoad = function(r){
     this.roadsRemaining--;
     this.roads.push(r)
+
+    if(initialPlacementsComplete){
+        //take players resources and give them to the bank
+        this.resources = [this.resources[0] - 1, this.resources[1] - 1, this.resources[2], this.resources[3], this.resources[4]];
+        bank = [bank[0] + 1, bank[1] + 1, bank[2], bank[3], bank[4]];
+    }
 
     //calculate longest road here
     this.calcLongestRoad();
@@ -159,9 +171,27 @@ Player.prototype.totalResources = function(){
     return sum;
 }
 Player.prototype.buildCity = function(){
+    
+    
+    //take players resources and give them to the bank
+    this.resources = [this.resources[0], this.resources[1], this.resources[2], this.resources[3] - 2, this.resources[4] + 3];
+    bank = [bank[0], bank[1], bank[2], bank[3] + 2, bank[4] + 3];
+
+
     this.settlementsRemaining++;
     this.citiesRemaining--;
     this.VP++;
+}
+Player.prototype.drawDevCard = function(card){
+
+    //take players resources and give them to the bank
+    this.resources = [this.resources[0], this.resources[1], this.resources[2] - 1, this.resources[3] - 1, this.resources[4] - 1];
+    bank = [bank[0], bank[1], bank[2] + 1, bank[3] + 1, bank[4] + 1];
+    this.devCards.push(card)
+
+}
+Player.prototype.playDevCard = function(){
+    //TODO
 }
 Player.prototype.getBuildableRoads = function(){
 

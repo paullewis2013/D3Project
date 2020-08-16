@@ -5,6 +5,7 @@
 //instance fields
 //--------------------------------------------------
 
+
 //TODO organize instance fields
 
 
@@ -650,17 +651,13 @@ function rollDice(){
     return result;
 }
 
-
+//this name is kind of confusing tbh
+//nothing is drawn on the canvas here
 function drawDevCard(){
     if(devCardArray.length > 0){
         var card = devCardArray.pop();
-        //document.getElementById("lastDevCard").innerHTML = "Last Dev card drawn: " + card
-        //document.getElementById("devCardsRemaining").innerHTML = devCardArray.length
-        //console.log(card)
 
-
-        //need to remove this line later because these dev cards are not actually being played yet
-        currPlayer.devCards.push(card)
+        currPlayer.drawDevCard(card)
     }else{
         console.log("deck empty")
     }

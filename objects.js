@@ -190,8 +190,55 @@ Player.prototype.drawDevCard = function(card){
     this.devCards.push(card)
 
 }
-Player.prototype.playDevCard = function(){
-    //TODO
+Player.prototype.playDevCard = function(card){
+    
+    devCardPlayedThisTurn = true;
+
+    switch(card){
+
+        case "knight": 
+
+            console.log("playing a " + card)
+            //remove knight from player hand and do actions for playing knight
+
+            break;
+
+        case "victory point": 
+
+            console.log("playing a " + card)
+            
+
+            break;
+
+        case "monopoly": 
+
+            console.log("playing a " + card)
+            
+
+            break;
+
+        case "road building": 
+
+            console.log("playing a " + card)
+            
+
+            break;
+
+        case "year of plenty": 
+
+            console.log("playing a " + card)
+            
+
+            break;
+
+        default:
+
+
+    }
+
+    drawHand()
+    drawButtons()
+
 }
 Player.prototype.getBuildableRoads = function(){
 

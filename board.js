@@ -18,6 +18,9 @@ var settlementButtonEnabled = false;
 var cityButtonEnabled = false;
 var turnButtonEnabled = false;
 
+var anyDevCardEnabled = false;
+var knightsEnabled = false;
+
 var winCondition = false;
 var initialPlacementsComplete = false;
 
@@ -356,22 +359,21 @@ async function mainGameLoop(){
 
     //turn loop
     do {
-        drawCanvas();
-        drawPlayerInfo();
-
-        diceRolledThisTurn = false;
-        devCardPlayedThisTurn = false;
-
+        
         //disable all moves except dice and knight
+        diceRolledThisTurn = false;
         freeze()
         diceButtonEnabled = true;
 
-        
-
-
         //cap dev cards played per turn
+        devCardPlayedThisTurn = false;
+        anyDevCardEnabled = false;
 
         //preturn option to play knight card
+        knightsEnabled = true;
+
+        drawCanvas();
+        drawPlayerInfo();
 
 
         //await player rolling the dice
@@ -445,7 +447,7 @@ function setButtons(){
         }
 
         //turn
-        if(!building){
+        if(!building && diceRolledThisTurn){
             turnButtonEnabled = true
         }else{
             turnButtonEnabled = false;

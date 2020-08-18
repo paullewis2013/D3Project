@@ -31,12 +31,20 @@ var settlementButtonPath;
 var cityButtonPath;
 var turnButtonPath;
 
+//place to store on screen location of drawn cards in hand
+var cardPaths = [];
+
 
 canvas.addEventListener('click', function(e) {
 
     //debugging help
-    //console.log(p1)
+    //console.log(cardPaths)
 
+
+
+
+    //–––––––––––––––––––––––––––––––––––––––––––––––––––––––
+    //buttons
 
     //dice Button
     if(ctx.isPointInPath(dicePath, e.offsetX, e.offsetY)){
@@ -100,6 +108,44 @@ canvas.addEventListener('click', function(e) {
         console.log("turn button clicked")
     }
 
+    //–––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
+
+
+    //–––––––––––––––––––––––––––––––––––––––––––––––––––––––
+    //resource and dev cards
+
+    for(let i = 0; i < cardPaths.length; i++){
+
+        if(ctx.isPointInPath(cardPaths[i].path, e.offsetX, e.offsetY)){
+            console.log(cardPaths[i].type + " card clicked")
+
+
+
+            //dev cards
+            if(!devCardPlayedThisTurn){
+
+                //knight
+                if(anyDevCardEnabled || knightsEnabled){
+                    currPlayer.playDevCard(cardPaths[i].type);
+                }
+
+                if(cardPaths[i].type === "victory point"){
+                    console.log("cannot play a victory point")
+                }
+
+
+            }
+
+
+        }
+
+    }
+
+
+
+    //–––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
 
     //loop through all vertices
     for(var i = 0; i < 12; i++){
@@ -138,6 +184,7 @@ canvas.addEventListener('click', function(e) {
         }
     }
 
+    //loop through current players settlements
     if(buildingCity){
 
         //loop through all of currPlayer's Settlements
@@ -197,7 +244,6 @@ canvas.addEventListener('click', function(e) {
 
     //loop through all roads
     let roads = currPlayer.getBuildableRoads()
-    //console.log(roads);
 
     for(let i = 0; i < roads.length; i++){
         if(ctx.isPointInPath(roads[i].hitbox, e.offsetX, e.offsetY)){
@@ -1690,6 +1736,9 @@ function drawRobber(){
 }
 
 function drawHand(){
+
+    cardPaths = [];
+
     ctx.strokeStyle = "black";
     ctx.lineWidth = 1;
 
@@ -1740,6 +1789,8 @@ function drawHand(){
                     ctx.fillStyle = "Green"
                     ctx.fill(currCard)
 
+                    cardPaths.push({path:currCard, type:resourceCard.WOOD});
+
                     break;
 
                 //brick
@@ -1747,6 +1798,8 @@ function drawHand(){
 
                     ctx.fillStyle = "Firebrick"
                     ctx.fill(currCard)
+
+                    cardPaths.push({path:currCard, type:resourceCard.BRICK});
 
                     break;
 
@@ -1756,6 +1809,8 @@ function drawHand(){
                     ctx.fillStyle = "lightgreen"
                     ctx.fill(currCard)
 
+                    cardPaths.push({path:currCard, type:resourceCard.SHEEP});
+
                     break;
                     
                 //wheat
@@ -1764,6 +1819,8 @@ function drawHand(){
                     ctx.fillStyle = "#ffff99"
                     ctx.fill(currCard)
 
+                    cardPaths.push({path:currCard, type:resourceCard.WHEAT});
+
                     break;
 
                 //ore
@@ -1771,6 +1828,8 @@ function drawHand(){
 
                     ctx.fillStyle = "slategrey"
                     ctx.fill(currCard)
+
+                    cardPaths.push({path:currCard, type:resourceCard.ORE});
 
                     break;
 
@@ -1848,6 +1907,8 @@ function drawHand(){
                     ctx.fill(currCard)
                     printMe += "K ("
 
+                    cardPaths.push({path:currCard, type:devCard.KNIGHT});
+
                     break;
 
                 //VP
@@ -1856,6 +1917,8 @@ function drawHand(){
                     ctx.fillStyle = "grey"
                     ctx.fill(currCard)
                     printMe += "VP ("
+
+                    cardPaths.push({path:currCard, type:devCard.VP});
 
                     break;
 
@@ -1866,6 +1929,8 @@ function drawHand(){
                     ctx.fill(currCard)
                     printMe += "M ("
 
+                    cardPaths.push({path:currCard, type:devCard.MONOPOLY});
+
                     break;
                     
                 //road
@@ -1875,6 +1940,8 @@ function drawHand(){
                     ctx.fill(currCard)
                     printMe += "R ("
 
+                    cardPaths.push({path:currCard, type:devCard.ROAD});
+
                     break;
 
                 //plenty
@@ -1883,6 +1950,8 @@ function drawHand(){
                     ctx.fillStyle = "grey"
                     ctx.fill(currCard)
                     printMe += "P ("
+
+                    cardPaths.push({path:currCard, type:devCard.PLENTY});
 
                     break;
 

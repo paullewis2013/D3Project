@@ -62,7 +62,7 @@ function Road(player, hitbox){
 function Player(color){
     this.VP = 0;
     this.resources = [0, 0, 0, 0, 0];
-    this.devCards = [];
+    this.devCards = [0, 0, 0, 0, 0];
     this.roadsRemaining = 15;
     this.settlementsRemaining = 5;
     this.citiesRemaining = 4;
@@ -187,7 +187,40 @@ Player.prototype.drawDevCard = function(card){
     //take players resources and give them to the bank
     this.resources = [this.resources[0], this.resources[1], this.resources[2] - 1, this.resources[3] - 1, this.resources[4] - 1];
     bank = [bank[0], bank[1], bank[2] + 1, bank[3] + 1, bank[4] + 1];
-    this.devCards.push(card)
+    
+    switch(card){
+        case "knight": 
+
+            this.devCards[0]++
+
+            break;
+
+        case "victory point": 
+
+            this.devCards[1]++
+
+            break;
+
+        case "monopoly": 
+
+            this.devCards[2]++
+
+            break;
+
+        case "road building": 
+
+            this.devCards[3]++
+
+            break;
+
+        case "year of plenty": 
+
+            this.devCards[4]++
+
+            break;
+
+        default:
+    }
 
 }
 Player.prototype.playDevCard = function(card){

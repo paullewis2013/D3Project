@@ -1848,45 +1848,45 @@ function drawHand(){
         }
     }
 
-    let devCounts = [0, 0, 0, 0, 0]
+    // let devCounts = [0, 0, 0, 0, 0]
 
 
-    //loop though all of current players dev Cards and sort them
-    for(let i = 0; i < currPlayer.devCards.length; i++){
+    // //loop though all of current players dev Cards and sort them
+    // for(let i = 0; i < currPlayer.devCards.length; i++){
 
-        switch(currPlayer.devCards[i]){
+    //     switch(currPlayer.devCards[i]){
 
-            case "knight":
-                devCounts[0]++
-                break;
+    //         case "knight":
+    //             devCounts[0]++
+    //             break;
 
-            case 'victory point':
-                devCounts[1]++
-                break;
+    //         case 'victory point':
+    //             devCounts[1]++
+    //             break;
 
-            case 'monopoly':
-                devCounts[2]++
-                break;
+    //         case 'monopoly':
+    //             devCounts[2]++
+    //             break;
             
-            case 'road building':
-                devCounts[3]++
-                break;
+    //         case 'road building':
+    //             devCounts[3]++
+    //             break;
 
-            case 'year of plenty':
-                devCounts[4]++
-                break;
+    //         case 'year of plenty':
+    //             devCounts[4]++
+    //             break;
             
-            default:
+    //         default:
 
-        }
+    //     }
 
-    }    
+    // }    
 
     //loop though all of current players dev cards and draw them
-    for(let i = 0; i < devCounts.length; i++){
+    for(let i = 0; i < currPlayer.devCards.length; i++){
         
         //only draw resource types that the player actually has
-        if(devCounts[i] != 0){
+        if(currPlayer.devCards[i] != 0){
             
             //define boundaries of resource card
             let currCard = new Path2D
@@ -1963,7 +1963,7 @@ function drawHand(){
             ctx.fillStyle = "black"
             ctx.textAlign = "center"
             ctx.font = "15px Arial"
-            ctx.fillText(printMe + devCounts[i] + ")", canvas.width - boxWidth + cardWidth * cardTypes + 5 * (cardTypes + 1) + cardWidth/2 - 100, 40 + cardHeight/2)
+            ctx.fillText(printMe + currPlayer.devCards[i] + ")", canvas.width - boxWidth + cardWidth * cardTypes + 5 * (cardTypes + 1) + cardWidth/2 - 100, 40 + cardHeight/2)
             
             
             cardTypes++;

@@ -64,6 +64,14 @@ function drawPlayerInfo(){
         let devPath = new Path2D();
 
         //dev cards
+
+        let devCount =  playersArr[i].devCards[0] + 
+                        playersArr[i].devCards[1] +
+                        playersArr[i].devCards[2] +
+                        playersArr[i].devCards[3] +
+                        playersArr[i].devCards[4]
+
+
         p_ctx.beginPath();
         devPath.rect(160, cardTop, 25, 40);
         p_ctx.closePath();
@@ -76,7 +84,7 @@ function drawPlayerInfo(){
         p_ctx.fillText("D", 172.5, cardTop + 28)
 
         p_ctx.fillStyle = "black"
-        p_ctx.fillText(playersArr[i].devCards.length, 172.5, cardTop + 60)
+        p_ctx.fillText(devCount, 172.5, cardTop + 60)
 
 
         let fontH = offset/7;

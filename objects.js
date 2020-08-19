@@ -142,6 +142,52 @@ Player.prototype.buildSettlement = function(settlement){
         this.resources = [this.resources[0] - 1, this.resources[1] - 1, this.resources[2] - 1, this.resources[3] - 1, this.resources[4]];
         bank = [bank[0] + 1, bank[1] + 1, bank[2] + 1, bank[3] + 1, bank[4]];
     }
+
+    //give player better trade rate with bank
+    if(settlement.location.port !== null){
+
+        let trade = settlement.location.port.trade
+
+        switch(trade){
+            
+            case "3:1":
+
+                //lower any tradecosts that were 4:1 to 3:1
+                for(let i = 0; i < this.tradecost.length; i++){
+                    if(this.tradecost[i] > 3){
+                        this.tradecost[i] = 3;
+                    }
+                }
+
+                break;
+
+            case "wood":
+
+                this.tradecost[0] = 2
+                break;
+
+            case "brick":
+
+                this.tradecost[1] = 2
+                break;
+
+            case "sheep":
+
+                this.tradecost[2] = 2
+                break;
+
+            case "wheat":
+
+                this.tradecost[3] = 2
+                break;
+
+            case "ore":
+
+                this.tradecost[4] = 2
+                break;
+        }
+
+    }
     
     this.VP++;
     this.settlementsRemaining--;
@@ -233,6 +279,9 @@ Player.prototype.playDevCard = function(card){
 
             console.log("playing a " + card)
             //remove knight from player hand and do actions for playing knight
+
+            this.devCards[0]--;
+            this.knightsPlayed++;
 
             break;
 

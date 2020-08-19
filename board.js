@@ -387,18 +387,17 @@ async function mainGameLoop(){
 
 
         //begin body of turn
+        anyDevCardEnabled = true;
 
         //disable all moves which aren't legal for player
         drawButtons()
 
-
-        //switch statement in loop for main turn actions which can happen in any order
+        //main turn loop actions can happen asynchronously here 
 
         //await choice to end turn
         await waitForTurnButton(turnNumber);
 
         //end of turn
-
         drawCanvas();
         drawPlayerInfo();
     
@@ -529,6 +528,7 @@ async function waitForTurnButton(currentTurn){
 async function waitForDiceRoll(){
 
     let diceRollFinished = false
+    knightsEnabled = false
 
     while(!diceRollFinished){
         

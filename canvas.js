@@ -126,12 +126,17 @@ canvas.addEventListener('click', function(e) {
             if(!devCardPlayedThisTurn){
 
                 //knight
-                if(anyDevCardEnabled || knightsEnabled){
+                if(anyDevCardEnabled || knightsEnabled && cardPaths[i].type === "knight"){
                     currPlayer.playDevCard(cardPaths[i].type);
-                }
+                }else if(anyDevCardEnabled){
+                    
+                    //VP are special case and cannot be played 
+                    if(cardPaths[i].type === "victory point"){
+                        console.log("cannot play a victory point")
+                    }else{
+                        currPlayer.playDevCard(cardPaths[i].type)
+                    }
 
-                if(cardPaths[i].type === "victory point"){
-                    console.log("cannot play a victory point")
                 }
 
 
@@ -1846,41 +1851,7 @@ function drawHand(){
             
             cardTypes++;
         }
-    }
-
-    // let devCounts = [0, 0, 0, 0, 0]
-
-
-    // //loop though all of current players dev Cards and sort them
-    // for(let i = 0; i < currPlayer.devCards.length; i++){
-
-    //     switch(currPlayer.devCards[i]){
-
-    //         case "knight":
-    //             devCounts[0]++
-    //             break;
-
-    //         case 'victory point':
-    //             devCounts[1]++
-    //             break;
-
-    //         case 'monopoly':
-    //             devCounts[2]++
-    //             break;
-            
-    //         case 'road building':
-    //             devCounts[3]++
-    //             break;
-
-    //         case 'year of plenty':
-    //             devCounts[4]++
-    //             break;
-            
-    //         default:
-
-    //     }
-
-    // }    
+    } 
 
     //loop though all of current players dev cards and draw them
     for(let i = 0; i < currPlayer.devCards.length; i++){

@@ -61,6 +61,7 @@ function Road(player, hitbox){
 //define player object
 function Player(color){
     this.VP = 0;
+    this.name = "";
     this.resources = [0, 0, 0, 0, 0];
     this.devCards = [0, 0, 0, 0, 0];
     this.roadsRemaining = 15;
@@ -149,7 +150,7 @@ Player.prototype.buildSettlement = function(settlement){
         let trade = settlement.location.port.trade
 
         switch(trade){
-            
+
             case "3:1":
 
                 //lower any tradecosts that were 4:1 to 3:1
@@ -192,6 +193,8 @@ Player.prototype.buildSettlement = function(settlement){
     this.VP++;
     this.settlementsRemaining--;
     this.settlements.push(settlement);
+
+    checkWinCondition()
 }
 Player.prototype.buildRoad = function(r){
     this.roadsRemaining--;
@@ -205,6 +208,8 @@ Player.prototype.buildRoad = function(r){
 
     //calculate longest road here
     this.calcLongestRoad();
+
+    checkWinCondition()
 }
 Player.prototype.totalResources = function(){
     
@@ -220,13 +225,15 @@ Player.prototype.buildCity = function(){
     
     
     //take players resources and give them to the bank
-    this.resources = [this.resources[0], this.resources[1], this.resources[2], this.resources[3] - 2, this.resources[4] + 3];
+    this.resources = [this.resources[0], this.resources[1], this.resources[2], this.resources[3] - 2, this.resources[4] - 3];
     bank = [bank[0], bank[1], bank[2], bank[3] + 2, bank[4] + 3];
 
 
     this.settlementsRemaining++;
     this.citiesRemaining--;
     this.VP++;
+
+    checkWinCondition()
 }
 Player.prototype.drawDevCard = function(card){
 
@@ -268,6 +275,7 @@ Player.prototype.drawDevCard = function(card){
         default:
     }
 
+    checkWinCondition()
 }
 Player.prototype.playDevCard = function(card){
     
@@ -320,6 +328,8 @@ Player.prototype.playDevCard = function(card){
 
     drawHand()
     drawButtons()
+
+    checkWinCondition()
 
 }
 Player.prototype.getBuildableRoads = function(){

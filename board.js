@@ -21,7 +21,9 @@ var turnButtonEnabled = false;
 var anyDevCardEnabled = false;
 var knightsEnabled = false;
 
+var pointsToWin = 10;
 var winCondition = false;
+var winner = null;
 var initialPlacementsComplete = false;
 
 var diceRolledThisTurn = false;
@@ -360,6 +362,10 @@ async function mainGameLoop(){
     //turn loop
     do {
         
+        //this is for a specific edge case where a player can reach 10 points while it
+        // is not their turn
+        checkWinCondition()
+
         //disable all moves except dice and knight
         diceRolledThisTurn = false;
         freeze()
@@ -404,6 +410,12 @@ async function mainGameLoop(){
     }while(!winCondition)
 
     //do something when end of game condition is reached
+
+    freeze();
+    drawCanvas();
+
+    console.log("Game over")
+    console.log(winner.color + " won the game")
 
 }
 
@@ -483,7 +495,9 @@ async function waitForSettlment(num){
 
     while(!built){
 
-        if(5 - currPlayer.settlementsRemaining >= num){
+        if(winCondition){
+            break;
+        }else if(5 - currPlayer.settlementsRemaining >= num){
             built = true
         }else{
             await sleep(100)
@@ -499,7 +513,9 @@ async function waitForRoad(num){
 
     while(!built){
 
-        if(15 - currPlayer.roadsRemaining >= num){
+        if(winCondition){
+            break;
+        }else if(15 - currPlayer.roadsRemaining >= num){
             built = true
         }else{
             await sleep(100)
@@ -515,7 +531,9 @@ async function waitForTurnButton(currentTurn){
 
     while(!ended){
 
-        if(turnNumber > currentTurn){
+        if(winCondition){
+            break;
+        }else if(turnNumber > currentTurn){
             ended = true
         }else{
             await sleep(100)
@@ -532,7 +550,9 @@ async function waitForDiceRoll(){
 
     while(!diceRollFinished){
         
-        if(diceRolledThisTurn && !movingRobber){
+        if(winCondition){
+            break;
+        }else if(diceRolledThisTurn && !movingRobber){
             diceRollFinished = true;
         }else{
             await sleep(100)
@@ -622,6 +642,15 @@ function generatePorts(){
 //--------------------------------------------------
 //functions for game events
 //--------------------------------------------------
+
+function checkWinCondition(){
+
+    if(currPlayer.VP + currPlayer.devCards[1] >= pointsToWin){
+        winCondition = true;
+        winner = currPlayer;
+    }
+
+}
 
 //generates a dice roll between 1 and 12 by summing two d6
 function rollDice(){

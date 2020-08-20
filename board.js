@@ -478,7 +478,7 @@ function setButtons(){
     
     
     //dice
-    if(!diceRolledThisTurn){
+    if(!diceRolledThisTurn && initialPlacementsComplete){
         diceButtonEnabled = true;
     }else{
         diceButtonEnabled = false;

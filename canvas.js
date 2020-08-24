@@ -343,7 +343,9 @@ var imageSrcs = ["assets/robber.svg",
                 "assets/SheepTexture.png", 
                 "assets/WheatTexture.png",
                 "assets/OreTexture.png",
-                "assets/DesertTexture.png",];
+                "assets/DesertTexture.png",
+                "assets/settlement.svg",
+                ];
 
 var images = [];
 
@@ -467,6 +469,8 @@ function drawButtons(){
     ctx.fillStyle = "white"
     ctx.fillText("Settlement", canvas.width - 50, 330, 70)
 
+    //ctx.drawImage(images[7], canvas.width - 90, 260, 80, 80)
+
 
     //city Button
     ctx.fillStyle = enabledColor
@@ -501,7 +505,7 @@ function initButtons(){
 
     //x y width height and curve radius for rectangle path
     let x = canvas.width - 90
-    let y = 10
+    let y = 5
     let w = 80
     let h = 80
     let radius = 10
@@ -529,7 +533,7 @@ function initButtons(){
     devButtonPath = new Path2D();
 
     //update y for new button
-    y = 100
+    y += 90
 
     r = x + w;
     b = y + h;
@@ -549,7 +553,7 @@ function initButtons(){
     roadButtonPath = new Path2D();
 
     //update y for new button
-    y = 190
+    y += 90
 
     r = x + w;
     b = y + h;
@@ -568,7 +572,7 @@ function initButtons(){
     settlementButtonPath = new Path2D();
 
     //update y for new button
-    y = 280
+    y += 90
 
     r = x + w;
     b = y + h;
@@ -587,7 +591,7 @@ function initButtons(){
     cityButtonPath = new Path2D();
 
     //update y for new button
-    y = 370
+    y += 90
 
     r = x + w;
     b = y + h;
@@ -606,7 +610,7 @@ function initButtons(){
     turnButtonPath = new Path2D();
 
     //update y for new button
-    y = 460
+    y += 90
 
     r = x + w;
     b = y + h;
@@ -1497,19 +1501,42 @@ function drawBank(){
 
     ctx.strokeStyle = "black";
     ctx.lineWidth = 1;
+    let bankPath = new Path2D()
 
     //draw box for bank to go in
-    ctx.beginPath()
-    ctx.rect(25, 10, 320, 80);
-    ctx.stroke();
-    ctx.fillStyle = "antiquewhite"
-    ctx.fill()
+    
 
+    let x = 15
+    let y = 0
+    let w = 340
+    let h = 90
+    let radius = 25
+
+    let r = x + w;
+    let b = y + h;
     ctx.beginPath()
-    ctx.rect(25 + 320/2 - 30, 2, 60, 20);
-    ctx.stroke();
-    ctx.fillStyle = "antiquewhite"
-    ctx.fill()
+    bankPath.moveTo(x, y);
+    bankPath.lineTo(r+radius, y - 2);
+    bankPath.quadraticCurveTo(r, y, r, y+radius);
+    bankPath.lineTo(r, y+h-radius);
+    bankPath.quadraticCurveTo(r, b, r-radius, b);
+    bankPath.lineTo(x, b);
+    //bankPath.quadraticCurveTo(x, b, x, b-radius);
+    bankPath.lineTo(x, y);
+    //bankPath.quadraticCurveTo(x, y, x+radius, y);
+    ctx.closePath()
+
+    ctx.lineWidth = 2;
+    ctx.stroke(bankPath);
+    ctx.fillStyle = "#a5b1c2"
+    ctx.fill(bankPath)
+    ctx.lineWidth = 1;
+
+    // ctx.beginPath()
+    // ctx.rect(25 + 320/2 - 30, 2, 60, 20);
+    // ctx.stroke();
+    // ctx.fillStyle = "antiquewhite"
+    // ctx.fill()
 
     ctx.font = "15px Arial"
     ctx.fillStyle = "black"
@@ -1730,7 +1757,8 @@ function drawTimer(){
 function drawTurnNum(){
     ctx.textAlign = "left"
     ctx.font = "Arial 15px"
-    ctx.fillText("Turn: " + turnNumber, 25, 105)
+    ctx.fillStyle = "black"
+    ctx.fillText("Turn: " + turnNumber, 25, 115)
 }
 
 
@@ -1753,17 +1781,46 @@ function drawHand(){
     let buffer = 5
     let boxWidth = 10 * cardWidth + 11 * buffer
 
-    ctx.beginPath()
-    ctx.rect(canvas.width - boxWidth - 100, 10, boxWidth, 80);
-    ctx.stroke();
-    ctx.fillStyle = "antiquewhite"
-    ctx.fill()
+    let handPath = new Path2D()
 
+    let x = 300
+    let y = 0
+    let w = 575
+    let h = 90
+    let radius = 25
+    let buttonRadius = 10
+
+    let r = x + w;
+    let b = y + h;
     ctx.beginPath()
-    ctx.rect(canvas.width - boxWidth/2 - 30 - 100, 2, 60, 20);
-    ctx.stroke();
-    ctx.fillStyle = "antiquewhite"
-    ctx.fill()
+    handPath.moveTo(x, y);
+    handPath.lineTo(r+buttonRadius, y - 2);
+    handPath.quadraticCurveTo(r, y, r, y+buttonRadius);
+    handPath.lineTo(r, y+h-radius);
+    handPath.quadraticCurveTo(r, b, r-radius, b);
+    handPath.lineTo(x, b);
+    //bankPath.quadraticCurveTo(x, b, x, b-radius);
+    handPath.lineTo(x, y);
+    //bankPath.quadraticCurveTo(x, y, x+radius, y);
+    ctx.closePath()
+
+    ctx.lineWidth = 2;
+    ctx.stroke(handPath);
+    ctx.fillStyle = "#d1d8e0"
+    ctx.fill(handPath)
+    ctx.lineWidth = 1;
+
+    // ctx.beginPath()
+    // ctx.rect(canvas.width - boxWidth - 100, 10, boxWidth, 80);
+    // ctx.stroke();
+    // ctx.fillStyle = "antiquewhite"
+    // ctx.fill()
+
+    // ctx.beginPath()
+    // ctx.rect(canvas.width - boxWidth/2 - 30 - 100, 2, 60, 20);
+    // ctx.stroke();
+    // ctx.fillStyle = "antiquewhite"
+    // ctx.fill()
 
     ctx.font = "15px Arial"
     ctx.textAlign = "center"
@@ -1957,9 +2014,9 @@ function drawCanvas(){
     //elements unrelated to board
     drawDice()
     drawButtons()
-    drawBank()
     drawTurnNum()
     drawHand()
+    drawBank()
 
     //elements under board
     drawPorts()
@@ -1979,5 +2036,7 @@ function drawCanvas(){
 
     //player info in rightside column
     drawPlayerInfo()
+
+    
 
 }

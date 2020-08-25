@@ -345,6 +345,7 @@ var imageSrcs = ["assets/robber.svg",
                 "assets/OreTexture.png",
                 "assets/DesertTexture.png",
                 "assets/settlement.svg",
+                "assets/bank.svg"
                 ];
 
 var images = [];
@@ -1503,20 +1504,18 @@ function drawBank(){
     ctx.lineWidth = 1;
     let bankPath = new Path2D()
 
-    //draw box for bank to go in
-    
-
+    //draw shape for bank to go in
     let x = 15
     let y = 0
     let w = 340
-    let h = 90
-    let radius = 25
+    let h = 100
+    let radius = 20
 
     let r = x + w;
     let b = y + h;
     ctx.beginPath()
     bankPath.moveTo(x, y);
-    bankPath.lineTo(r+radius, y - 2);
+    bankPath.lineTo(r+radius, y);
     bankPath.quadraticCurveTo(r, y, r, y+radius);
     bankPath.lineTo(r, y+h-radius);
     bankPath.quadraticCurveTo(r, b, r-radius, b);
@@ -1526,21 +1525,20 @@ function drawBank(){
     //bankPath.quadraticCurveTo(x, y, x+radius, y);
     ctx.closePath()
 
-    ctx.lineWidth = 2;
-    ctx.stroke(bankPath);
-    ctx.fillStyle = "#a5b1c2"
+    ctx.lineWidth = 4;
+    // ctx.strokeStyle = "#B0E0E6"
+    // ctx.stroke(bankPath);
+    ctx.fillStyle = "#bdc3c7"
     ctx.fill(bankPath)
     ctx.lineWidth = 1;
+    ctx.strokeStyle = "black"
 
-    // ctx.beginPath()
-    // ctx.rect(25 + 320/2 - 30, 2, 60, 20);
-    // ctx.stroke();
-    // ctx.fillStyle = "antiquewhite"
-    // ctx.fill()
+    //draw bank image
+    ctx.drawImage(images[8], 30, 20, 60, 60)
 
-    ctx.font = "15px Arial"
-    ctx.fillStyle = "black"
-    ctx.fillText("Bank", 25 +  320/2, 17)
+    // ctx.font = "15px Arial"
+    // ctx.fillStyle = "black"
+    // ctx.fillText("Bank", 25 +  320/2, 17)
     
     //draw numbers for resources
     for(var i = 0; i < 6; i++){
@@ -1548,20 +1546,20 @@ function drawBank(){
         ctx.font = "15px Arial"
         if(i<5){
             ctx.beginPath()
-            ctx.rect(37 + (i*320/6), 30, 25, 35)
+            ctx.rect(120 + ((i%3)*320/4), 15 + Math.floor(i/3) * 40, 25, 35)
             ctx.stroke()
             ctx.fillStyle = colorVals[i]
             ctx.fill()
             ctx.fillStyle = "black"
-            ctx.fillText(bank[i], 48 + (i*320/6) + i/2, 83)
+            ctx.fillText(bank[i], 160 + ((i%3)*320/4), 40 + Math.floor(i/3) * 40)
         }else{
             ctx.beginPath()
-            ctx.rect(37 + (i*320/6), 30, 25, 35)
+            ctx.rect(120 + ((i%3)*320/4), 15 + Math.floor(i/3) * 40, 25, 35)
             ctx.stroke()
             ctx.fillStyle = colorVals[i]
             ctx.fill()
             ctx.fillStyle = "black"
-            ctx.fillText(devCardArray.length, 48 + (i*320/6) + i/2, 83)
+            ctx.fillText(devCardArray.length, 160 + ((i%3)*320/4), 40 + Math.floor(i/3) * 40)
         }
         
     }
@@ -1758,7 +1756,7 @@ function drawTurnNum(){
     ctx.textAlign = "left"
     ctx.font = "Arial 15px"
     ctx.fillStyle = "black"
-    ctx.fillText("Turn: " + turnNumber, 25, 115)
+    ctx.fillText("Turn: " + turnNumber, 25, 125)
 }
 
 
@@ -1804,11 +1802,13 @@ function drawHand(){
     //bankPath.quadraticCurveTo(x, y, x+radius, y);
     ctx.closePath()
 
-    ctx.lineWidth = 2;
-    ctx.stroke(handPath);
-    ctx.fillStyle = "#d1d8e0"
+    ctx.lineWidth = 4;
+    // ctx.strokeStyle = "#B0E0E6"
+    // ctx.stroke(handPath);
+    ctx.fillStyle = "#ecf0f1"
     ctx.fill(handPath)
     ctx.lineWidth = 1;
+    ctx.strokeStyle = "black"
 
     // ctx.beginPath()
     // ctx.rect(canvas.width - boxWidth - 100, 10, boxWidth, 80);

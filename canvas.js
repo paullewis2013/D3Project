@@ -408,10 +408,47 @@ function drawButtons(){
     
     setButtons()
 
-    //the text isn't really linked to the locations of the buttons and must be updated separately if moved
 
+    //draw a path behind the buttons
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 1;
+    let buttonAreaPath = new Path2D()
+
+    //draw shape for bank to go in
+    let x = canvas.width - 110
+    let y = 0
+    let w = 120
+    let h = 555
+    let radius = 20
+
+    let r = x + w;
+    let b = y + h;
+    ctx.beginPath()
+    buttonAreaPath.moveTo(x, y);
+    buttonAreaPath.lineTo(r, y);
+    buttonAreaPath.quadraticCurveTo(r, y, r, y+radius);
+    buttonAreaPath.lineTo(r, y+h-radius);
+    buttonAreaPath.quadraticCurveTo(r, b, r-radius, b);
+    buttonAreaPath.lineTo(x+radius, b);
+    buttonAreaPath.quadraticCurveTo(x, b, x, b-radius);
+    buttonAreaPath.lineTo(x, y+radius);
+    buttonAreaPath.quadraticCurveTo(x, y, x, y);
+    ctx.closePath()
+
+    ctx.lineWidth = 4;
+    // ctx.strokeStyle = "#B0E0E6"
+    // ctx.stroke(bankPath);
+    ctx.fillStyle = "#a8bbcf"
+    ctx.fill(buttonAreaPath)
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "black"
+
+
+
+    //the text isn't really linked to the locations of the buttons and must be updated separately if moved
     let disabledColor = 'slategrey'
-    let enabledColor = 'black'
+    let enabledColor = '#2c3e50'
+    let strokeColor = "#2980b9"
 
     //trade button
     ctx.fillStyle = enabledColor
@@ -423,7 +460,7 @@ function drawButtons(){
     ctx.textAlign = "center"
     ctx.fillStyle = "white"
     ctx.font = "20px Arial"
-    ctx.fillText("Trade", canvas.width - 50, 60, 70)
+    ctx.fillText("Trade", canvas.width - 50, 55, 70)
 
 
     //dev Button
@@ -434,7 +471,7 @@ function drawButtons(){
     ctx.fill(devButtonPath)
 
     ctx.fillStyle = "white"
-    ctx.fillText("Dev Card", canvas.width - 50, 150, 70)
+    ctx.fillText("Dev Card", canvas.width - 50, 145, 70)
 
 
     //road Button
@@ -444,14 +481,14 @@ function drawButtons(){
     }
     ctx.fill(roadButtonPath)
 
-    if(buildingRoad){
+    if(buildingRoad && initialPlacementsComplete){
         ctx.lineWidth = 4;
-        ctx.strokeStyle = "white"
+        ctx.strokeStyle = strokeColor
         ctx.stroke(roadButtonPath)
     }
 
     ctx.fillStyle = "white"
-    ctx.fillText("road", canvas.width - 50, 240, 70)
+    ctx.fillText("road", canvas.width - 50, 235, 70)
 
 
     //settlement Button
@@ -461,14 +498,14 @@ function drawButtons(){
     }
     ctx.fill(settlementButtonPath)
 
-    if(buildingSettlement){
+    if(buildingSettlement && initialPlacementsComplete){
         ctx.lineWidth = 4;
-        ctx.strokeStyle = "white"
+        ctx.strokeStyle = strokeColor
         ctx.stroke(settlementButtonPath)
     }
 
     ctx.fillStyle = "white"
-    ctx.fillText("Settlement", canvas.width - 50, 330, 70)
+    ctx.fillText("Settlement", canvas.width - 50, 325, 70)
 
     //ctx.drawImage(images[7], canvas.width - 90, 260, 80, 80)
 
@@ -480,14 +517,14 @@ function drawButtons(){
     }
     ctx.fill(cityButtonPath)
 
-    if(buildingCity){
+    if(buildingCity && initialPlacementsComplete){
         ctx.lineWidth = 4;
-        ctx.strokeStyle = "white"
+        ctx.strokeStyle = strokeColor
         ctx.stroke(cityButtonPath)
     }
 
     ctx.fillStyle = "white"
-    ctx.fillText("City", canvas.width - 50, 420, 70)
+    ctx.fillText("City", canvas.width - 50, 415, 70)
 
 
     //turn Button
@@ -498,7 +535,7 @@ function drawButtons(){
     ctx.fill(turnButtonPath)
 
     ctx.fillStyle = "white"
-    ctx.fillText("End Turn", canvas.width - 50, 510, 70)
+    ctx.fillText("End Turn", canvas.width - 50, 505, 70)
 }
 
 
@@ -1515,7 +1552,7 @@ function drawBank(){
     let b = y + h;
     ctx.beginPath()
     bankPath.moveTo(x, y);
-    bankPath.lineTo(r+radius, y);
+    bankPath.lineTo(r+radius, y - 2);
     bankPath.quadraticCurveTo(r, y, r, y+radius);
     bankPath.lineTo(r, y+h-radius);
     bankPath.quadraticCurveTo(r, b, r-radius, b);
@@ -1528,7 +1565,7 @@ function drawBank(){
     ctx.lineWidth = 4;
     // ctx.strokeStyle = "#B0E0E6"
     // ctx.stroke(bankPath);
-    ctx.fillStyle = "#bdc3c7"
+    ctx.fillStyle = "#ecf0f1"
     ctx.fill(bankPath)
     ctx.lineWidth = 1;
     ctx.strokeStyle = "black"
@@ -1783,8 +1820,8 @@ function drawHand(){
 
     let x = 300
     let y = 0
-    let w = 575
-    let h = 90
+    let w = 565
+    let h = 95
     let radius = 25
     let buttonRadius = 10
 
@@ -1805,7 +1842,7 @@ function drawHand(){
     ctx.lineWidth = 4;
     // ctx.strokeStyle = "#B0E0E6"
     // ctx.stroke(handPath);
-    ctx.fillStyle = "#ecf0f1"
+    ctx.fillStyle = "#d9e2ea"
     ctx.fill(handPath)
     ctx.lineWidth = 1;
     ctx.strokeStyle = "black"

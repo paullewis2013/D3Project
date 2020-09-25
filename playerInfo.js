@@ -38,7 +38,7 @@ function drawPlayerInfo(){
         p_ctx.fill()
 
         p_ctx.fillStyle = "black"
-        p_ctx.fillText("VP: " + playersArr[i].VP, 50, offset * i + offset * .8)
+        p_ctx.fillText("VP: " + playersArr[i].getVP(), 50, offset * i + offset * .8)
         //console.log(p1.VP)
 
         var cardTop = offset * i + offset * .25;

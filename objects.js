@@ -47,6 +47,7 @@ Vertex.prototype.build = function (settlement) {
 
 }
 //player is to set a specific player deadroads is to track visited roads
+//works recursively
 Vertex.prototype.getLongestPath = function (player, deadRoads){
 
     let newRoads = [];
@@ -277,11 +278,11 @@ Player.prototype.buildRoad = function(r){
     this.roadsRemaining--;
     this.roads.push(r)
 
-    // if(initialPlacementsComplete){
-    //     //take players resources and give them to the bank
-    //     this.resources = [this.resources[0] - 1, this.resources[1] - 1, this.resources[2], this.resources[3], this.resources[4]];
-    //     bank = [bank[0] + 1, bank[1] + 1, bank[2], bank[3], bank[4]];
-    // }
+    if(initialPlacementsComplete){
+        //take players resources and give them to the bank
+        this.resources = [this.resources[0] - 1, this.resources[1] - 1, this.resources[2], this.resources[3], this.resources[4]];
+        bank = [bank[0] + 1, bank[1] + 1, bank[2], bank[3], bank[4]];
+    }
 
     //longest road will be calculated in board.js file
 
@@ -465,6 +466,18 @@ Player.prototype.calcLongestRoad = function(){
 
     //TODO if longest road changes hands do that here
     //road must be at least 5 and greater than any other players longest road
+    if(this.longestRoad >= 5){
+
+        //if longest road holder is null then no player has longest road yet
+        if(longestRoadHolder == null){
+            longestRoadHolder = this;
+        }else{
+            if(this.longestRoad > longestRoadHolder.longestRoad){
+                longestRoadHolder = this;
+            }
+        }
+
+    }
 
 }
 Player.prototype.getBuildableVertices = function(){
@@ -528,6 +541,23 @@ Player.prototype.getReachableVertices = function(){
     
 
     return reachableVerts;
+}
+Player.prototype.getVP = function(){
+
+    let result = this.VP;
+
+    //add points for longest road
+    if(longestRoadHolder === this){
+        result += 2;
+    }
+
+    //add points for largest army 
+    if(longestRoadHolder === this){
+        result += 2;
+    }
+
+    return result;
+
 }
 
 

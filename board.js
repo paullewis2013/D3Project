@@ -51,6 +51,9 @@ var turnNumber = 0
 //maybe this should point to a tile
 var robberLocation = null
 
+var longestRoadHolder = null;
+var largestArmyHolder = null;
+
 //the tiles on the board
 //a 2d array where first index represents row and second represent num in row
 var tilesArr = [

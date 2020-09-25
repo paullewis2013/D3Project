@@ -488,7 +488,7 @@ function drawButtons(){
     }
 
     ctx.fillStyle = "white"
-    ctx.fillText("road", canvas.width - 50, 235, 70)
+    ctx.fillText("Road", canvas.width - 50, 235, 70)
 
 
     //settlement Button
@@ -783,8 +783,8 @@ function drawVertices(){
                     ctx.stroke(verticesArr[i][j].hitbox)
     
                     //for debug
-                    // ctx.fillStyle = "black"
-                    // ctx.fillText(i + "," + j, verticesArr[i][j].cx, verticesArr[i][j].cy + 5)
+                    ctx.fillStyle = "black"
+                    ctx.fillText(i + "," + j, verticesArr[i][j].cx, verticesArr[i][j].cy + 5)
                 }
             }
     
@@ -1113,7 +1113,7 @@ function initRoads(){
         }
     }
 
-    //loop through all vertices and add adjacent roads
+    //loop through all vertices and add adjacent roads also add adjacent verts to each road
     for(let i = 0; i < verticesArr.length; i++){
         for(let j = 0; j < verticesArr[i].length; j++){
 
@@ -1123,8 +1123,10 @@ function initRoads(){
                 //in even rows road goes down
                 if(i%2 === 0){
                     verticesArr[i][j].adjRoads.push(roadsArr[i-1][j]);
+                    roadsArr[i-1][j].adjVerts.push(verticesArr[i][j])
                 }else{
                     verticesArr[i][j].adjRoads.push(roadsArr[i][j]);
+                    roadsArr[i][j].adjVerts.push(verticesArr[i][j])
                 }
 
             }
@@ -1136,8 +1138,10 @@ function initRoads(){
                 if(i <= 5){
                     if(i%2 === 0){
                         verticesArr[i][j].adjRoads.push(roadsArr[i][(j*2) + 1]);
+                        roadsArr[i][(j*2) + 1].adjVerts.push(verticesArr[i][j])
                     }else{
                         verticesArr[i][j].adjRoads.push(roadsArr[i-1][j*2]);
+                        roadsArr[i-1][j*2].adjVerts.push(verticesArr[i][j])
                     }
                 }
 
@@ -1145,8 +1149,10 @@ function initRoads(){
                 else{
                     if(i%2 === 0){
                         verticesArr[i][j].adjRoads.push(roadsArr[i][j*2]);
+                        roadsArr[i][j*2].adjVerts.push(verticesArr[i][j])
                     }else{
                         verticesArr[i][j].adjRoads.push(roadsArr[i-1][(j*2) + 1]);
+                        roadsArr[i-1][(j*2) + 1].adjVerts.push(verticesArr[i][j])
                     }
                 }
                 
@@ -1160,8 +1166,10 @@ function initRoads(){
                 if(i <= 5){
                     if(i%2 === 0){
                         verticesArr[i][j].adjRoads.push(roadsArr[i][j*2]);
+                        roadsArr[i][j*2].adjVerts.push(verticesArr[i][j])
                     }else{
                         verticesArr[i][j].adjRoads.push(roadsArr[i-1][(j*2) - 1]);
+                        roadsArr[i-1][(j*2) - 1].adjVerts.push(verticesArr[i][j])
                     }
                 }
 
@@ -1169,8 +1177,10 @@ function initRoads(){
                 else{
                     if(i%2 === 0){
                         verticesArr[i][j].adjRoads.push(roadsArr[i][(j*2) - 1]);
+                        roadsArr[i][(j*2) - 1].adjVerts.push(verticesArr[i][j])
                     }else{
                         verticesArr[i][j].adjRoads.push(roadsArr[i-1][j*2]);
+                        roadsArr[i-1][j*2].adjVerts.push(verticesArr[i][j])
                     }
                 }
                 

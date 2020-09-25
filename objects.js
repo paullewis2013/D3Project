@@ -46,6 +46,62 @@ Vertex.prototype.build = function (settlement) {
     }
 
 }
+//player is to set a specific player deadroads is to track visited roads
+Vertex.prototype.getLongestPath = function (player, deadRoads){
+
+    let newRoads = [];
+
+    //finds all unexplored roads 
+    for(let i = 0; i < this.adjRoads.length; i++){
+
+        if(this.adjRoads[i].player === player && !deadRoads.includes(this.adjRoads[i])){
+            newRoads.push(this.adjRoads[i])
+        }
+
+    }
+    
+    //base case is no adj roads of given color that aren't in deadRoads list
+    if(newRoads.length === 0){
+        return 0;
+    }
+    //for each unexplored road call the method again recursively on the vertex at the other end of the road
+    else{
+
+        //track results of each recursive call
+        let scores = [];
+
+        for(let i = 0; i < newRoads.length; i++){
+
+            //create a new dead roads list for next recursive call
+            let updatedDeadRoads = [];
+            for(let j = 0; j < deadRoads.length; j++){
+                updatedDeadRoads.push(deadRoads[j])
+            }
+
+            //add current road
+            updatedDeadRoads.push(newRoads[i]);
+
+            //get the next vertex for recursive call
+            nextVert = newRoads[i].getOppositeVert(this);
+
+            scores.push(1 + nextVert.getLongestPath(player, updatedDeadRoads))
+
+        }
+
+        let max = 0;
+
+        for(let i = 0; i < scores.length; i++){
+            max = (scores[i] > max) ? scores[i] : max;
+        }
+
+        //take the maximum value returned from of any of the recursive calls
+        return max;
+
+    }
+
+
+
+}
 
 
 //define road object
@@ -53,8 +109,29 @@ function Road(player, hitbox){
     this.player = player;
     this.hitbox = hitbox;
     this.adjRoads = [];
+    this.adjVerts = [];
     this.i;
     this.j;
+}
+//pass the road a vertex and if the vertex is adjacent return the opposite adjacent vertex
+Road.prototype.getOppositeVert = function(v){
+
+    if(this.adjVerts.includes(v)){
+
+        //console.log("opposite vert included")
+
+        if(this.adjVerts[0] === v){
+            return this.adjVerts[1]
+        }else{
+            return this.adjVerts[0]
+        }
+
+    }
+
+    //if the vertex wasn't adjacent return null
+    return null;
+    
+
 }
 
 
@@ -200,14 +277,13 @@ Player.prototype.buildRoad = function(r){
     this.roadsRemaining--;
     this.roads.push(r)
 
-    if(initialPlacementsComplete){
-        //take players resources and give them to the bank
-        this.resources = [this.resources[0] - 1, this.resources[1] - 1, this.resources[2], this.resources[3], this.resources[4]];
-        bank = [bank[0] + 1, bank[1] + 1, bank[2], bank[3], bank[4]];
-    }
+    // if(initialPlacementsComplete){
+    //     //take players resources and give them to the bank
+    //     this.resources = [this.resources[0] - 1, this.resources[1] - 1, this.resources[2], this.resources[3], this.resources[4]];
+    //     bank = [bank[0] + 1, bank[1] + 1, bank[2], bank[3], bank[4]];
+    // }
 
-    //calculate longest road here
-    this.calcLongestRoad();
+    //longest road will be calculated in board.js file
 
     checkWinCondition()
 }
@@ -367,7 +443,28 @@ Player.prototype.getBuildableRoads = function(){
 }
 Player.prototype.calcLongestRoad = function(){
 
-    //TODO
+    let currLength = 0;
+    let length = 0;
+
+    //get an array of all reachable vertices for given player
+    let verts = this.getReachableVertices();
+    console.log("numVerts = " + verts.length)
+
+    //for each vertex, find the longest path that includes that vertex
+    for(let i = 0; i < verts.length; i++){
+        
+        currLength = verts[i].getLongestPath(this, [])
+
+        //compare current vertex longest path and longest previous path and set length to the longer one
+        length = (currLength > length) ? currLength : length
+    }
+
+    //update longest road length for player
+    this.longestRoad = length;
+
+
+    //TODO if longest road changes hands do that here
+    //road must be at least 5 and greater than any other players longest road
 
 }
 Player.prototype.getBuildableVertices = function(){
@@ -400,6 +497,37 @@ Player.prototype.getBuildableVertices = function(){
 
     return buildableVerts
 
+}
+Player.prototype.getReachableVertices = function(){
+
+    let reachableVerts = [];
+
+    //loop through every vertex in the board and return any vertex that has an adjacent road for the current player
+    for(var i = 0; i < 12; i++){
+
+        for(var j = 0; j < verticesArr[i].length; j++){
+            
+            //look at each road for given vertex and add the vertex if current player has an adjacent road
+            for(let k = 0; k < verticesArr[i][j].adjRoads.length; k++){
+                
+                if(verticesArr[i][j].adjRoads[k].player === this ){
+                    if(!reachableVerts.includes(verticesArr[i][j])){
+                        reachableVerts.push(verticesArr[i][j])
+                    }
+                }
+            }
+
+            
+        }
+
+    }
+
+    for(let i = 0; i < reachableVerts.length; i++){
+        console.log(reachableVerts[i].toString())
+    }
+    
+
+    return reachableVerts;
 }
 
 

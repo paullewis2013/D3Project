@@ -361,7 +361,7 @@ async function mainGameLoop(){
 
     //turn loop
     do {
-        
+
         //this is for a specific edge case where a player can reach 10 points while it
         // is not their turn
         checkWinCondition()
@@ -826,6 +826,8 @@ function buildRoad(road, player){
     player.buildRoad(road)
 
     road.player = player;
+
+    player.calcLongestRoad()
 
     buildingRoad = false;
     showRoads = false;

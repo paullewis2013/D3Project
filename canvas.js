@@ -57,7 +57,7 @@ canvas.addEventListener('click', function(e) {
     //trade button
     if(ctx.isPointInPath(tradeButtonPath, e.offsetX, e.offsetY)){
         if(tradeButtonEnabled){
-            //tradeButton()
+            tradeButton()
         }
         console.log("trade button clicked")
     }
@@ -345,7 +345,8 @@ var imageSrcs = ["assets/robber.svg",
                 "assets/OreTexture.png",
                 "assets/DesertTexture.png",
                 "assets/settlement.svg",
-                "assets/bank.svg"
+                "assets/bank.svg",
+                "assets/user.svg"
                 ];
 
 var images = [];
@@ -369,8 +370,8 @@ function drawDice(){
   
         //this thing is called a closure but idk how it works tbh
         (function (i) {
-            var xPos = (canvas.width - ((i + 1) * 65) - 5);
-            var yPos = canvas.height - 70;
+            var xPos = (canvas.width - ((i + 1) * 65) - 110);
+            var yPos = 100;
             diceImgs[i] = new Image();
             diceImgs[i].src = diceArr[i].getImg();
 
@@ -389,16 +390,16 @@ function initDicePath(){
     
     dicePath = new Path2D();
     
-    let lX = (canvas.width - ((2) * 65) - 5)
-    let rX = (canvas.width - ((2) * 65) - 5) + 125
+    let lX = (canvas.width - ((2) * 65) - 110)
+    let rX = (canvas.width - ((2) * 65) - 110) + 125
 
 
     ctx.beginPath();
-    dicePath.moveTo(lX, canvas.height - 70)
-    dicePath.lineTo(lX, canvas.height - 10)
-    dicePath.lineTo(rX, canvas.height - 10)
-    dicePath.lineTo(rX, canvas.height - 70)
-    dicePath.lineTo(lX, canvas.height - 70)
+    dicePath.moveTo(lX, 100)
+    dicePath.lineTo(lX, 160)
+    dicePath.lineTo(rX, 160)
+    dicePath.lineTo(rX, 100)
+    dicePath.lineTo(lX, 100)
     ctx.closePath()
 
 
@@ -456,6 +457,12 @@ function drawButtons(){
         ctx.fillStyle = disabledColor
     }
     ctx.fill(tradeButtonPath)
+
+    if(currentlyTrading){
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = strokeColor
+        ctx.stroke(tradeButtonPath)
+    }
 
     ctx.textAlign = "center"
     ctx.fillStyle = "white"
@@ -783,8 +790,8 @@ function drawVertices(){
                     ctx.stroke(verticesArr[i][j].hitbox)
     
                     //for debug
-                    ctx.fillStyle = "black"
-                    ctx.fillText(i + "," + j, verticesArr[i][j].cx, verticesArr[i][j].cy + 5)
+                    // ctx.fillStyle = "black"
+                    // ctx.fillText(i + "," + j, verticesArr[i][j].cx, verticesArr[i][j].cy + 5)
                 }
             }
     
@@ -1813,6 +1820,80 @@ function drawRobber(){
     
 }
 
+//draws a trade menu in lower right corner of canvas
+//TODO fix bank bug with color
+function drawTradeMenu(){
+
+    //define boundaries of trade menu
+    let menu_x = canvas.width - 300
+    let menu_y = canvas.height - 235
+    let width = 290
+    let height = 225
+
+    //draw the trade menu box
+    ctx.rect(menu_x, menu_y, width, height)
+    ctx.fillStyle = "antiquewhite"
+    ctx.fill()
+
+    //draw the dividing lines for the 3 sections
+    ctx.moveTo(menu_x + 3* width/4, menu_y)
+    ctx.lineTo(menu_x + 3* width/4, menu_y + height)
+    ctx.stroke()
+
+    //draw the cards
+    //send cards
+    ctx.textAlign = "left"
+    ctx.fillStyle = "black"
+    ctx.fillText("Send ", menu_x + 5, menu_y + 15)
+
+    for(let i = 0; i < 5; i++){
+        ctx.beginPath()
+        ctx.rect(menu_x + 15 + i * 40, menu_y + 25, 30, 55)
+        ctx.stroke()
+    }
+
+    //receive cards
+    ctx.textAlign = "left"
+    ctx.fillStyle = "black"
+    ctx.fillText("Receive ", menu_x + 5, menu_y - 10 + height)
+
+    for(let i = 0; i < 5; i++){
+        ctx.beginPath()
+        ctx.rect(menu_x + 15 + i * 40, menu_y + 20 + height/2, 30, 55)
+        ctx.stroke()
+    }
+
+    //draw the trade arrows
+
+    //draw the player circles
+    let circle_y = menu_y + height/(2 * (playersArr.length - 1))
+
+    for(let i = 0; i < playersArr.length; i++){
+        
+        if(playersArr[i] == currPlayer){
+            i++
+            if(i == playersArr.length){
+                break;
+            }
+        }
+        
+        ctx.beginPath();
+        ctx.arc(menu_x + (7 * width/8), circle_y, 20, 0, 2 * Math.PI, false);
+        ctx.closePath();
+        ctx.fillStyle = playersArr[i].color;
+        ctx.fill()
+
+        //draw user icon on top of image
+        ctx.drawImage(images[9], menu_x + (7 * width/8) - 21, circle_y - 24, 42, 40)
+
+        circle_y += height/(playersArr.length - 1);
+    }
+
+    //console.log("here")
+    ctx.fillStyle = "black"
+
+}
+
 function drawHand(){
 
     cardPaths = [];
@@ -2064,6 +2145,11 @@ function drawCanvas(){
     drawTurnNum()
     drawHand()
     drawBank()
+
+    if(currentlyTrading){
+        drawTradeMenu()
+    }
+    
 
     //elements under board
     drawPorts()

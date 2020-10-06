@@ -534,10 +534,6 @@ Player.prototype.getReachableVertices = function(){
         }
 
     }
-
-    for(let i = 0; i < reachableVerts.length; i++){
-        console.log(reachableVerts[i].toString())
-    }
     
 
     return reachableVerts;

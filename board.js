@@ -29,6 +29,8 @@ var initialPlacementsComplete = false;
 var diceRolledThisTurn = false;
 var devCardPlayedThisTurn = false;
 
+var currentlyTrading = false;
+
 //an array to store value and frequency of dice rolls
 var dice_results_arr = [];
 
@@ -430,7 +432,12 @@ function setButtons(){
     if(diceRolledThisTurn && !movingRobber){
 
         //trade button
-        tradeButtonEnabled = false;
+        if(!building){
+            tradeButtonEnabled = true;
+        }else{
+            tradeButtonEnabled = false;
+        }
+        
 
         //dev button
         if(!building && devCardArray.length > 0 && (currPlayer.resources[2] > 0 && currPlayer.resources[3] > 0 && currPlayer.resources[4] > 0)){
@@ -652,6 +659,18 @@ function checkWinCondition(){
         winCondition = true;
         winner = currPlayer;
     }
+
+    drawCanvas()
+    drawPlayerInfo()
+}
+
+function giveResources(){
+
+    for(let i = 0; i < playersArr.length; i++){
+        playersArr[i].resources = [100, 100, 100, 100, 100]
+    }
+
+    drawCanvas()
 
 }
 
@@ -898,10 +917,23 @@ function turnButton(){
     
     turnNumber++;
 
+    //move to next player
     currPlayerIndex = ++currPlayerIndex%(playersArr.length);
     currPlayer = playersArr[currPlayerIndex];
 
     console.log("turn completed")
+}
+
+function tradeButton(){
+
+    if(!currentlyTrading){
+        currentlyTrading = true;
+    }else{
+        currentlyTrading = false;
+    }
+
+    drawCanvas()
+
 }
 
 function freeze(){

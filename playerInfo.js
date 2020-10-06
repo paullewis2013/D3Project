@@ -31,11 +31,15 @@ function drawPlayerInfo(){
         p_ctx.fill()
         p_ctx.stroke()
 
+        //draw player circle
         p_ctx.beginPath();
         p_ctx.arc(50, offset/3 + offset * i, 20, 0, 2 * Math.PI, false);
         p_ctx.closePath();
         p_ctx.fillStyle = playersArr[i].color;
         p_ctx.fill()
+
+        //draw user icon on top of player circle
+        p_ctx.drawImage(images[9], 30 - 1, offset/3 - 24 + offset * i, 42, 40)
 
         p_ctx.fillStyle = "black"
         p_ctx.fillText("VP: " + playersArr[i].getVP(), 50, offset * i + offset * .8)

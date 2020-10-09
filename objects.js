@@ -368,19 +368,44 @@ Player.prototype.playDevCard = function(card){
             this.devCards[0]--;
             this.knightsPlayed++;
 
+            if(this.knightsPlayed >= 3){
+                if(largestArmyHolder == null){
+                    largestArmyHolder = this
+                }else{
+                    if(this.knightsPlayed > largestArmyHolder.knightsPlayed){
+                        largestArmyHolder = this
+                    }
+                }
+            }
+
             break;
 
         case "victory point": 
 
             console.log("playing a " + card)
-            
 
             break;
 
         case "monopoly": 
 
             console.log("playing a " + card)
+
+            this.devCards[2]--;
             
+            //TODO get input from user about which resource to steal
+            //implement this later for now its wood
+            let resourceNum = 0
+
+            for(let i = 0; i < playersArr.length; i++){
+                
+                //for each other player take their cards of given type and transfer them to player
+                if(playersArr[i] != this){
+                    let loot = playersArr[i].resources[resourceNum]
+                    playersArr[i].resources[resourceNum] = 0
+                    this.resources[resourceNum] += loot
+                }
+            }
+
 
             break;
 
@@ -388,13 +413,27 @@ Player.prototype.playDevCard = function(card){
 
             console.log("playing a " + card)
             
+            this.devCards[3]--;
 
             break;
 
         case "year of plenty": 
 
             console.log("playing a " + card)
-            
+
+            this.devCards[4]--;
+
+
+            //TODO get input from player about which two resouces (contained in the bank) that they want
+            let resourceNum1 = 0
+            let resourceNum2 = 0
+
+            //take those two resouces from the bank and give them to player
+            bank[resourceNum1]--
+            this.resources[resourceNum1]++
+
+            bank[resourceNum2]--
+            this.resources[resourceNum2]++
 
             break;
 
@@ -548,7 +587,7 @@ Player.prototype.getVP = function(){
     }
 
     //add points for largest army 
-    if(longestRoadHolder === this){
+    if(largestArmyHolder === this){
         result += 2;
     }
 

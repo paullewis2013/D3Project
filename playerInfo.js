@@ -42,7 +42,13 @@ function drawPlayerInfo(){
         p_ctx.drawImage(images[9], 30 - 1, offset/3 - 24 + offset * i, 42, 40)
 
         p_ctx.fillStyle = "black"
-        p_ctx.fillText("VP: " + playersArr[i].getVP(), 50, offset * i + offset * .8)
+
+        let vp = playersArr[i].getVP()
+        if(playersArr[i].devCards[1] > 0){
+            vp += "(" + (vp + playersArr[i].devCards[1]) + ")"
+        }
+
+        p_ctx.fillText("VP: " + vp, 50, offset * i + offset * .8)
         //console.log(p1.VP)
 
         var cardTop = offset * i + offset * .25;

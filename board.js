@@ -921,6 +921,8 @@ function turnButton(){
     currPlayerIndex = ++currPlayerIndex%(playersArr.length);
     currPlayer = playersArr[currPlayerIndex];
 
+    currentlyTrading = false;
+
     console.log("turn completed")
 }
 

@@ -437,8 +437,6 @@ function drawButtons(){
     ctx.closePath()
 
     ctx.lineWidth = 4;
-    // ctx.strokeStyle = "#B0E0E6"
-    // ctx.stroke(bankPath);
     ctx.fillStyle = "#a8bbcf"
     ctx.fill(buttonAreaPath)
     ctx.lineWidth = 1;

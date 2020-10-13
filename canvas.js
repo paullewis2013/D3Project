@@ -19,6 +19,7 @@ var textured = true;
 
 var movingRobber = false;
 var showRoads = false;
+var showVerts = false;
 
 var colorVals = ["green", "firebrick", "lightgreen", "#ffff99", "slategrey", "blue"]
 
@@ -89,6 +90,7 @@ canvas.addEventListener('click', function(e) {
             settlementButton()
         }else if(settlementButtonEnabled && buildingSettlement){
             cancelAction()
+            showVerts = false
         }
         console.log("settlement button clicked")
     }
@@ -801,8 +803,14 @@ function drawVertices(){
                 
                 if(verticesArr[i][j].settlement === null && verticesArr[i][j].dead !== true){
                     ctx.fillStyle = "white";
-                    ctx.fill(verticesArr[i][j].hitbox)
-                    ctx.stroke(verticesArr[i][j].hitbox)
+                    ctx.strokeColor = "white";
+                    ctx.beginPath()
+                    ctx.arc(verticesArr[i][j].cx, verticesArr[i][j].cy, aState.vertSize, 0, Math.PI * 2, false)
+                    ctx.fill()
+                    ctx.stroke()
+                    ctx.closePath()
+                    // ctx.fill(verticesArr[i][j].hitbox)
+                    // ctx.stroke(verticesArr[i][j].hitbox)
     
                     //for debug
                     // ctx.fillStyle = "black"
@@ -820,8 +828,11 @@ function drawVertices(){
 
         for(var i = 0; i < verts.length; i++){
             ctx.fillStyle = "white";
-            ctx.fill(verts[i].hitbox)
-            ctx.stroke(verts[i].hitbox)
+            ctx.beginPath()
+            ctx.arc(verts[i].cx, verts[i].cy, aState.vertSize, 0, Math.PI * 2, false)
+            ctx.fill()
+            ctx.stroke()
+            ctx.closePath()
         }
 
     }
@@ -2275,6 +2286,10 @@ function drawCanvas(){
     drawRoads()
     drawSettlements()
     drawRobber()
+    if(showVerts){
+        drawVertices()
+    }
+    
 
     //player info in rightside column
     drawPlayerInfo()
@@ -2282,3 +2297,29 @@ function drawCanvas(){
     
 
 }
+
+
+//create a global object to track animation changes
+function AnimationState(){
+    this.vertSize = 15
+    this.angle = Math.PI
+}
+AnimationState.prototype.update = function(){
+    
+    this.angle = (this.angle + Math.PI/25)%(2*Math.PI)
+    
+    this.vertSize = 15 + 2.5 * Math.sin(this.angle);
+}
+
+var aState = new AnimationState()
+
+//method to be called on loop
+function drawFrame(){
+    //console.log("drawing frame" + aState.vertSize)
+    aState.update()
+
+    drawCanvas()
+}
+
+setInterval(drawFrame, 80)
+

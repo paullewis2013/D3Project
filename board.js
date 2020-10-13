@@ -316,6 +316,7 @@ async function initialSettlements(){
 
         //create a function that waits for settlement to be built before continuing
         await waitForSettlment(1);
+        showVerts = false;
 
 
         roadButton();
@@ -341,6 +342,7 @@ async function initialSettlements(){
 
         //create a function that waits for settlement to be built before continuing
         await waitForSettlment(2);
+        showVerts = false;
 
         roadButton();
 
@@ -1008,6 +1010,7 @@ function settlementButton(){
 
     buildingSettlement = true;
     freeze();
+    showVerts = true;
     drawVertices();
 
 }

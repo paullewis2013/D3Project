@@ -31,6 +31,9 @@ var settlementButtonPath;
 var cityButtonPath;
 var turnButtonPath;
 
+var tileRadius;
+var buttonWidth;
+
 //place to store on screen location of drawn cards in hand
 var cardPaths = [];
 
@@ -370,8 +373,8 @@ function drawDice(){
   
         //this thing is called a closure but idk how it works tbh
         (function (i) {
-            var xPos = (canvas.width - ((i + 1) * 65) - 110);
-            var yPos = 100;
+            var xPos = (canvas.width - ((i + 1) * 65));
+            var yPos = 3 * tileRadius;
             diceImgs[i] = new Image();
             diceImgs[i].src = diceArr[i].getImg();
 
@@ -390,16 +393,18 @@ function initDicePath(){
     
     dicePath = new Path2D();
     
-    let lX = (canvas.width - ((2) * 65) - 110)
-    let rX = (canvas.width - ((2) * 65) - 110) + 125
+    let lX = (canvas.width - ((2) * 65))
+    let rX = (canvas.width - ((2) * 65)) + 125
 
+    let tY = 3 * tileRadius
+    let bY = tY + 65
 
     ctx.beginPath();
-    dicePath.moveTo(lX, 100)
-    dicePath.lineTo(lX, 160)
-    dicePath.lineTo(rX, 160)
-    dicePath.lineTo(rX, 100)
-    dicePath.lineTo(lX, 100)
+    dicePath.moveTo(lX, tY)
+    dicePath.lineTo(lX, bY)
+    dicePath.lineTo(rX, bY)
+    dicePath.lineTo(rX, tY)
+    dicePath.lineTo(lX, tY)
     ctx.closePath()
 
 
@@ -416,11 +421,15 @@ function drawButtons(){
     let buttonAreaPath = new Path2D()
 
     //draw shape for bank to go in
-    let x = canvas.width - 110
-    let y = 0
-    let w = 120
-    let h = 555
+    let x = (canvas.width/2) - 2.5*tileRadius
+    let y = canvas.height - 2 * tileRadius
+    let w = canvas.width - x
+    let h = 2 * tileRadius
     let radius = 20
+
+    let textY = canvas.height - h/2 + 10/2
+
+    let textX = x + buttonWidth/2
 
     let r = x + w;
     let b = y + h;
@@ -465,8 +474,9 @@ function drawButtons(){
     ctx.textAlign = "center"
     ctx.fillStyle = "white"
     ctx.font = "20px Arial"
-    ctx.fillText("Trade", canvas.width - 50, 55, 70)
+    ctx.fillText("Trade", textX, textY, 70)
 
+    textX += buttonWidth
 
     //dev Button
     ctx.fillStyle = enabledColor
@@ -476,8 +486,9 @@ function drawButtons(){
     ctx.fill(devButtonPath)
 
     ctx.fillStyle = "white"
-    ctx.fillText("Dev Card", canvas.width - 50, 145, 70)
+    ctx.fillText("Dev Card", textX, textY, 70)
 
+    textX += buttonWidth
 
     //road Button
     ctx.fillStyle = enabledColor
@@ -493,8 +504,9 @@ function drawButtons(){
     }
 
     ctx.fillStyle = "white"
-    ctx.fillText("Road", canvas.width - 50, 235, 70)
+    ctx.fillText("Road", textX, textY, 70)
 
+    textX += buttonWidth
 
     //settlement Button
     ctx.fillStyle = enabledColor
@@ -510,10 +522,11 @@ function drawButtons(){
     }
 
     ctx.fillStyle = "white"
-    ctx.fillText("Settlement", canvas.width - 50, 325, 70)
+    ctx.fillText("Settlement", textX, textY, 70)
 
     //ctx.drawImage(images[7], canvas.width - 90, 260, 80, 80)
 
+    textX += buttonWidth
 
     //city Button
     ctx.fillStyle = enabledColor
@@ -529,8 +542,9 @@ function drawButtons(){
     }
 
     ctx.fillStyle = "white"
-    ctx.fillText("City", canvas.width - 50, 415, 70)
+    ctx.fillText("City", textX, textY, 70)
 
+    textX += buttonWidth
 
     //turn Button
     ctx.fillStyle = enabledColor
@@ -540,21 +554,24 @@ function drawButtons(){
     ctx.fill(turnButtonPath)
 
     ctx.fillStyle = "white"
-    ctx.fillText("End Turn", canvas.width - 50, 505, 70)
+    ctx.fillText("End Turn", textX, textY, 70)
 }
 
 
 function initButtons(){
 
     //x y width height and curve radius for rectangle path
-    let x = canvas.width - 90
-    let y = 5
-    let w = 80
-    let h = 80
+    let x = (canvas.width/2) - 2.5*tileRadius
+    let y = canvas.height - tileRadius * 1.8
+    let w = (canvas.width - x) / 7
+    let h = tileRadius * 1.5
     let radius = 10
+
+    buttonWidth = w * 7/6
 
     tradeButtonPath = new Path2D();
 
+    x += (w * 14/13) - w
 
     //rectangle with rounded corners
     let r = x + w;
@@ -576,7 +593,7 @@ function initButtons(){
     devButtonPath = new Path2D();
 
     //update y for new button
-    y += 90
+    x += w * 7/6
 
     r = x + w;
     b = y + h;
@@ -596,7 +613,7 @@ function initButtons(){
     roadButtonPath = new Path2D();
 
     //update y for new button
-    y += 90
+    x += w * 7/6
 
     r = x + w;
     b = y + h;
@@ -615,7 +632,7 @@ function initButtons(){
     settlementButtonPath = new Path2D();
 
     //update y for new button
-    y += 90
+    x += w * 7/6
 
     r = x + w;
     b = y + h;
@@ -634,7 +651,7 @@ function initButtons(){
     cityButtonPath = new Path2D();
 
     //update y for new button
-    y += 90
+    x += w * 7/6
 
     r = x + w;
     b = y + h;
@@ -653,7 +670,7 @@ function initButtons(){
     turnButtonPath = new Path2D();
 
     //update y for new button
-    y += 90
+    x += w * 7/6
 
     r = x + w;
     b = y + h;
@@ -684,7 +701,7 @@ function drawTileTextures(){
         //centerY = ((2 + i) * (canvas.height / 7)) - radius;
 
         //some circle packing magic thats like a 30-60-90 triangle
-        centerY = (canvas.height * 4/7) - Math.sqrt(3)*radius*(2-i);
+        centerY = (canvas.height * 3/7) - Math.sqrt(3)*radius*(2-i);
 
         var times;
 
@@ -1424,33 +1441,32 @@ function initPorts(){
 function drawTiles(){
     var centerX;
     var centerY;
-    //var radius = canvas.height/11.5;
-    var radius = 60;
+    //tileRadius = canvas.height/15;
+    tileRadius = 60;
 
     ctx.textAlign = "center"
     ctx.font = "20px Arial";
 
     for(var i = 0; i < 5; i++){
-        //centerY = ((2 + i) * (canvas.height / 7)) - radius;
 
         //some circle packing magic that makes a 30-60-90 triangle
-        centerY = (canvas.height * 4/7) - Math.sqrt(3)*radius*(2-i);
+        centerY = (canvas.height * 3/7) - Math.sqrt(3)*tileRadius*(2-i);
 
         var times;
 
         //first and last row
         if(i === 0 || i === 4){
-            centerX = (canvas.width/2) - 3.5*radius
+            centerX = (canvas.width/2) - 3.5*tileRadius
             times = 3;
         }
         //second and second to last row
         if(i === 1 || i === 3){
-            centerX = (canvas.width/2) - 4.5*radius
+            centerX = (canvas.width/2) - 4.5*tileRadius
             times = 4;
         }
         //middle row
         if(i === 2){
-            centerX = (canvas.width/2) - 5.5*radius
+            centerX = (canvas.width/2) - 5.5*tileRadius
             times = 5;
         }
 
@@ -1460,7 +1476,7 @@ function drawTiles(){
             var hexAngle = ((2 * Math.PI) / 6)
 
             //7/6 makes the hexagons flush 6.9/6 looks nicer anything below leaves a gap
-            var hexRad = radius * 6.5/6
+            var hexRad = tileRadius * 6.5/6
 
             tilesArr[i][j].cx = centerX;
             tilesArr[i][j].cy = centerY;
@@ -1542,7 +1558,7 @@ function drawTiles(){
                 
             }
 
-            centerX += radius * 2 
+            centerX += tileRadius * 2 
         }
 
     }
@@ -1557,24 +1573,24 @@ function drawBank(){
     let bankPath = new Path2D()
 
     //draw shape for bank to go in
-    let x = 15
+    let x = canvas.width - tileRadius * 5
     let y = 0
-    let w = 340
-    let h = 100
+    let w = tileRadius * 5
+    let h = 3 * tileRadius
+    
     let radius = 20
-
     let r = x + w;
     let b = y + h;
     ctx.beginPath()
-    bankPath.moveTo(x, y);
-    bankPath.lineTo(r+radius, y - 2);
+    bankPath.moveTo(x + radius, y);
+    bankPath.lineTo(r+radius, y);
     bankPath.quadraticCurveTo(r, y, r, y+radius);
     bankPath.lineTo(r, y+h-radius);
     bankPath.quadraticCurveTo(r, b, r-radius, b);
     bankPath.lineTo(x, b);
-    //bankPath.quadraticCurveTo(x, b, x, b-radius);
+    bankPath.quadraticCurveTo(x, b, x, b-radius);
     bankPath.lineTo(x, y);
-    //bankPath.quadraticCurveTo(x, y, x+radius, y);
+    bankPath.quadraticCurveTo(x, y, x+radius, y);
     ctx.closePath()
 
     ctx.lineWidth = 4;
@@ -1586,11 +1602,13 @@ function drawBank(){
     ctx.strokeStyle = "black"
 
     //draw bank image
-    ctx.drawImage(images[8], 30, 20, 60, 60)
+    ctx.drawImage(images[8], x + w/2 - tileRadius/2, 0, tileRadius, tileRadius)
 
-    // ctx.font = "15px Arial"
-    // ctx.fillStyle = "black"
-    // ctx.fillText("Bank", 25 +  320/2, 17)
+    let cardHeight = 0.8 * tileRadius
+    let cardWidth = 5 * cardHeight/7
+
+    let startX = x + tileRadius/6
+    let cardY = 1.3 * tileRadius
     
     //draw numbers for resources
     for(var i = 0; i < 6; i++){
@@ -1598,20 +1616,56 @@ function drawBank(){
         ctx.font = "15px Arial"
         if(i<5){
             ctx.beginPath()
-            ctx.rect(120 + ((i%3)*320/4), 15 + Math.floor(i/3) * 40, 25, 35)
+            ctx.rect(startX + (i * w/6), cardY + (i%2) * 40, cardWidth, cardHeight)
             ctx.stroke()
             ctx.fillStyle = colorVals[i]
             ctx.fill()
             ctx.fillStyle = "black"
-            ctx.fillText(bank[i], 160 + ((i%3)*320/4), 40 + Math.floor(i/3) * 40)
+            //ctx.fillText(bank[i], 160 + ((i%3)*320/4), 40 + Math.floor(i/3) * 40)
+
+            let cardX = startX + (i * w/6)
+            let currCardY = cardY + (i%2) * 40
+
+            //draw circle for number of cards
+            ctx.beginPath()
+            ctx.arc(cardX, currCardY, tileRadius * 0.15, 0, 2 * Math.PI, false)
+            ctx.stroke()
+            ctx.fillStyle = "white"
+            ctx.fill()
+
+            //draw number to show how many the user has
+            ctx.fillStyle = "black"
+            ctx.textAlign = "center"
+            ctx.font = "12px Arial"
+            ctx.fillText(bank[i], cardX, currCardY + 5)
+
+
+
+
         }else{
             ctx.beginPath()
-            ctx.rect(120 + ((i%3)*320/4), 15 + Math.floor(i/3) * 40, 25, 35)
+            ctx.rect(startX + (i * w/6), cardY + (i%2) * 40, cardWidth, cardHeight)
             ctx.stroke()
             ctx.fillStyle = colorVals[i]
             ctx.fill()
             ctx.fillStyle = "black"
-            ctx.fillText(devCardArray.length, 160 + ((i%3)*320/4), 40 + Math.floor(i/3) * 40)
+            //ctx.fillText(devCardArray.length, 160 + ((i%3)*320/4), 40 + Math.floor(i/3) * 40)
+
+            let cardX = startX + (i * w/6)
+            let currCardY = cardY + (i%2) * 40
+
+            //draw circle for number of cards
+            ctx.beginPath()
+            ctx.arc(cardX, currCardY, tileRadius * 0.15, 0, 2 * Math.PI, false)
+            ctx.stroke()
+            ctx.fillStyle = "white"
+            ctx.fill()
+
+            //draw number to show how many the user has
+            ctx.fillStyle = "black"
+            ctx.textAlign = "center"
+            ctx.font = "12px Arial"
+            ctx.fillText(devCardArray.length, cardX, currCardY + 5)
         }
         
     }
@@ -1808,7 +1862,7 @@ function drawTurnNum(){
     ctx.textAlign = "left"
     ctx.font = "Arial 15px"
     ctx.fillStyle = "black"
-    ctx.fillText("Turn: " + turnNumber, 25, 125)
+    ctx.fillText("Turn: " + turnNumber, 25, 25)
 }
 
 
@@ -1824,11 +1878,12 @@ function drawTradeMenu(){
 
     //define boundaries of trade menu
     let menu_x = canvas.width - 300
-    let menu_y = canvas.height - 235
+    let menu_y = canvas.height - 6 * tileRadius
     let width = 290
     let height = 225
 
     //draw the trade menu box
+    ctx.beginPath()
     ctx.rect(menu_x, menu_y, width, height)
     ctx.fillStyle = "antiquewhite"
     ctx.fill()
@@ -1894,23 +1949,15 @@ function drawTradeMenu(){
 
 function drawHand(){
 
-    cardPaths = [];
-
     ctx.strokeStyle = "black";
     ctx.lineWidth = 1;
 
-    let cardTypes = 0
-    let cardWidth = 40
-    let cardHeight = 60
-    let buffer = 5
-    let boxWidth = 10 * cardWidth + 11 * buffer
-
     let handPath = new Path2D()
 
-    let x = 300
-    let y = 0
-    let w = 565
-    let h = 95
+    let x = 0
+    let y = canvas.height - 2 * tileRadius
+    let w = canvas.width - ((canvas.width/2) + 2.5*tileRadius)
+    let h = 2 * tileRadius
     let radius = 25
     let buttonRadius = 10
 
@@ -1918,7 +1965,7 @@ function drawHand(){
     let b = y + h;
     ctx.beginPath()
     handPath.moveTo(x, y);
-    handPath.lineTo(r+buttonRadius, y - 2);
+    handPath.lineTo(r+buttonRadius, y);
     handPath.quadraticCurveTo(r, y, r, y+buttonRadius);
     handPath.lineTo(r, y+h-radius);
     handPath.quadraticCurveTo(r, b, r-radius, b);
@@ -1936,36 +1983,38 @@ function drawHand(){
     ctx.lineWidth = 1;
     ctx.strokeStyle = "black"
 
-    // ctx.beginPath()
-    // ctx.rect(canvas.width - boxWidth - 100, 10, boxWidth, 80);
-    // ctx.stroke();
-    // ctx.fillStyle = "antiquewhite"
-    // ctx.fill()
+    //draw player circle
+    ctx.beginPath();
+    ctx.arc(w/6, canvas.height - h/2, tileRadius/2, 0, 2 * Math.PI, false);
+    ctx.closePath();
+    ctx.fillStyle = currPlayer.color;
+    ctx.fill()
 
-    // ctx.beginPath()
-    // ctx.rect(canvas.width - boxWidth/2 - 30 - 100, 2, 60, 20);
-    // ctx.stroke();
-    // ctx.fillStyle = "antiquewhite"
-    // ctx.fill()
+    //draw user icon on top of player circle
+    ctx.drawImage(images[9], w/6 - tileRadius/1.95, canvas.height - h/2 - .6*tileRadius, tileRadius * 1.05, tileRadius)
 
-    ctx.font = "15px Arial"
-    ctx.textAlign = "center"
-    ctx.fillStyle = "black"
-    ctx.fillText("Cards", canvas.width - boxWidth/2 - 100, 17)
+    cardPaths = [];
 
-    
+    let cardTypes = 0
+    let cardHeight = 0.8 * tileRadius
+    let cardWidth = 5 * cardHeight/7
+    let buffer = (((2*w)/3) - 5 * cardWidth) / 5
+    let boxWidth = 10 * cardWidth + 11 * buffer
+    let cardY = y + 0.1 * tileRadius
+    let cardX = w/3
+
 
     //loop through all of current players resources
     for(let i = 0; i < currPlayer.resources.length; i++){
-        
+
         //only draw resource types that the player actually has
         if(currPlayer.resources[i] != 0){
-            
+
             //define boundaries of resource card
             let currCard = new Path2D
 
             ctx.beginPath()
-            currCard.rect(canvas.width - boxWidth + cardWidth * cardTypes + 5 * (cardTypes + 1) - 100, 20, cardWidth, cardHeight);
+            currCard.rect(cardX, cardY, cardWidth, cardHeight);
             ctx.stroke(currCard);
 
             //get style for resource card
@@ -2025,16 +2074,46 @@ function drawHand(){
 
             }
             
+
+            //draw circle for number of cards
+            ctx.beginPath()
+            ctx.arc(cardX, cardY, tileRadius * 0.15, 0, 2 * Math.PI, false)
+            ctx.stroke()
+            ctx.fillStyle = "white"
+            ctx.fill()
+
             //draw number to show how many the user has
             ctx.fillStyle = "black"
             ctx.textAlign = "center"
-            ctx.font = "15px Arial"
-            ctx.fillText(currPlayer.resources[i], canvas.width - boxWidth + cardWidth * cardTypes + 5 * cardTypes + cardWidth/2 - 100, 40 + cardHeight/2)
+            ctx.font = "12px Arial"
+            ctx.fillText(currPlayer.resources[i], cardX, cardY + 5)
             
-            
+            cardX += buffer + cardWidth
             cardTypes++;
         }
+        //for resources the player doesnt have draw a stroked line
+        else{
+
+            //define boundaries of resource card
+            let currCard = new Path2D
+
+            ctx.beginPath()
+            currCard.rect(cardX, cardY, cardWidth, cardHeight);
+
+            ctx.setLineDash([5,3])
+            ctx.stroke(currCard)
+
+            cardX += buffer + cardWidth
+        }
+        //disables stroked lines
+        ctx.setLineDash([])
     } 
+
+
+    //move to next row of cards
+    cardY += tileRadius
+    cardX = w/3
+
 
     //loop though all of current players dev cards and draw them
     for(let i = 0; i < currPlayer.devCards.length; i++){
@@ -2046,7 +2125,7 @@ function drawHand(){
             let currCard = new Path2D
 
             ctx.beginPath()
-            currCard.rect(canvas.width - boxWidth + cardWidth * cardTypes + 5 * (cardTypes + 1) - 100, 20, cardWidth, cardHeight);
+            currCard.rect(cardX, cardY, cardWidth, cardHeight);
             ctx.stroke(currCard);
 
             let printMe = ""
@@ -2059,7 +2138,7 @@ function drawHand(){
 
                     ctx.fillStyle = "Grey"
                     ctx.fill(currCard)
-                    printMe += "K ("
+                    printMe += "K"
 
                     cardPaths.push({path:currCard, type:devCard.KNIGHT});
 
@@ -2070,7 +2149,7 @@ function drawHand(){
 
                     ctx.fillStyle = "grey"
                     ctx.fill(currCard)
-                    printMe += "VP ("
+                    printMe += "VP"
 
                     cardPaths.push({path:currCard, type:devCard.VP});
 
@@ -2081,7 +2160,7 @@ function drawHand(){
 
                     ctx.fillStyle = "grey"
                     ctx.fill(currCard)
-                    printMe += "M ("
+                    printMe += "M"
 
                     cardPaths.push({path:currCard, type:devCard.MONOPOLY});
 
@@ -2092,7 +2171,7 @@ function drawHand(){
 
                     ctx.fillStyle = "grey"
                     ctx.fill(currCard)
-                    printMe += "R ("
+                    printMe += "R"
 
                     cardPaths.push({path:currCard, type:devCard.ROAD});
 
@@ -2103,7 +2182,7 @@ function drawHand(){
 
                     ctx.fillStyle = "grey"
                     ctx.fill(currCard)
-                    printMe += "P ("
+                    printMe += "P"
 
                     cardPaths.push({path:currCard, type:devCard.PLENTY});
 
@@ -2112,16 +2191,48 @@ function drawHand(){
                 default:
 
             }
-            
+
+
+            //draw circle for number of cards
+            ctx.beginPath()
+            ctx.arc(cardX, cardY, tileRadius * 0.15, 0, 2 * Math.PI, false)
+            ctx.stroke()
+            ctx.fillStyle = "white"
+            ctx.fill()
+
             //draw number to show how many the user has
             ctx.fillStyle = "black"
             ctx.textAlign = "center"
+            ctx.font = "12px Arial"
+            ctx.fillText(currPlayer.devCards[i], cardX, cardY + 5)
+            
+            //draw dev card type
+            ctx.fillStyle = "black"
+            ctx.textAlign = "center"
             ctx.font = "15px Arial"
-            ctx.fillText(printMe + currPlayer.devCards[i] + ")", canvas.width - boxWidth + cardWidth * cardTypes + 5 * (cardTypes + 1) + cardWidth/2 - 100, 40 + cardHeight/2)
+            ctx.fillText(printMe, cardX + cardWidth/2, cardY + cardHeight/2)
             
-            
+            cardX += buffer + cardWidth
             cardTypes++;
         }
+        
+        //for resources the player doesnt have draw a stroked line
+        else{
+
+            //define boundaries of resource card
+            let currCard = new Path2D
+
+            ctx.beginPath()
+            currCard.rect(cardX, cardY, cardWidth, cardHeight);
+
+            ctx.setLineDash([5,3])
+            ctx.stroke(currCard)
+
+            cardX += buffer + cardWidth
+        }
+        //disables stroked lines
+        ctx.setLineDash([])
+        
     }
 
 

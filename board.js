@@ -667,7 +667,7 @@ function checkWinCondition(){
 function giveResources(){
 
     for(let i = 0; i < playersArr.length; i++){
-        playersArr[i].resources = [100, 100, 100, 100, 100]
+        playersArr[i].resources = [10, 10, 10, 10, 10]
     }
 
     drawCanvas()

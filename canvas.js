@@ -341,17 +341,28 @@ function preloadImages(srcs, imgs) {
     }
 }
 
-//any new image has to be added here 
+//any new image has to be added here and you need to append it otherwise it shifts all other indices
 var imageSrcs = ["assets/robber.svg", 
                 "assets/WoodTexture.png", 
                 "assets/BrickTexture.png", 
                 "assets/SheepTexture.png", 
                 "assets/WheatTexture.png",
+
+                //5
                 "assets/OreTexture.png",
                 "assets/DesertTexture.png",
                 "assets/settlement.svg",
                 "assets/bank.svg",
-                "assets/user.svg"
+                "assets/user.svg",
+
+                //10
+                "assets/dice-1.png",
+                "assets/dice-2.png",
+                "assets/dice-3.png",
+                "assets/dice-4.png",
+                "assets/dice-5.png",
+                "assets/dice-6.png",
+
                 ];
 
 var images = [];
@@ -370,23 +381,60 @@ function toggleTexture(){
 
 //draw the dice in corner of canvas
 function drawDice(){
-    var diceImgs = []
+
+    //new and improved
     for(i=0; i<diceArr.length; i++){
-  
-        //this thing is called a closure but idk how it works tbh
-        (function (i) {
-            var xPos = (canvas.width - ((i + 1) * 65));
-            var yPos = 3 * tileRadius;
-            diceImgs[i] = new Image();
-            diceImgs[i].src = diceArr[i].getImg();
 
-            diceImgs[i].onload = function () {
-                ctx.drawImage(diceImgs[i], xPos, yPos, 60, 60);
-            };
+        var xPos = (canvas.width - ((i + 1) * 65));
+        var yPos = 3 * tileRadius;
 
-        })(i);
-  
+        console.log(diceArr[i].getImg())
+
+        switch(diceArr[i].getImg()){
+            case "assets/Dice-1.png":
+                ctx.drawImage(images[10], xPos, yPos, 60, 60);
+                break;
+
+            case "assets/Dice-2.png":
+                ctx.drawImage(images[11], xPos, yPos, 60, 60);
+                break;
+
+            case "assets/Dice-3.png":
+                ctx.drawImage(images[12], xPos, yPos, 60, 60);
+                break;
+
+            case "assets/Dice-4.png":
+                ctx.drawImage(images[13], xPos, yPos, 60, 60);
+                break;
+
+            case "assets/Dice-5.png":
+                ctx.drawImage(images[14], xPos, yPos, 60, 60);
+                break;
+
+            case "assets/Dice-6.png":
+                ctx.drawImage(images[15], xPos, yPos, 60, 60);
+                break;
+        }
     }
+
+
+    // var diceImgs = []
+    // for(i=0; i<diceArr.length; i++){
+  
+    //     //this thing is called a closure but idk how it works tbh
+    //     (function (i) {
+    //         var xPos = (canvas.width - ((i + 1) * 65));
+    //         var yPos = 3 * tileRadius;
+    //         diceImgs[i] = new Image();
+    //         diceImgs[i].src = diceArr[i].getImg();
+
+    //         diceImgs[i].onload = function () {
+    //             ctx.drawImage(diceImgs[i], xPos, yPos, 60, 60);
+    //         };
+
+    //     })(i);
+  
+    // }
     //remove me I don't belong here
     //drawCircles()
 }
@@ -803,7 +851,7 @@ function drawVertices(){
                 
                 if(verticesArr[i][j].settlement === null && verticesArr[i][j].dead !== true){
                     ctx.fillStyle = "white";
-                    ctx.strokeColor = "white";
+                    ctx.strokeStyle = "black";
                     ctx.beginPath()
                     ctx.arc(verticesArr[i][j].cx, verticesArr[i][j].cy, aState.vertSize, 0, Math.PI * 2, false)
                     ctx.fill()
@@ -828,6 +876,7 @@ function drawVertices(){
 
         for(var i = 0; i < verts.length; i++){
             ctx.fillStyle = "white";
+            ctx.strokeStyle = "black";
             ctx.beginPath()
             ctx.arc(verts[i].cx, verts[i].cy, aState.vertSize, 0, Math.PI * 2, false)
             ctx.fill()
@@ -1602,7 +1651,7 @@ function drawBank(){
     bankPath.quadraticCurveTo(x, b, x, b-radius);
     bankPath.lineTo(x, y);
     bankPath.quadraticCurveTo(x, y, x+radius, y);
-    ctx.closePath()
+    ctx.closePath() 
 
     ctx.lineWidth = 4;
     // ctx.strokeStyle = "#B0E0E6"
@@ -1689,6 +1738,7 @@ function drawPorts(){
 
         ctx.textAlign = "center"
         ctx.strokeStyle = "PERU"
+        ctx.setLineDash([5,1])
         ctx.lineWidth = 8;
 
         //draw lines to ports
@@ -1703,6 +1753,7 @@ function drawPorts(){
         ctx.stroke()
 
         ctx.lineWidth = 3
+        ctx.setLineDash([])
 
         //draw port itself
         ctx.beginPath();
@@ -1719,6 +1770,7 @@ function drawPorts(){
         ctx.fillText(portsArr[i].trade, portsArr[i].cx, portsArr[i].cy + 5)
 
     }
+
 }
 
 //defines a path around the perimeter of the island
@@ -2308,7 +2360,7 @@ AnimationState.prototype.update = function(){
     
     this.angle = (this.angle + Math.PI/25)%(2*Math.PI)
     
-    this.vertSize = 15 + 2.5 * Math.sin(this.angle);
+    this.vertSize = 15 + 1.5 * Math.sin(this.angle);
 }
 
 var aState = new AnimationState()

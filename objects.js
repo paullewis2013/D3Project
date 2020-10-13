@@ -488,7 +488,7 @@ Player.prototype.calcLongestRoad = function(){
 
     //get an array of all reachable vertices for given player
     let verts = this.getReachableVertices();
-    console.log("numVerts = " + verts.length)
+    //console.log("numVerts = " + verts.length)
 
     //for each vertex, find the longest path that includes that vertex
     for(let i = 0; i < verts.length; i++){

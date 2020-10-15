@@ -137,7 +137,8 @@ Road.prototype.getOppositeVert = function(v){
 
 
 //define player object
-function Player(color){
+function Player(color, isBot){
+    this.isBot = isBot;
     this.VP = 0;
     this.name = "";
     this.resources = [0, 0, 0, 0, 0];
@@ -155,9 +156,12 @@ function Player(color){
     this.settlementA = null;
     this.settlementB = null;
 }
+Player.prototype.setBot = function(isBot){
+    this.isBot = isBot;
+}
 Player.prototype.buildSettlement = function(settlement){
     
-    console.log("building a settlement")
+    //console.log("building a settlement")
 
     if(this.VP === 0){
         this.settlementA = settlement;
@@ -640,8 +644,6 @@ Player.prototype.botBestRoad = function(){
     potentialRoads = this.getBuildableRoads()
 
     let randomIndex = Math.floor(Math.random() * (potentialRoads.length))
-
-    console.log(randomIndex)
 
     buildRoad(potentialRoads[randomIndex], this)
 

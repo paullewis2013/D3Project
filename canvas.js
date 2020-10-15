@@ -508,7 +508,7 @@ function drawButtons(){
     let buttonAreaPath = new Path2D()
 
     //draw shape for bank to go in
-    let x = (canvas.width/2) - 1.5*tileRadius
+    let x = (canvas.width/2) - 1.8*tileRadius
     let y = canvas.height - 1.5 * tileRadius
     let w = canvas.width - x
     let h = 1.5 * tileRadius
@@ -516,7 +516,7 @@ function drawButtons(){
 
     let textY = canvas.height - tileRadius + 10/2
 
-    let textX = x + buttonWidth/2
+    let textX = x + buttonWidth/2 + 0.3*tileRadius
 
     let r = x + w;
     let b = y + h;
@@ -538,6 +538,7 @@ function drawButtons(){
     ctx.fill()
     ctx.lineWidth = 1;
     ctx.strokeStyle = "black"
+    ctx.stroke()
 
 
 
@@ -2072,7 +2073,7 @@ function drawHand(){
 
     let x = 0
     let y = canvas.height - 2 * tileRadius
-    let w = canvas.width - ((canvas.width/2) + 1.5*tileRadius)
+    let w = canvas.width - ((canvas.width/2) + 1.8*tileRadius)
     let h = 2 * tileRadius
     let radius = 25
     let buttonRadius = 10
@@ -2086,9 +2087,7 @@ function drawHand(){
     handPath.lineTo(r, y+h-radius);
     handPath.quadraticCurveTo(r, b + 3, r+radius, b + 3);
     handPath.lineTo(x, b);
-    //bankPath.quadraticCurveTo(x, b, x, b-radius);
     handPath.lineTo(x, y);
-    //bankPath.quadraticCurveTo(x, y, x+radius, y);
     ctx.closePath()
 
     ctx.lineWidth = 4;

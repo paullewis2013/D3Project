@@ -259,10 +259,10 @@ function setUpTiles(){
 
 }
 
-var p1 = new Player("Orange");
-var p2 = new Player("Red");
-var p3 = new Player("Purple");
-var p4 = new Player("Blue");
+var p1 = new Player("Orange", false);
+var p2 = new Player("Red", true);
+var p3 = new Player("Purple", true);
+var p4 = new Player("Blue", true);
 playersArr.push(p1);
 playersArr.push(p2);
 playersArr.push(p3);
@@ -270,8 +270,6 @@ playersArr.push(p4);
 
 currPlayerIndex = Math.floor(Math.random() * 4);
 var currPlayer = playersArr[currPlayerIndex];
-
-//currplayer = ++currPlayer%(number of players)
 
 //sets all game conditions initally
 //called when last image finishes loading
@@ -310,22 +308,23 @@ async function initialSettlements(){
     turnButtonEnabled = false;
 
     //go through players in order
+    //WARNING use currPlayer to access player and not playersArr[i]
     for(let i = 0; i < playersArr.length; i++){
 
+        console.log(currPlayer.isBot)
+
         //input for all players
-        if(!quickStarting){
+        if(!currPlayer.isBot || !quickStarting){
             settlementButton();
 
             //create a function that waits for settlement to be built before continuing
-            await waitForSettlment(1);
+            await waitForSettlement(currPlayer, 1);
             showVerts = false;
-
 
             roadButton();
 
-
             //a function that waits for road to be built before continuing
-            await waitForRoad(1);
+            await waitForRoad(currPlayer, 1);
         }
         //bot placement
         else{
@@ -353,19 +352,19 @@ async function initialSettlements(){
     for(let i = 0; i < playersArr.length; i++){
 
         //input for all players
-        if(!quickStarting){
+        if(!currPlayer.isBot || !quickStarting){
+            console.log("here")
+
             settlementButton();
 
             //create a function that waits for settlement to be built before continuing
-            await waitForSettlment(1);
+            await waitForSettlement(currPlayer, 2);
             showVerts = false;
-
 
             roadButton();
 
-
             //a function that waits for road to be built before continuing
-            await waitForRoad(1);
+            await waitForRoad(currPlayer, 2);
         }
         //bot placement
         else{
@@ -532,7 +531,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function waitForSettlment(num){
+async function waitForSettlement(player, num){
 
     let built = false;
 
@@ -540,7 +539,7 @@ async function waitForSettlment(num){
 
         if(winCondition){
             break;
-        }else if(5 - currPlayer.settlementsRemaining >= num){
+        }else if(5 - player.settlementsRemaining >= num){
             built = true
         }else{
             await sleep(100)
@@ -550,7 +549,7 @@ async function waitForSettlment(num){
 
 }
 
-async function waitForRoad(num){
+async function waitForRoad(player, num){
 
     let built = false;
 
@@ -558,7 +557,7 @@ async function waitForRoad(num){
 
         if(winCondition){
             break;
-        }else if(15 - currPlayer.roadsRemaining >= num){
+        }else if(15 - player.roadsRemaining >= num){
             built = true
         }else{
             await sleep(100)

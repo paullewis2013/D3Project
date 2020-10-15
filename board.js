@@ -56,6 +56,8 @@ var robberLocation = null
 var longestRoadHolder = null;
 var largestArmyHolder = null;
 
+var quickStarting = true
+
 //the tiles on the board
 //a 2d array where first index represents row and second represent num in row
 var tilesArr = [
@@ -310,20 +312,34 @@ async function initialSettlements(){
     //go through players in order
     for(let i = 0; i < playersArr.length; i++){
 
-        drawCanvas()
+        //input for all players
+        if(!quickStarting){
+            settlementButton();
 
-        settlementButton();
-
-        //create a function that waits for settlement to be built before continuing
-        await waitForSettlment(1);
-        showVerts = false;
-
-
-        roadButton();
+            //create a function that waits for settlement to be built before continuing
+            await waitForSettlment(1);
+            showVerts = false;
 
 
-        //create a function that waits for road to be built before continuing
-        await waitForRoad(1);
+            roadButton();
+
+
+            //a function that waits for road to be built before continuing
+            await waitForRoad(1);
+        }
+        //bot placement
+        else{
+            showVerts = false
+
+            currPlayer.botBestSettlement()
+
+            await sleep(500)
+
+            currPlayer.botBestRoad()
+
+            await sleep(500)
+        }
+        
 
 
         if(i < playersArr.length - 1){
@@ -336,18 +352,33 @@ async function initialSettlements(){
     //snake backwards through players
     for(let i = 0; i < playersArr.length; i++){
 
-        drawCanvas()
+        //input for all players
+        if(!quickStarting){
+            settlementButton();
 
-        settlementButton();
+            //create a function that waits for settlement to be built before continuing
+            await waitForSettlment(1);
+            showVerts = false;
 
-        //create a function that waits for settlement to be built before continuing
-        await waitForSettlment(2);
-        showVerts = false;
 
-        roadButton();
+            roadButton();
 
-        //create a function that waits for road to be built before continuing
-        await waitForRoad(2);
+
+            //a function that waits for road to be built before continuing
+            await waitForRoad(1);
+        }
+        //bot placement
+        else{
+            showVerts = false
+
+            currPlayer.botBestSettlement()
+
+            await sleep(500)
+
+            currPlayer.botBestRoad()
+
+            await sleep(500)
+        }
 
         if(i < playersArr.length - 1){
             currPlayerIndex = (currPlayerIndex + 3)%(playersArr.length);
@@ -670,6 +701,7 @@ function giveResources(){
 
     for(let i = 0; i < playersArr.length; i++){
         playersArr[i].resources = [10, 10, 10, 10, 10]
+        playersArr[i].devCards = [1, 1, 1, 1, 1]
     }
 
     drawCanvas()
@@ -1058,6 +1090,10 @@ function graphicButton(){
     
 }
 
+
+function quickStart(){
+    quickStarting = true
+}
 
 
 //--------------------------------------------------

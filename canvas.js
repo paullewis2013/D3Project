@@ -20,6 +20,8 @@ var textured = true;
 var movingRobber = false;
 var showRoads = false;
 var showVerts = false;
+var hoveredVert = null;
+var hoveredRoad = null;
 
 var colorVals = ["green", "firebrick", "lightgreen", "#ffff99", "slategrey", "blue"]
 
@@ -315,6 +317,37 @@ canvas.addEventListener('mousemove', function(e) {
 
     }
 
+    //if hovering over a vertex while building, color it the player color
+    if(showVerts){
+
+        hoveredVert = null;
+
+        //loop through all verts
+        for(let i = 0; i < 12; i++){
+            for(let j = 0; j < verticesArr[i].length; j++){
+                if(ctx.isPointInPath(verticesArr[i][j].hitbox, e.offsetX, e.offsetY)){
+                    hoveredVert = verticesArr[i][j]
+                }
+            }
+        }
+    }
+
+    //if hovering over a road while building, color it the player color
+    if(showRoads){
+
+        hoveredRoad = null;
+
+        //loop through all verts
+        for(let i = 0; i < 11; i++){
+            for(let j = 0; j < roadsArr[i].length; j++){
+                if(ctx.isPointInPath(roadsArr[i][j].hitbox, e.offsetX, e.offsetY)){
+                    hoveredRoad = roadsArr[i][j]
+                }
+            }
+        }
+    }
+    
+
     
 });
 
@@ -388,31 +421,35 @@ function drawDice(){
         var xPos = (canvas.width - ((i + 1) * 65));
         var yPos = 3 * tileRadius;
 
-        console.log(diceArr[i].getImg())
+        let size = 60
+
+        if(diceButtonEnabled){
+            size = aState.vertSize * 4
+        }
 
         switch(diceArr[i].getImg()){
             case "assets/Dice-1.png":
-                ctx.drawImage(images[10], xPos, yPos, 60, 60);
+                ctx.drawImage(images[10], xPos, yPos, size, size);
                 break;
 
             case "assets/Dice-2.png":
-                ctx.drawImage(images[11], xPos, yPos, 60, 60);
+                ctx.drawImage(images[11], xPos, yPos, size, size);
                 break;
 
             case "assets/Dice-3.png":
-                ctx.drawImage(images[12], xPos, yPos, 60, 60);
+                ctx.drawImage(images[12], xPos, yPos, size, size);
                 break;
 
             case "assets/Dice-4.png":
-                ctx.drawImage(images[13], xPos, yPos, 60, 60);
+                ctx.drawImage(images[13], xPos, yPos, size, size);
                 break;
 
             case "assets/Dice-5.png":
-                ctx.drawImage(images[14], xPos, yPos, 60, 60);
+                ctx.drawImage(images[14], xPos, yPos, size, size);
                 break;
 
             case "assets/Dice-6.png":
-                ctx.drawImage(images[15], xPos, yPos, 60, 60);
+                ctx.drawImage(images[15], xPos, yPos, size, size);
                 break;
         }
     }
@@ -471,33 +508,34 @@ function drawButtons(){
     let buttonAreaPath = new Path2D()
 
     //draw shape for bank to go in
-    let x = (canvas.width/2) - 2.5*tileRadius
-    let y = canvas.height - 2 * tileRadius
+    let x = (canvas.width/2) - 1.5*tileRadius
+    let y = canvas.height - 1.5 * tileRadius
     let w = canvas.width - x
-    let h = 2 * tileRadius
+    let h = 1.5 * tileRadius
     let radius = 20
 
-    let textY = canvas.height - h/2 + 10/2
+    let textY = canvas.height - tileRadius + 10/2
 
     let textX = x + buttonWidth/2
 
     let r = x + w;
     let b = y + h;
     ctx.beginPath()
-    buttonAreaPath.moveTo(x, y);
-    buttonAreaPath.lineTo(r, y);
-    buttonAreaPath.quadraticCurveTo(r, y, r, y+radius);
-    buttonAreaPath.lineTo(r, y+h-radius);
-    buttonAreaPath.quadraticCurveTo(r, b, r-radius, b);
-    buttonAreaPath.lineTo(x+radius, b);
-    buttonAreaPath.quadraticCurveTo(x, b, x, b-radius);
-    buttonAreaPath.lineTo(x, y+radius);
-    buttonAreaPath.quadraticCurveTo(x, y, x, y);
+    ctx.rect(x, y, w, h)
+    // buttonAreaPath.moveTo(x, y);
+    // buttonAreaPath.lineTo(r, y);
+    // buttonAreaPath.quadraticCurveTo(r, y, r, y+radius);
+    // buttonAreaPath.lineTo(r, y+h-radius);
+    // buttonAreaPath.quadraticCurveTo(r, b, r-radius, b);
+    // buttonAreaPath.lineTo(x+radius, b);
+    // buttonAreaPath.quadraticCurveTo(x, b, x, b-radius);
+    // buttonAreaPath.lineTo(x, y+radius);
+    // buttonAreaPath.quadraticCurveTo(x, y, x, y);
     ctx.closePath()
 
     ctx.lineWidth = 4;
     ctx.fillStyle = "#a8bbcf"
-    ctx.fill(buttonAreaPath)
+    ctx.fill()
     ctx.lineWidth = 1;
     ctx.strokeStyle = "black"
 
@@ -611,7 +649,7 @@ function drawButtons(){
 function initButtons(){
 
     //x y width height and curve radius for rectangle path
-    let x = (canvas.width/2) - 2.5*tileRadius
+    let x = (canvas.width/2) - 1.5*tileRadius
     let y = canvas.height - tileRadius * 1.8
     let w = (canvas.width - x) / 7
     let h = tileRadius * 1.5
@@ -850,7 +888,15 @@ function drawVertices(){
             for(var j = 0; j < verticesArr[i].length; j++){
                 
                 if(verticesArr[i][j].settlement === null && verticesArr[i][j].dead !== true){
+                    
+                    //set vert color to white by default
                     ctx.fillStyle = "white";
+
+                    //set vert color to player color if hovering
+                    if(verticesArr[i][j] == hoveredVert){
+                        ctx.fillStyle = currPlayer.color
+                    }
+                    
                     ctx.strokeStyle = "black";
                     ctx.beginPath()
                     ctx.arc(verticesArr[i][j].cx, verticesArr[i][j].cy, aState.vertSize, 0, Math.PI * 2, false)
@@ -876,6 +922,11 @@ function drawVertices(){
 
         for(var i = 0; i < verts.length; i++){
             ctx.fillStyle = "white";
+
+            if(verts[i] == hoveredVert){
+                ctx.fillStyle = currPlayer.color
+            }
+
             ctx.strokeStyle = "black";
             ctx.beginPath()
             ctx.arc(verts[i].cx, verts[i].cy, aState.vertSize, 0, Math.PI * 2, false)
@@ -1638,24 +1689,21 @@ function drawBank(){
     let w = tileRadius * 5
     let h = 3 * tileRadius
     
-    let radius = 20
+    let radius = 30
     let r = x + w;
     let b = y + h;
     ctx.beginPath()
-    bankPath.moveTo(x + radius, y);
-    bankPath.lineTo(r+radius, y);
-    bankPath.quadraticCurveTo(r, y, r, y+radius);
-    bankPath.lineTo(r, y+h-radius);
-    bankPath.quadraticCurveTo(r, b, r-radius, b);
-    bankPath.lineTo(x, b);
+    bankPath.moveTo(x, y);
+    bankPath.lineTo(r, y);
+    bankPath.lineTo(r, b);
+    bankPath.lineTo(x + radius, b);
     bankPath.quadraticCurveTo(x, b, x, b-radius);
     bankPath.lineTo(x, y);
-    bankPath.quadraticCurveTo(x, y, x+radius, y);
     ctx.closePath() 
 
     ctx.lineWidth = 4;
     // ctx.strokeStyle = "#B0E0E6"
-    // ctx.stroke(bankPath);
+    ctx.stroke(bankPath);
     ctx.fillStyle = "#ecf0f1"
     ctx.fill(bankPath)
     ctx.lineWidth = 1;
@@ -1863,6 +1911,11 @@ function drawRoads(){
             if(adjRoads[i].player === null){
                             
                 ctx.fillStyle = "white";
+
+                if(adjRoads[i] == hoveredRoad){
+                    ctx.fillStyle = currPlayer.color
+                }
+
                 ctx.fill(adjRoads[i].hitbox)
                 ctx.stroke(adjRoads[i].hitbox)
 
@@ -2019,7 +2072,7 @@ function drawHand(){
 
     let x = 0
     let y = canvas.height - 2 * tileRadius
-    let w = canvas.width - ((canvas.width/2) + 2.5*tileRadius)
+    let w = canvas.width - ((canvas.width/2) + 1.5*tileRadius)
     let h = 2 * tileRadius
     let radius = 25
     let buttonRadius = 10
@@ -2028,10 +2081,10 @@ function drawHand(){
     let b = y + h;
     ctx.beginPath()
     handPath.moveTo(x, y);
-    handPath.lineTo(r+buttonRadius, y);
+    handPath.lineTo(r-buttonRadius, y);
     handPath.quadraticCurveTo(r, y, r, y+buttonRadius);
     handPath.lineTo(r, y+h-radius);
-    handPath.quadraticCurveTo(r, b, r-radius, b);
+    handPath.quadraticCurveTo(r, b + 3, r+radius, b + 3);
     handPath.lineTo(x, b);
     //bankPath.quadraticCurveTo(x, b, x, b-radius);
     handPath.lineTo(x, y);
@@ -2040,7 +2093,7 @@ function drawHand(){
 
     ctx.lineWidth = 4;
     // ctx.strokeStyle = "#B0E0E6"
-    // ctx.stroke(handPath);
+    ctx.stroke(handPath);
     ctx.fillStyle = "#d9e2ea"
     ctx.fill(handPath)
     ctx.lineWidth = 1;
@@ -2349,6 +2402,17 @@ function drawCanvas(){
     
 
 }
+
+
+//------------------------------------------------------
+//
+//      
+//    
+//    Animation
+//    
+//    
+//    
+//------------------------------------------------------
 
 
 //create a global object to track animation changes

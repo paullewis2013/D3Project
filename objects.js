@@ -157,6 +157,8 @@ function Player(color){
 }
 Player.prototype.buildSettlement = function(settlement){
     
+    console.log("building a settlement")
+
     if(this.VP === 0){
         this.settlementA = settlement;
     }else if(this.VP === 1){
@@ -592,6 +594,56 @@ Player.prototype.getVP = function(){
     }
 
     return result;
+
+}
+Player.prototype.botBestSettlement = function(){
+
+    let highest = null
+    let num = 0
+
+    //find open vertex with most production points
+    for(let i = 0; i < 12; i++){
+        for(let j = 0; j < verticesArr[i].length; j++){
+
+            //only check settlements that are buildable
+            if(verticesArr[i][j].settlement == null && !verticesArr[i][j].dead){
+                
+                let currCount = 0
+
+                for(let k = 0; k < verticesArr[i][j].adjTiles.length; k++){
+
+                    if(verticesArr[i][j].adjTiles[k].number !== 7){
+                        currCount += 6 - Math.abs(7 - verticesArr[i][j].adjTiles[k].number)
+                    }
+
+                }
+
+                if(currCount > num){
+                    highest = verticesArr[i][j]
+                    num = currCount
+                }
+            }
+            
+
+        }
+    }
+
+    buildSettlement(highest, this) 
+
+
+}
+Player.prototype.botBestRoad = function(){
+
+    //very naive approach to roads
+    //just builds a random legal road
+
+    potentialRoads = this.getBuildableRoads()
+
+    let randomIndex = Math.floor(Math.random() * (potentialRoads.length))
+
+    console.log(randomIndex)
+
+    buildRoad(potentialRoads[randomIndex], this)
 
 }
 

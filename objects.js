@@ -648,6 +648,41 @@ Player.prototype.botBestRoad = function(){
     buildRoad(potentialRoads[randomIndex], this)
 
 }
+Player.prototype.botDiscard = function(){
+
+    //figure out how many total cards player has
+    let numCards = 0
+
+    for(let i = 0; i < this.resources.length; i++){
+        numCards += this.resources[i]
+    }
+
+    let numToDiscard = 0
+
+    //if cards is greater than 7 need to discard half
+    if(numCards > 7){
+        numToDiscard = Math.floor(numCards/2)
+
+        //discard one card at a time until you no longer need to discard
+        while(numToDiscard > 0){
+
+            //generate a random resourceType
+            let resourceType = Math.floor(Math.random() * 5)
+
+            if(this.resources[resourceType] != 0){
+                //return card to bank
+                this.resources[resourceType]--
+                bank[resourceType]++
+
+                //reduce counters for remaining cards
+                numCards--
+                numToDiscard--
+            }
+            
+        }
+    }
+
+}
 
 
 //define dice object

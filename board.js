@@ -259,7 +259,7 @@ function setUpTiles(){
 
 }
 
-var p1 = new Player("Orange", false);
+var p1 = new Player("Orange", true);
 var p2 = new Player("Red", true);
 var p3 = new Player("Purple", true);
 var p4 = new Player("Blue", true);
@@ -422,7 +422,7 @@ async function mainGameLoop(){
         //await player rolling the dice
         await waitForDiceRoll()
 
-
+        //handle this in roll dice method
         //if robber
             //await each player choosing resources to discard
             //await currPlayer moving robber
@@ -722,6 +722,11 @@ function rollDice(){
     if(result === 7){
         //discard resources over 7 first
         //loop through all players
+        for(let i = 0; i < playersArr.length; i++){
+            if(playersArr[i].isBot){
+                playersArr[i].botDiscard()
+            }
+        }
 
         //move robber after resources discarded
         moveRobber();

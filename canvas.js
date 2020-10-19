@@ -20,6 +20,7 @@ var textured = true;
 var movingRobber = false;
 var showRoads = false;
 var showVerts = false;
+var showMonopolyMenu = false;
 var hoveredVert = null;
 var hoveredRoad = null;
 
@@ -39,6 +40,10 @@ var buttonWidth;
 
 //place to store on screen location of drawn cards in hand
 var cardPaths = [];
+var monopolyMenuCardPaths = [];
+
+
+var selectedResource = null;
 
 
 canvas.addEventListener('click', function(e) {
@@ -46,7 +51,20 @@ canvas.addEventListener('click', function(e) {
     //debugging help
     //console.log(cardPaths)
 
+    //monopoly input
+    if(showMonopolyMenu){
 
+        //console.log(monopolyMenuCardPaths)
+
+        for(let i = 0; i < monopolyMenuCardPaths.length; i++){
+           
+            if(monopolyMenuCardPaths[i] != null && ctx.isPointInPath(monopolyMenuCardPaths[i], e.offsetX, e.offsetY)){
+                selectedResource = i
+            }
+        }
+
+
+    }
 
 
     //–––––––––––––––––––––––––––––––––––––––––––––––––––––––
@@ -1990,7 +2008,6 @@ function drawRobber(){
 }
 
 //draws a trade menu in lower right corner of canvas
-//TODO fix bank bug with color
 function drawTradeMenu(){
 
     //define boundaries of trade menu
@@ -2356,6 +2373,180 @@ function drawHand(){
 
 }
 
+function drawVisited(){
+
+    //roads first
+    for(var i = 0; i < 11; i++){
+
+        for(var j = 0; j < roadsArr[i].length; j++){
+            
+            if(currPlayer.visited.includes(roadsArr[i][j])){
+
+                //change color to color of player who owns it
+                ctx.fillStyle = "black";
+                ctx.fill(roadsArr[i][j].hitbox)
+                ctx.stroke(roadsArr[i][j].hitbox)
+
+            }
+            
+        }
+
+    }
+
+    //vertices next
+    for(let i = 0; i < 12; i++){
+        for(let j = 0; j < verticesArr[i].length; j++){
+
+            if(currPlayer.visited.includes(verticesArr[i][j])){
+                ctx.fillStyle = "black"
+                ctx.fill(verticesArr[i][j].hitbox)
+            }
+
+        }
+    }
+
+}
+
+function drawMonopolyMenu(){
+    //define boundaries of trade menu
+    let menu_x = canvas.width - 300
+    let menu_y = canvas.height - 4.5 * tileRadius
+    let w = 290
+    let h = 2 * tileRadius
+
+    let x = menu_x
+    let y = menu_y
+    let radius = 10
+
+    let r = x + w;
+    let b = y + h;
+
+    //draw the trade menu box
+    let monopolyMenuPath = new Path2D
+
+    ctx.beginPath()
+    monopolyMenuPath.moveTo(x+radius, y);
+    monopolyMenuPath.lineTo(r-radius, y);
+    monopolyMenuPath.quadraticCurveTo(r, y, r, y+radius);
+    monopolyMenuPath.lineTo(r, y+h-radius);
+    monopolyMenuPath.quadraticCurveTo(r, b, r-radius, b);
+    monopolyMenuPath.lineTo(x+radius, b);
+    monopolyMenuPath.quadraticCurveTo(x, b, x, b-radius);
+    monopolyMenuPath.lineTo(x, y+radius);
+    monopolyMenuPath.quadraticCurveTo(x, y, x+radius, y);
+    ctx.closePath()
+    ctx.fillStyle = "#d9e2ea"
+    ctx.fill(monopolyMenuPath)
+    ctx.strokeColor = "black"
+    ctx.stroke(monopolyMenuPath)
+
+    //add a message at the top
+    ctx.fillStyle = "black"
+    ctx.fillText("Please select a resource type:", menu_x + w/2, menu_y + 15)
+
+    monopolyMenuCardPaths = [];
+
+    let cardHeight = 0.8 * tileRadius
+    let cardWidth = 5 * cardHeight/7
+    let buffer = (w - 5 * cardWidth) / 5
+    //let boxWidth = 10 * cardWidth + 11 * buffer
+    let cardY = menu_y + (h - cardHeight)/2
+    let cardX = menu_x + buffer/2
+
+
+    //loop through all of current players resources
+    for(let i = 0; i < bank.length; i++){
+
+        //only draw resource types that the player actually has
+        if(bank[i] != 0){
+
+            //define boundaries of resource card
+            let currCard = new Path2D
+
+            ctx.beginPath()
+            currCard.rect(cardX, cardY, cardWidth, cardHeight);
+            ctx.stroke(currCard);
+
+            //get style for resource card
+            switch(i){
+                
+                //wood
+                case 0:
+
+                    ctx.fillStyle = "Green"
+                    ctx.fill(currCard)
+
+                    monopolyMenuCardPaths.push(currCard);
+
+                    break;
+
+                //brick
+                case 1:
+
+                    ctx.fillStyle = "Firebrick"
+                    ctx.fill(currCard)
+
+                    monopolyMenuCardPaths.push(currCard);
+
+                    break;
+
+                //sheep
+                case 2:
+
+                    ctx.fillStyle = "lightgreen"
+                    ctx.fill(currCard)
+
+                    monopolyMenuCardPaths.push(currCard);
+
+                    break;
+                    
+                //wheat
+                case 3:
+
+                    ctx.fillStyle = "#ffff99"
+                    ctx.fill(currCard)
+
+                    monopolyMenuCardPaths.push(currCard);
+
+                    break;
+
+                //ore
+                case 4:
+
+                    ctx.fillStyle = "slategrey"
+                    ctx.fill(currCard)
+
+                    monopolyMenuCardPaths.push(currCard);
+
+                    break;
+
+                default:
+
+            }
+            
+            cardX += buffer + cardWidth
+        }
+        //for resources the player doesnt have draw a stroked line
+        else{
+
+            //define boundaries of resource card
+            let currCard = new Path2D
+
+            ctx.beginPath()
+            currCard.rect(cardX, cardY, cardWidth, cardHeight);
+
+            ctx.setLineDash([5,3])
+            ctx.stroke(currCard)
+
+            cardX += buffer + cardWidth
+
+            monopolyMenuCardPaths.push(null)
+        }
+        //disables stroked lines
+        ctx.setLineDash([])
+    } 
+}
+
 function drawCanvas(){
 
     //draw the background
@@ -2373,6 +2564,10 @@ function drawCanvas(){
     if(currentlyTrading){
         drawTradeMenu()
     }
+
+    if(showMonopolyMenu){
+        drawMonopolyMenu()
+    }
     
 
     //elements under board
@@ -2387,12 +2582,15 @@ function drawCanvas(){
     }
 
     //elements on top of board
+
+    // drawVisited()
     drawRoads()
     drawSettlements()
     drawRobber()
     if(showVerts){
         drawVertices()
     }
+    
     
 
     //player info in rightside column
@@ -2407,7 +2605,7 @@ function drawCanvas(){
 //
 //      
 //    
-//    Animation
+//    Animation below this break
 //    
 //    
 //    

@@ -155,6 +155,8 @@ function Player(color, isBot){
 
     this.settlementA = null;
     this.settlementB = null;
+
+    this.visited = [];
 }
 Player.prototype.setBot = function(isBot){
     this.isBot = isBot;
@@ -360,7 +362,7 @@ Player.prototype.drawDevCard = function(card){
 
     checkWinCondition()
 }
-Player.prototype.playDevCard = function(card){
+Player.prototype.playDevCard = async function(card){
     
     devCardPlayedThisTurn = true;
 
@@ -369,11 +371,12 @@ Player.prototype.playDevCard = function(card){
         case "knight": 
 
             console.log("playing a " + card)
-            //remove knight from player hand and do actions for playing knight
 
+            //remove knight from player hand and do actions for playing knight
             this.devCards[0]--;
             this.knightsPlayed++;
 
+            //check largest army condition
             if(this.knightsPlayed >= 3){
                 if(largestArmyHolder == null){
                     largestArmyHolder = this
@@ -384,11 +387,34 @@ Player.prototype.playDevCard = function(card){
                 }
             }
 
+            //select a tile
+
+                //select a tile for bot
+
+                //or take human input to select tile
+
+                //set tile to blocked
+                //set old tile to unblocked
+
+            //select a player to rob
+
+                //select a player to rob as bot
+
+                //or take human input to select tile
+
+            //take a random resource from the selected player
+            //and give it to the player who played the knight
+
+            //TODO add this code to 7 roll also
+
             break;
 
         case "victory point": 
 
-            console.log("playing a " + card)
+            console.log("Can't play this card " + card)
+
+            //maybe give some input that this cannot be played during a turn
+            devCardPlayedThisTurn = false;
 
             break;
 
@@ -398,10 +424,29 @@ Player.prototype.playDevCard = function(card){
 
             this.devCards[2]--;
             
-            //TODO get input from user about which resource to steal
-            //implement this later for now its wood
             let resourceNum = 0
 
+            //bot selects a resource randomly
+            if(this.isBot){
+                resourceNum = Math.floor(Math.random() * 5)
+            }
+            //have player select a resource manually
+            else{
+
+                //set a global variable to mark that a resource is being selected
+                //draw the trade menu on the canvas
+                showMonopolyMenu = true;
+
+                //block until a resouce is selected
+                resourceNum = await waitForMonopolyChoice()
+
+                console.log("Monopoly played on resource: " + resourceNum)
+
+                //restore global variable to default state
+                showMonopolyMenu = false;
+            }
+
+            //take the cards
             for(let i = 0; i < playersArr.length; i++){
                 
                 //for each other player take their cards of given type and transfer them to player
@@ -420,6 +465,31 @@ Player.prototype.playDevCard = function(card){
             console.log("playing a " + card)
             
             this.devCards[3]--;
+
+            //lets player build 2 roads
+
+            //loop twice
+            for(let i = 0; i < 2; i++){
+                
+                if(this.roadsRemaining > 0){
+                    //bot way to do this
+                    if(this.isBot){
+
+                    
+                    }
+                    //human way
+                    else{
+                        //TODO make road free and don't let player click out of it
+
+                        roadButton()
+                        await waitForRoad(this, 14 - this.roadsRemaining)
+                    }
+                }
+                
+            }
+
+
+
 
             break;
 
@@ -448,8 +518,8 @@ Player.prototype.playDevCard = function(card){
 
     }
 
-    drawHand()
-    drawButtons()
+    // drawHand()
+    // drawButtons()
 
     checkWinCondition()
 
@@ -602,8 +672,8 @@ Player.prototype.getVP = function(){
 }
 Player.prototype.botBestSettlement = function(){
 
-    let highest = null
-    let num = 0
+    let highestUtilityVert = null
+    let highestUtility = 0
 
     //find open vertex with most production points
     for(let i = 0; i < 12; i++){
@@ -612,19 +682,13 @@ Player.prototype.botBestSettlement = function(){
             //only check settlements that are buildable
             if(verticesArr[i][j].settlement == null && !verticesArr[i][j].dead){
                 
-                let currCount = 0
+                let utility = this.botCalcSettlementValue(verticesArr[i][j])
 
-                for(let k = 0; k < verticesArr[i][j].adjTiles.length; k++){
-
-                    if(verticesArr[i][j].adjTiles[k].number !== 7){
-                        currCount += 6 - Math.abs(7 - verticesArr[i][j].adjTiles[k].number)
-                    }
-
-                }
-
-                if(currCount > num){
-                    highest = verticesArr[i][j]
-                    num = currCount
+                //this favor settlements higher on the board since there isn't a chance of picking
+                //later equally valued settlements
+                if(utility > highestUtility){
+                    highestUtilityVert = verticesArr[i][j]
+                    highestUtility = utility
                 }
             }
             
@@ -632,11 +696,11 @@ Player.prototype.botBestSettlement = function(){
         }
     }
 
-    buildSettlement(highest, this) 
+    buildSettlement(highestUtilityVert, this) 
 
 
 }
-Player.prototype.botBestRoad = function(){
+Player.prototype.botBestRoad = function(base){
 
     //very naive approach to roads
     //just builds a random legal road
@@ -645,7 +709,34 @@ Player.prototype.botBestRoad = function(){
 
     let randomIndex = Math.floor(Math.random() * (potentialRoads.length))
 
-    buildRoad(potentialRoads[randomIndex], this)
+    // buildRoad(potentialRoads[randomIndex], this)
+
+
+    //experimental
+
+    let potentialRoadScores = [];
+    this.visited = []
+
+    //for each potential road out of settlement explore to see if there are buildable vertices
+    for(let i = 0; i < potentialRoads.length; i++){
+        this.visited = []
+        potentialRoadScores.push(this.botCalcRoadValue(potentialRoads[i], base))
+    }
+
+    //loop through potential road scores and build road with highest score
+    let index = 0
+    let max = 0
+
+    for(let i = 0; i < potentialRoadScores.length; i++){
+        console.log(potentialRoadScores[i])
+
+        if(potentialRoadScores[i] > max){
+            index = i
+            max = potentialRoadScores[i]
+        }
+    }
+
+    buildRoad(potentialRoads[index], this)
 
 }
 Player.prototype.botDiscard = function(){
@@ -682,6 +773,120 @@ Player.prototype.botDiscard = function(){
         }
     }
 
+}
+Player.prototype.botCalcSettlementValue = function(vertex){
+    
+    //calculates value of a settlement as 0 if it cannot build there or the sum of production value otherwise
+
+    if(vertex.settlement != null || vertex.dead){
+        return 0
+    }
+
+    //sum of production points for tile
+    let currCount = 0
+    for(let k = 0; k < vertex.adjTiles.length; k++){
+
+        if(vertex.adjTiles[k].number !== 7){
+            currCount += 6 - Math.abs(7 - vertex.adjTiles[k].number)
+        }
+
+    }
+
+    //add in extra weight for ports
+    if(vertex.port != null){
+        currCount++;
+    }
+
+    //add in extra weight for 2nd settlement resources
+    if(!initialPlacementsComplete && this.VP == 1){
+
+        //create array of adjacent resources
+        let foundResources = []
+
+        for(let i = 0; i < vertex.adjTiles.length; i++){
+            let r = vertex.adjTiles[i].resourceCard
+
+            switch(r){
+                
+                case "wood":
+                    foundResources[0]++
+                    break;
+                
+                case "brick":
+                    foundResources[1]++
+                    break;
+
+                case "sheep":
+                    foundResources[2]++
+                    break;
+
+                case "wheat":
+                    foundResources[3]++
+                    break;
+
+                case "ore":
+                    foundResources[4]++
+                    break;
+                
+                default:
+
+            }
+        }
+
+        //if it provides an initial road
+        if(foundResources[0] != 0 && foundResources[1] != 0){
+            currCount++
+        }
+
+        //if it provides an initial dev card
+        if(foundResources[2] != 0 && foundResources[3] != 0 && foundResources[4] != 0){
+            currCount++
+        }
+
+    }
+
+    //add in extra weight for expansion potential
+
+    //add in extra weight for resource synergy
+
+    //add in extra weight for diversity of resources
+
+
+
+    return currCount
+}
+Player.prototype.botCalcRoadValue = function(road, base){
+
+    //console.log("called recursively")
+
+    //create essentially a binary tree spanning outwards from road
+
+    let value = 0
+
+    //move outwards once
+    d1 = road.getOppositeVert(base)
+    this.visited.push(road)
+    this.visited.push(d1)
+
+    //console.log(d1.toString())
+
+    //base case is a dead end road
+    if(d1.settlement != null){
+        return 0;
+    }
+
+
+    //loop through adjacent roads to d1
+    for(let i = 0; i < d1.adjRoads.length; i++){
+
+        //explore paths down open roads
+        if(d1.adjRoads[i].player == null && !this.visited.includes(d1.adjRoads[i])){
+            
+            value += 0.5 * this.botCalcRoadValue(d1.adjRoads[i], d1)
+        }
+    }   
+
+    return value + this.botCalcSettlementValue(base)
 }
 
 

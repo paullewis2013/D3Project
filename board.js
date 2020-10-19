@@ -307,11 +307,13 @@ async function initialSettlements(){
     cityButtonEnabled = false;
     turnButtonEnabled = false;
 
+
+    let botDelay = 250
+
+
     //go through players in order
     //WARNING use currPlayer to access player and not playersArr[i]
     for(let i = 0; i < playersArr.length; i++){
-
-        console.log(currPlayer.isBot)
 
         //input for all players
         if(!currPlayer.isBot || !quickStarting){
@@ -332,11 +334,11 @@ async function initialSettlements(){
 
             currPlayer.botBestSettlement()
 
-            await sleep(500)
+            await sleep(botDelay)
 
-            currPlayer.botBestRoad()
+            currPlayer.botBestRoad(currPlayer.settlementA.location)
 
-            await sleep(500)
+            await sleep(botDelay)
         }
         
 
@@ -372,11 +374,11 @@ async function initialSettlements(){
 
             currPlayer.botBestSettlement()
 
-            await sleep(500)
+            await sleep(botDelay)
 
-            currPlayer.botBestRoad()
+            currPlayer.botBestRoad(currPlayer.settlementB.location)
 
-            await sleep(500)
+            await sleep(botDelay)
         }
 
         if(i < playersArr.length - 1){
@@ -395,6 +397,11 @@ async function mainGameLoop(){
     console.log("entering MainGameLoop")
 
     turnNumber = 1;
+
+    //unbot all the players
+    for(let i = 0; i < playersArr.length; i++){
+        playersArr[i].isBot = false;
+    }
 
     //turn loop
     do {
@@ -461,7 +468,9 @@ function setButtons(){
     
     let building = buildingRoad || buildingSettlement || buildingCity;
 
-    if(diceRolledThisTurn && !movingRobber){
+
+
+    if(diceRolledThisTurn && !movingRobber && !showMonopolyMenu){
 
         //trade button
         if(!building){
@@ -546,6 +555,26 @@ async function waitForSettlement(player, num){
         }
 
     }
+
+}
+
+async function waitForMonopolyChoice(){
+
+    let resourceNum = -1
+
+    while(resourceNum == -1){
+
+        if(selectedResource != null){
+            resourceNum = selectedResource
+            selectedResource = null
+        }else{
+            //console.log("waiting for resource num")
+            await sleep(100)
+        }
+
+    }
+
+    return resourceNum;
 
 }
 
@@ -985,8 +1014,6 @@ function freeze(){
     settlementButtonEnabled = false;
     cityButtonEnabled = false;
     turnButtonEnabled = false;
-
-    drawCanvas()
 }
 
 function unfreeze(){
@@ -998,7 +1025,6 @@ function unfreeze(){
     cityButtonEnabled = true;
     turnButtonEnabled = true;
 
-    drawCanvas()
 }
 
 //--------------------------------------------------

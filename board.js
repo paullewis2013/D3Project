@@ -422,9 +422,6 @@ async function mainGameLoop(){
         //preturn option to play knight card
         knightsEnabled = true;
 
-        drawCanvas();
-        drawPlayerInfo();
-
 
         //await player rolling the dice
         await waitForDiceRoll()
@@ -637,7 +634,7 @@ async function waitForTurnButton(currentTurn){
 async function waitForDiceRoll(){
 
     let diceRollFinished = false
-    knightsEnabled = false
+    knightsEnabled = true
 
     while(!diceRollFinished){
         

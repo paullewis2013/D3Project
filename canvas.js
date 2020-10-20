@@ -177,12 +177,11 @@ canvas.addEventListener('click', function(e) {
             console.log(cardPaths[i].type + " card clicked")
 
 
-
             //dev cards
             if(!devCardPlayedThisTurn){
 
                 //knight
-                if(anyDevCardEnabled || knightsEnabled && cardPaths[i].type === "knight"){
+                if(knightsEnabled && cardPaths[i].type === "knight"){
                     currPlayer.playDevCard(cardPaths[i].type);
                 }else if(anyDevCardEnabled){
                     
@@ -695,7 +694,6 @@ function drawButtons(){
     ctx.fillText("End Turn", textX, textY, 70)
 }
 
-
 function initButtons(){
 
     //x y width height and curve radius for rectangle path
@@ -825,8 +823,6 @@ function initButtons(){
     ctx.closePath()
 
 }
-
-
 
 function drawTileTextures(){
 
@@ -1559,7 +1555,6 @@ function initVertices(){
 
 }
 
-
 function initPorts(){
 
     var radius = 60;
@@ -1597,7 +1592,6 @@ function initPorts(){
     portsArr[8].cy = verticesArr[10][2].cy + hexRad;
 
 }
-
 
 function drawTiles(){
     var centerX;
@@ -1829,7 +1823,6 @@ function drawBank(){
     }
 }
 
-
 function drawPorts(){
 
     for(var i = 0; i < portsArr.length; i++){
@@ -1929,7 +1922,6 @@ function drawIsland(){
 
 }
 
-
 function drawRoads(){
 
     ctx.lineWidth = 1;
@@ -1974,7 +1966,6 @@ function drawRoads(){
     }
     
 }
-
 
 function drawSettlements(){
     
@@ -2030,7 +2021,6 @@ function drawTurnNum(){
     ctx.fillStyle = "black"
     ctx.fillText("Turn: " + turnNumber, 25, 25)
 }
-
 
 function drawRobber(){
 
@@ -2595,6 +2585,9 @@ function drawYOPMenu(){
 
     cardX = menu_x + buffer/2
     cardY = menu_y + cardHeight + 5 * ((h - 2 * cardHeight)/6);
+
+    ctx.strokeColor = "black"
+    ctx.lineWidth = 1
 
     //loop through all of banks resources
     for(let i = 0; i < bank.length; i++){

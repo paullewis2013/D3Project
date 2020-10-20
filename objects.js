@@ -389,14 +389,21 @@ Player.prototype.playDevCard = async function(card){
                 }
             }
 
+            //begin moving robber
+            moveRobber()
+
             //select a tile
 
-                //select a tile for bot
+            //select a tile for bot
+            if(this.isBot){
 
-                //or take human input to select tile
+                //bot will block highest production value tile it doesn't have a settlement on
 
-                //set tile to blocked
-                //set old tile to unblocked
+            }
+
+            //or take human input to select tile
+            //this will just happen
+
 
             //select a player to rob
 

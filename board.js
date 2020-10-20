@@ -558,6 +558,26 @@ async function waitForSettlement(player, num){
 
 }
 
+//bizarrely this is the exact same method body as waitForMonopolyChoice but it handles the global variable 
+//differently outside of this method
+//nvm it is now different
+async function waitForYOPChoice(){
+
+    let finished = false;
+
+    while(!finished){
+
+        if(yop2){
+            return selectedResource
+        }else{
+            //console.log("waiting for resource num")
+            await sleep(100)
+        }
+
+    }
+
+}
+
 async function waitForMonopolyChoice(){
 
     let resourceNum = -1

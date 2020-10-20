@@ -21,6 +21,7 @@ var movingRobber = false;
 var showRoads = false;
 var showVerts = false;
 var showMonopolyMenu = false;
+var showYOPMenu = false;
 var hoveredVert = null;
 var hoveredRoad = null;
 
@@ -41,9 +42,12 @@ var buttonWidth;
 //place to store on screen location of drawn cards in hand
 var cardPaths = [];
 var monopolyMenuCardPaths = [];
+var yopMenuCardPaths = [];
 
 
 var selectedResource = null;
+var yop1 = false;
+var yop2 = false;
 
 
 canvas.addEventListener('click', function(e) {
@@ -66,6 +70,33 @@ canvas.addEventListener('click', function(e) {
 
     }
 
+    if(showYOPMenu){
+        for(let i = 0; i < yopMenuCardPaths.length; i++){
+           
+            if(yopMenuCardPaths[i] != null && ctx.isPointInPath(yopMenuCardPaths[i], e.offsetX, e.offsetY)){
+
+                if(yop1 && i >= 5 && !yop2){
+                    console.log("second resource selected")
+                    yop2 = true
+                    selectedResource.push(i%5)
+                }
+
+                else if(!yop1){
+                    console.log("first resource selected")
+                    yop1 = true
+                    selectedResource.push(i%5)
+                }
+
+                else if(yop1 && i<5){
+                    console.log("first resource changed")
+                    yop1 = true
+                    selectedResource[0] = i%5
+                }
+
+                
+            }
+        }
+    }
 
     //–––––––––––––––––––––––––––––––––––––––––––––––––––––––
     //buttons
@@ -2407,6 +2438,258 @@ function drawVisited(){
 
 }
 
+function drawYOPMenu(){
+    //define boundaries of trade menu
+    let menu_x = canvas.width - 300
+    let menu_y = canvas.height - 5.5 * tileRadius
+    let w = 290
+    let h = 3 * tileRadius
+
+    let x = menu_x
+    let y = menu_y
+    let radius = 10
+
+    let r = x + w;
+    let b = y + h;
+
+    //draw the trade menu box
+    let yopMenuPath = new Path2D
+
+    ctx.beginPath()
+
+    yopMenuPath.moveTo(x+radius, y);
+    yopMenuPath.lineTo(r-radius, y);
+    yopMenuPath.quadraticCurveTo(r, y, r, y+radius);
+    yopMenuPath.lineTo(r, y+h-radius);
+    yopMenuPath.quadraticCurveTo(r, b, r-radius, b);
+    yopMenuPath.lineTo(x+radius, b);
+    yopMenuPath.quadraticCurveTo(x, b, x, b-radius);
+    yopMenuPath.lineTo(x, y+radius);
+    yopMenuPath.quadraticCurveTo(x, y, x+radius, y);
+
+    ctx.closePath()
+    ctx.fillStyle = "#d9e2ea"
+    ctx.fill(yopMenuPath)
+    ctx.strokeColor = "black"
+    ctx.stroke(yopMenuPath)
+
+    //add a message at the top
+    ctx.fillStyle = "black"
+    ctx.fillText("Please select resource 1:", menu_x + w/2, menu_y + 15)
+
+    yopMenuCardPaths = [];
+
+    let cardHeight = 0.8 * tileRadius
+    let cardWidth = 5 * cardHeight/7
+    let buffer = (w - 5 * cardWidth) / 5
+    //let boxWidth = 10 * cardWidth + 11 * buffer
+    let cardY = menu_y + (h - 2 * cardHeight)/3
+    let cardX = menu_x + buffer/2
+
+
+    //loop through all of banks resources
+    for(let i = 0; i < bank.length; i++){
+
+        //only draw resource types that the bank actually has
+        if(bank[i] != 0){
+
+            //define boundaries of resource card
+            let currCard = new Path2D
+
+            ctx.beginPath()
+            currCard.rect(cardX, cardY, cardWidth, cardHeight);
+            
+            ctx.strokeColor = "black"
+            ctx.lineWidth = 1
+
+            if(yop1 && selectedResource[0] == i){
+                ctx.strokeColor = "#2980b9"
+                ctx.lineWidth = 4
+            }
+            
+            ctx.stroke(currCard);
+            
+
+            //get style for resource card
+            switch(i){
+                
+                //wood
+                case 0:
+
+                    ctx.fillStyle = "Green"
+                    ctx.fill(currCard)
+
+                    yopMenuCardPaths.push(currCard);
+
+                    break;
+
+                //brick
+                case 1:
+
+                    ctx.fillStyle = "Firebrick"
+                    ctx.fill(currCard)
+
+                    yopMenuCardPaths.push(currCard);
+
+                    break;
+
+                //sheep
+                case 2:
+
+                    ctx.fillStyle = "lightgreen"
+                    ctx.fill(currCard)
+
+                    yopMenuCardPaths.push(currCard);
+
+                    break;
+                    
+                //wheat
+                case 3:
+
+                    ctx.fillStyle = "#ffff99"
+                    ctx.fill(currCard)
+
+                    yopMenuCardPaths.push(currCard);
+
+                    break;
+
+                //ore
+                case 4:
+
+                    ctx.fillStyle = "slategrey"
+                    ctx.fill(currCard)
+
+                    yopMenuCardPaths.push(currCard);
+
+                    break;
+
+                default:
+
+            }
+            
+            cardX += buffer + cardWidth
+        }
+        //for resources the player doesnt have draw a stroked line
+        else{
+
+            //define boundaries of resource card
+            let currCard = new Path2D
+
+            ctx.beginPath()
+            currCard.rect(cardX, cardY, cardWidth, cardHeight);
+
+            ctx.setLineDash([5,3])
+            ctx.stroke(currCard)
+
+            cardX += buffer + cardWidth
+
+            yopMenuCardPaths.push(null)
+        }
+        //disables stroked lines
+        ctx.setLineDash([])
+    } 
+
+    //add a message at the top
+    ctx.fillStyle = "black"
+    ctx.fillText("Please select resource 2:", menu_x + w/2, menu_y + h/2 + 15)
+
+    cardX = menu_x + buffer/2
+    cardY = menu_y + cardHeight + 5 * ((h - 2 * cardHeight)/6);
+
+    //loop through all of banks resources
+    for(let i = 0; i < bank.length; i++){
+
+        //only draw resource types that the bank actually has
+        if(bank[i] != 0 && yop1 && !(i == selectedResource[0] && bank[selectedResource[0]] == 1)){
+
+            //define boundaries of resource card
+            let currCard = new Path2D
+
+            ctx.beginPath()
+            currCard.rect(cardX, cardY, cardWidth, cardHeight);
+            ctx.stroke(currCard);
+
+            //get style for resource card
+            switch(i){
+                
+                //wood
+                case 0:
+
+                    ctx.fillStyle = "Green"
+                    ctx.fill(currCard)
+
+                    yopMenuCardPaths.push(currCard);
+
+                    break;
+
+                //brick
+                case 1:
+
+                    ctx.fillStyle = "Firebrick"
+                    ctx.fill(currCard)
+
+                    yopMenuCardPaths.push(currCard);
+
+                    break;
+
+                //sheep
+                case 2:
+
+                    ctx.fillStyle = "lightgreen"
+                    ctx.fill(currCard)
+
+                    yopMenuCardPaths.push(currCard);
+
+                    break;
+                    
+                //wheat
+                case 3:
+
+                    ctx.fillStyle = "#ffff99"
+                    ctx.fill(currCard)
+
+                    yopMenuCardPaths.push(currCard);
+
+                    break;
+
+                //ore
+                case 4:
+
+                    ctx.fillStyle = "slategrey"
+                    ctx.fill(currCard)
+
+                    yopMenuCardPaths.push(currCard);
+
+                    break;
+
+                default:
+
+            }
+            
+            cardX += buffer + cardWidth
+        }
+        //for resources the player doesnt have draw a stroked line
+        else{
+
+            //define boundaries of resource card
+            let currCard = new Path2D
+
+            ctx.beginPath()
+            currCard.rect(cardX, cardY, cardWidth, cardHeight);
+
+            ctx.setLineDash([5,3])
+            ctx.stroke(currCard)
+
+            cardX += buffer + cardWidth
+
+            yopMenuCardPaths.push(null)
+        }
+        //disables stroked lines
+        ctx.setLineDash([])
+    } 
+
+}
+
 function drawMonopolyMenu(){
     //define boundaries of trade menu
     let menu_x = canvas.width - 300
@@ -2567,6 +2850,10 @@ function drawCanvas(){
 
     if(showMonopolyMenu){
         drawMonopolyMenu()
+    }
+
+    if(showYOPMenu){
+        drawYOPMenu()
     }
     
 

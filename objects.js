@@ -365,6 +365,8 @@ Player.prototype.drawDevCard = function(card){
 Player.prototype.playDevCard = async function(card){
     
     devCardPlayedThisTurn = true;
+    let bankTotal = 0
+    let resourceNum = 0
 
     switch(card){
 
@@ -422,13 +424,30 @@ Player.prototype.playDevCard = async function(card){
 
             console.log("playing a " + card)
 
+            //make sure bank has at least 2 resources
+            for(let i = 0; i < bank.length; i++){
+                bankTotal += bank[i]
+            }
+
+            if(bankTotal == 19 * 5){
+                console.log("No cards to use monopoly on")
+                devCardPlayedThisTurn = false;
+                break;
+            }
+
+
             this.devCards[2]--;
             
-            let resourceNum = 0
+            resourceNum = 0
 
             //bot selects a resource randomly
             if(this.isBot){
+
                 resourceNum = Math.floor(Math.random() * 5)
+
+                while(bank[resourceNum] == 0){
+                    resourceNum = Math.floor(Math.random() * 5)
+                }
             }
             //have player select a resource manually
             else{
@@ -488,14 +507,22 @@ Player.prototype.playDevCard = async function(card){
                 
             }
 
-
-
-
             break;
 
         case "year of plenty": 
 
             console.log("playing a " + card)
+
+            //make sure bank has at least 2 resources
+            for(let i = 0; i < bank.length; i++){
+                bankTotal += bank[i]
+            }
+
+            if(bankTotal < 2){
+                console.log("Not enough cards in bank to play YOP")
+                devCardPlayedThisTurn = false;
+                break;
+            }
 
             this.devCards[4]--;
 
@@ -503,6 +530,49 @@ Player.prototype.playDevCard = async function(card){
             //TODO get input from player about which two resouces (contained in the bank) that they want
             let resourceNum1 = 0
             let resourceNum2 = 0
+
+            //bot resource selection
+            if(this.isBot){
+
+                resourceNum1 = Math.floor(Math.random() * 5)
+
+                while(bank[resourceNum1] < 0){
+                    resourceNum1 = Math.floor(Math.random() * 5)
+                }
+
+                resourceNum2 = Math.floor(Math.random() * 5)
+                
+                while(bank[resourceNum2] < 0 || (bank[resourceNum2] < 1 && resourceNum1 == resourceNum2)){
+                    resourceNum2 = Math.floor(Math.random() * 5)
+                }
+
+            }
+            //player resource selection
+            else{
+
+                yop1 = false
+                yop2 = false
+
+                //set a global variable to mark that a resource is being selected
+                //draw the trade menu on the canvas
+                showYOPMenu = true;
+
+                selectedResource = []
+
+                //block until a resouce is selected
+                await waitForYOPChoice()
+
+                //restore global variable to default state
+                showYOPMenu = false;
+
+                resourceNum1 = selectedResource[0]
+                resourceNum2 = selectedResource[1]
+
+                selectedResource = null
+
+            }
+
+            console.log("YOP played on resource: " + resourceNum1 + " and " + resourceNum2)
 
             //take those two resouces from the bank and give them to player
             bank[resourceNum1]--

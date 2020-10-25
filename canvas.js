@@ -473,7 +473,7 @@ function drawDice(){
 
         let size = 60
 
-        if(diceButtonEnabled){
+        if(initialPlacementsComplete && diceButtonEnabled){
             size = aState.vertSize * 4
         }
 
@@ -2838,19 +2838,19 @@ function initBackgroundDots(){
     let offset = false;
 
     //make a lot of rows
-    for(let i = 0; i < 55; i++){
+    for(let i = 0; i < 45; i++){
 
         //add a new array to populate
         dotsArray.push([])
 
         //push custom x y coordinate structure into array
-        for(let j = 0; j < 55; j++){
+        for(let j = 0; j < 45; j++){
             dotsArray[i].push([x, y, 0, 0])
-            x += canvas.width/45
+            x += canvas.width/35
         }
 
         //move y up a row
-        y += canvas.height/50
+        y += canvas.height/35
 
         //stagger every other row
         if(!offset){
@@ -2873,8 +2873,8 @@ function drawBackgroundAnimated(){
     //defines distance that coordinates travel from their original locations
     let movement = 6
 
-    let drawX = dotsArray[0][0][0] - movement * Math.sin(aState.angle + randomTable[0][0])
-    let drawY = dotsArray[0][0][1] - movement * Math.sin(aState.angle + randomTable[0][0])
+    let drawX = dotsArray[0][0][0] - movement * Math.sin(aState.slowAngle + randomTable[0][0])
+    let drawY = dotsArray[0][0][1] - movement * Math.sin(aState.slowAngle + randomTable[0][0])
 
     for(let i = 0; i < dotsArray.length; i++){
 
@@ -2884,8 +2884,8 @@ function drawBackgroundAnimated(){
             //let randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
             ctx.fillStyle = randomColor
 
-            let drawX = dotsArray[i][j][0] - movement * Math.sin(aState.angle + randomTable[i][j])
-            let drawY = dotsArray[i][j][1] - movement * Math.sin(aState.angle + randomTable[i][j])
+            let drawX = dotsArray[i][j][0] - movement * Math.sin(aState.slowAngle + randomTable[i][j])
+            let drawY = dotsArray[i][j][1] - movement * Math.sin(aState.slowAngle + randomTable[i][j])
 
             dotsArray[i][j][2] = drawX
             dotsArray[i][j][3] = drawY
@@ -3007,7 +3007,7 @@ function AnimationState(){
 AnimationState.prototype.update = function(){
     
     this.angle = (this.angle + Math.PI/25)%(2*Math.PI)
-    this.slowAngle = (this.slowAngle + Math.PI/500)%(2*Math.PI)
+    this.slowAngle = (this.slowAngle + Math.PI/35)%(2*Math.PI)
     
     this.vertSize = 15 + 1.5 * Math.sin(this.angle);
 }

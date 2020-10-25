@@ -439,12 +439,12 @@ var imageSrcs = ["assets/robber.svg",
                 "assets/user.svg",
 
                 //10
-                "assets/dice-1.png",
-                "assets/dice-2.png",
-                "assets/dice-3.png",
-                "assets/dice-4.png",
-                "assets/dice-5.png",
-                "assets/dice-6.png",
+                "assets/Dice-1.png",
+                "assets/Dice-2.png",
+                "assets/Dice-3.png",
+                "assets/Dice-4.png",
+                "assets/Dice-5.png",
+                "assets/Dice-6.png",
 
                 ];
 
@@ -2880,7 +2880,7 @@ function drawBackgroundAnimated(){
 
         for(let j = 0; j < dotsArray[i].length; j++){
 
-            let randomColor = '#7CB9'+ Math.floor(randomTable[i%10][j%10]/(2*Math.PI) * 64 + 200).toString(16);
+            let randomColor = '#7CB9'+ Math.floor(randomTable[i%10][j%10]/(2*Math.PI) * 26 + 230).toString(16);
             //let randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
             ctx.fillStyle = randomColor
 
@@ -2930,7 +2930,7 @@ function drawCanvas(){
 
     //draw the background
     ctx.rect(0, 0, canvas.width, canvas.height)
-    ctx.fillStyle = "#B0E0E6"
+    ctx.fillStyle = "#7CB9E6"
     ctx.fill()
 
     drawBackgroundAnimated()

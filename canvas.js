@@ -2831,24 +2831,28 @@ function drawMonopolyMenu(){
 
 function initBackgroundDots(){
     
+    //start the pattern outside the bounds of canvas
     let x = -50
     let y = -50
 
     let offset = false;
 
+    //make a lot of rows
     for(let i = 0; i < 55; i++){
 
+        //add a new array to populate
         dotsArray.push([])
 
+        //push custom x y coordinate structure into array
         for(let j = 0; j < 55; j++){
             dotsArray[i].push([x, y, 0, 0])
             x += canvas.width/45
         }
 
-        x = x%canvas.width
+        //move y up a row
         y += canvas.height/50
 
-
+        //stagger every other row
         if(!offset){
             offset = true;
             x = -100
@@ -2865,7 +2869,9 @@ function initBackgroundDots(){
 function drawBackgroundAnimated(){
 
     ctx.strokeStyle = "white"
-    let movement = 8
+
+    //defines distance that coordinates travel from their original locations
+    let movement = 6
 
     let drawX = dotsArray[0][0][0] - movement * Math.sin(aState.angle + randomTable[0][0])
     let drawY = dotsArray[0][0][1] - movement * Math.sin(aState.angle + randomTable[0][0])
@@ -2927,7 +2933,6 @@ function drawCanvas(){
     ctx.fillStyle = "#B0E0E6"
     ctx.fill()
 
-    ctx.filter = blur("10px")
     drawBackgroundAnimated()
     
 

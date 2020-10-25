@@ -57,6 +57,7 @@ var longestRoadHolder = null;
 var largestArmyHolder = null;
 
 var quickStarting = true
+var randomTable = []
 
 //the tiles on the board
 //a 2d array where first index represents row and second represent num in row
@@ -276,6 +277,8 @@ var currPlayer = playersArr[currPlayerIndex];
 function setup(){
     console.log("entering set up method")
 
+    initRandomTable()
+    initBackgroundDots()
     populateDevCardDeck()
     populateDiceResultsArr()
     graphicButton()
@@ -1140,6 +1143,20 @@ function graphicButton(){
 
 function quickStart(){
     quickStarting = true
+}
+
+//fills the random table with angles between 0 and 2 PI Radians
+function initRandomTable(){
+
+    for(let i = 0; i < 100; i++){
+
+        randomTable.push([])
+
+        for(let j = 0; j < 100; j++){
+            randomTable[i].push(Math.random() * 2 * Math.PI)
+        }
+    }
+
 }
 
 

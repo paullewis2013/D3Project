@@ -44,6 +44,8 @@ var cardPaths = [];
 var monopolyMenuCardPaths = [];
 var yopMenuCardPaths = [];
 
+//for moving background things
+var dotsArray = []
 
 var selectedResource = null;
 var yop1 = false;
@@ -904,8 +906,12 @@ function drawTileTextures(){
             ctx.closePath()
             ctx.clip();
             
+
+            let drawX = centerX - (hexRad) - 50 - 50 * Math.sin(randomTable[i][j])
+            let drawY = centerY - (hexRad) - 50 - 50 * Math.sin(randomTable[j][i])
+
             //draw image(inside of path only)
-            ctx.drawImage(tilesArr[i][j].img, centerX - (hexRad), centerY - (hexRad), 300, 300);
+            ctx.drawImage(tilesArr[i][j].img, drawX, drawY, 300, 300);
 
             //remove path and restore canvas to normal
             ctx.restore();
@@ -2823,12 +2829,107 @@ function drawMonopolyMenu(){
     } 
 }
 
+function initBackgroundDots(){
+    
+    let x = -50
+    let y = -50
+
+    let offset = false;
+
+    for(let i = 0; i < 55; i++){
+
+        dotsArray.push([])
+
+        for(let j = 0; j < 55; j++){
+            dotsArray[i].push([x, y, 0, 0])
+            x += canvas.width/45
+        }
+
+        x = x%canvas.width
+        y += canvas.height/50
+
+
+        if(!offset){
+            offset = true;
+            x = -100
+        }else{
+            offset = false;
+            x = -100 - canvas.width/80
+        }
+        
+        
+    }
+
+}
+
+function drawBackgroundAnimated(){
+
+    ctx.strokeStyle = "white"
+    let movement = 8
+
+    let drawX = dotsArray[0][0][0] - movement * Math.sin(aState.angle + randomTable[0][0])
+    let drawY = dotsArray[0][0][1] - movement * Math.sin(aState.angle + randomTable[0][0])
+
+    for(let i = 0; i < dotsArray.length; i++){
+
+        for(let j = 0; j < dotsArray[i].length; j++){
+
+            let randomColor = '#7CB9'+ Math.floor(randomTable[i%10][j%10]/(2*Math.PI) * 64 + 200).toString(16);
+            //let randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
+            ctx.fillStyle = randomColor
+
+            let drawX = dotsArray[i][j][0] - movement * Math.sin(aState.angle + randomTable[i][j])
+            let drawY = dotsArray[i][j][1] - movement * Math.sin(aState.angle + randomTable[i][j])
+
+            dotsArray[i][j][2] = drawX
+            dotsArray[i][j][3] = drawY
+
+            // ctx.beginPath()
+            // ctx.arc(drawX, drawY, 5, 0, 2 * Math.PI, false)
+            // ctx.fill()
+
+            // if(     (i < dotsArray.length - 1) && (j < dotsArray[i].length - 1)     ){
+            if(i < dotsArray.length - 1 && i%2 != 0 && j < dotsArray[i].length - 1 && j > 0){
+
+                ctx.beginPath()
+                ctx.moveTo(drawX, drawY)
+                ctx.lineTo(dotsArray[i+1][j][2], dotsArray[i+1][j][3])
+                ctx.lineTo(dotsArray[i][j-1][2], dotsArray[i][j-1][3])
+                ctx.lineTo(dotsArray[i][j][2], dotsArray[i][j][3])
+                ctx.closePath()
+                ctx.fill()
+                ctx.stroke()
+            }
+
+            else if(i < dotsArray.length - 1 && i%2 == 0 && j < dotsArray[i].length && j > 0){
+
+                ctx.beginPath()
+                ctx.moveTo(drawX, drawY)
+                ctx.lineTo(dotsArray[i+1][j-1][2], dotsArray[i+1][j-1][3])
+                ctx.lineTo(dotsArray[i][j-1][2], dotsArray[i][j-1][3])
+                ctx.lineTo(dotsArray[i][j][2], dotsArray[i][j][3])
+                ctx.closePath()
+                ctx.fill()
+                ctx.stroke()
+            }
+            
+        }
+        
+    }
+
+}
+
+//this one is really important
 function drawCanvas(){
 
     //draw the background
     ctx.rect(0, 0, canvas.width, canvas.height)
     ctx.fillStyle = "#B0E0E6"
     ctx.fill()
+
+    ctx.filter = blur("10px")
+    drawBackgroundAnimated()
+    
 
     //elements unrelated to board
     drawDice()
@@ -2896,10 +2997,12 @@ function drawCanvas(){
 function AnimationState(){
     this.vertSize = 15
     this.angle = Math.PI
+    this.slowAngle = Math.PI
 }
 AnimationState.prototype.update = function(){
     
     this.angle = (this.angle + Math.PI/25)%(2*Math.PI)
+    this.slowAngle = (this.slowAngle + Math.PI/500)%(2*Math.PI)
     
     this.vertSize = 15 + 1.5 * Math.sin(this.angle);
 }

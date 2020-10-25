@@ -470,7 +470,7 @@ function setButtons(){
 
 
 
-    if(diceRolledThisTurn && !movingRobber && !showMonopolyMenu){
+    if(diceRolledThisTurn && !movingRobber && !showMonopolyMenu && !showYOPMenu){
 
         //trade button
         if(!building){
@@ -606,13 +606,15 @@ async function waitForRoad(player, num){
 
         if(winCondition){
             break;
-        }else if(15 - player.roadsRemaining >= num){
+        }else if(15 - player.roadsRemaining > num){
             built = true
         }else{
             await sleep(100)
         }
 
     }
+
+    return true
 
 }
 

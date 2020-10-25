@@ -152,6 +152,7 @@ function Player(color, isBot){
     this.tradecost = [4, 4, 4, 4, 4];
     this.settlements = [];
     this.roads = [];
+    this.rbDevPlayed = false;
 
     this.settlementA = null;
     this.settlementB = null;
@@ -286,7 +287,7 @@ Player.prototype.buildRoad = function(r){
     this.roadsRemaining--;
     this.roads.push(r)
 
-    if(initialPlacementsComplete){
+    if(initialPlacementsComplete && !this.rbDevPlayed){
         //take players resources and give them to the bank
         this.resources = [this.resources[0] - 1, this.resources[1] - 1, this.resources[2], this.resources[3], this.resources[4]];
         bank = [bank[0] + 1, bank[1] + 1, bank[2], bank[3], bank[4]];
@@ -494,6 +495,9 @@ Player.prototype.playDevCard = async function(card){
 
             //lets player build 2 roads
 
+            //turn on free roads
+            this.rbDevPlayed = true
+
             //loop twice
             for(let i = 0; i < 2; i++){
                 
@@ -501,18 +505,24 @@ Player.prototype.playDevCard = async function(card){
                     //bot way to do this
                     if(this.isBot){
 
-                    
+                        await sleep(250)
+                        this.botBestRoad(null)
+                        
                     }
                     //human way
                     else{
                         //TODO make road free and don't let player click out of it
 
                         roadButton()
-                        await waitForRoad(this, 14 - this.roadsRemaining)
+                        await waitForRoad(this, 15 - this.roadsRemaining)
+
                     }
                 }
                 
             }
+
+            //turn off free roads
+            this.rbDevPlayed = false
 
             break;
 
@@ -784,10 +794,13 @@ Player.prototype.botBestRoad = function(base){
 
     potentialRoads = this.getBuildableRoads()
 
-    let randomIndex = Math.floor(Math.random() * (potentialRoads.length))
+    if(base == null){
+        
+        let randomIndex = Math.floor(Math.random() * (potentialRoads.length))
 
-    // buildRoad(potentialRoads[randomIndex], this)
-
+        buildRoad(potentialRoads[randomIndex], this)
+        return;
+    }
 
     //experimental
 

@@ -2868,7 +2868,7 @@ function initBackgroundDots(){
 
 function drawBackgroundAnimated(){
 
-    ctx.strokeStyle = "white"
+    ctx.strokeStyle = "#128CD2"
 
     //defines distance that coordinates travel from their original locations
     let movement = 6

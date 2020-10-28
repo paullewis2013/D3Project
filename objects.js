@@ -632,11 +632,42 @@ Player.prototype.getBuildableRoads = function(){
         for(let j = 0; j < this.roads[i].adjRoads.length; j++){
             
             // console.log(this.roads[i].adjRoads[j])
+            // let vert1 = this.roads[i].adjVerts[0].player == null || this.roads[i].adjVerts[0].player == this
+            // let vert2 = this.roads[i].adjVerts[1].player == null || this.roads[i].adjVerts[1].player == this
 
             //check if road is already there
             if(this.roads[i].adjRoads[j].player === null){
                 //console.log(this.roads[i].adjRoads[j])
-                buildableRoads.push(this.roads[i].adjRoads[j])
+                
+                let r = this.roads[i].adjRoads[j]
+
+                let reachable = false
+
+                //check first side of raod
+                if(r.adjVerts[0].settlement == null || r.adjVerts[0].settlement.player == this){
+                    for(let k = 0; k < r.adjVerts[0].adjRoads.length; k++){
+                        if(r.adjVerts[0].adjRoads[k].player == this){
+                            reachable = true
+                        }
+                    }
+                }
+
+                if(r.adjVerts[1].settlement == null || r.adjVerts[1].settlement.player == this){
+                    for(let k = 0; k < r.adjVerts[1].adjRoads.length; k++){
+                        if(r.adjVerts[1].adjRoads[k].player == this){
+                            reachable = true
+                        }
+                    }
+                }
+                
+
+                if(reachable){
+
+                    buildableRoads.push(r)
+
+                }else{
+                    console.log("failed")
+                }
             }
         }
     }

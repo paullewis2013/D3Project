@@ -578,6 +578,22 @@ async function waitForYOPChoice(){
 
 }
 
+async function waitForRobberMoved(){
+    
+    let finished = false;
+
+    while(!finished){
+
+        if(!movingRobber){
+            return;
+        }else{
+            //console.log("waiting for resource num")
+            await sleep(100)
+        }
+
+    }
+}
+
 async function waitForMonopolyChoice(){
 
     let resourceNum = -1

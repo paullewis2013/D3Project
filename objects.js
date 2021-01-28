@@ -400,6 +400,8 @@ Player.prototype.playDevCard = async function(card){
 
                 //bot will block highest production value tile it doesn't have a settlement on
 
+            }else{
+                await waitForRobberMoved()
             }
 
             //or take human input to select tile
@@ -407,14 +409,51 @@ Player.prototype.playDevCard = async function(card){
 
 
             //select a player to rob
+            let t = robberLocation
+            let playersToRob = []
 
-                //select a player to rob as bot
+            //list all unique players adjacent to tile who have at least 1 resource
+            for(let i = 0; i < t.settlements.length; i++){
+                if(t.settlements[i].player != this && !playersToRob.includes(t.settlements[i].player)){
+                    for(let j = 0; j < 5; j++){
+                        if(t.settlements[i].player.resources[j] != 0){
+                            playersToRob.push(t.settlements[i].player)
+                            j = 5
+                        }
+                    }
+                } 
+            }
 
-                //or take human input to select tile
+            console.log(playersToRob)
 
-            //take a random resource from the selected player
-            //and give it to the player who played the knight
+            let selectedPlayer = null
 
+            if(playersToRob.length > 0){
+                //bot choose player to rob
+                if(this.isBot){
+
+                    let index = Math.floor(Math.random() * playersToRob.length)
+                    selectedPlayer = playersToRob[index]
+
+                }
+                //human choose player to rob
+                else{
+
+                    let index = Math.floor(Math.random() * playersToRob.length)
+                    selectedPlayer = playersToRob[index]
+
+                }
+            }
+
+            //if a player was selected
+            if(selectedPlayer != null){
+
+                //take a random resource from the selected player
+                //and give it to the player who played the knight
+
+            }
+
+            
             //TODO add this code to 7 roll also
 
             break;
@@ -1008,6 +1047,50 @@ Player.prototype.botCalcRoadValue = function(road, base){
     }   
 
     return value + this.botCalcSettlementValue(base)
+}
+Player.prototype.botTurn = function(){
+
+    //pre roll phase
+
+    //first decide if you want to play a knight
+    //if playing a knight gets you a win by largest army always play the knight
+    //if another player could steal largest army from you then play the knight
+    //if currently blocked on an important tile consider playing knight
+    //if at 7 resources maybe wait to play knight
+    //if there is another stronger dev card to play during turn do not play the knight
+    //target player with resource you want to steal but maybe wait until after normal dice roll
+
+    //roll phase
+
+    //next roll the dice
+    //if necessary move the robber
+    //and discard resources etc.
+
+    //post roll phase
+
+    //deterministic win attempt
+
+    //if there are any moves that result in a win, play those immediately every time
+    //e.g. road that gives longest road if VP >= 8
+    //settlement or city built to put vp to 10 etc.
+
+    //if not evaluate board/hand to determine if there are desired resources and attempt to trade for them
+    //wait for response from trades
+    //if applicable consider trading with bank or using dev card instead of trading to get desired resources
+    //if using a monopoly try to trade away the desired resource before using it to get it all back for free
+
+    //deterministic win attempt again
+
+    //if no deterministic win try to improve own win chance as much as possible by
+    //increasing production capacity (build city, settlement, etc.)
+    //buying dev cards weighted by odds of getting useful dev card
+    //build roads to reach new desired verts
+    //build roads to get longest road or block, (avoid early longest road)
+
+    //continue until no moves worth playing are found
+
+    //end turn
+
 }
 
 

@@ -2016,7 +2016,7 @@ function drawSettlements(){
     }
 }
 
-//write me
+//TODO write me
 function drawTimer(){
 
 }
@@ -2883,6 +2883,7 @@ function drawBackgroundAnimated(){
             let randomColor = '#7CB9'+ Math.floor(randomTable[i%10][j%10]/(2*Math.PI) * 56 + 200).toString(16);
             //let randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
             ctx.fillStyle = randomColor
+            ctx.lineWidth = 1;
 
             let drawX = dotsArray[i][j][0] - movement * Math.sin(aState.slowAngle + randomTable[i][j])
             let drawY = dotsArray[i][j][1] - movement * Math.sin(aState.slowAngle + randomTable[i][j])
@@ -2935,7 +2936,6 @@ function drawCanvas(){
 
     drawBackgroundAnimated()
     
-
     //elements unrelated to board
     drawDice()
     drawButtons()

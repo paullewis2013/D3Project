@@ -61,7 +61,10 @@ var yop2 = false;
 canvas.addEventListener('click', function(e) {
 
     //debugging help
-    //console.log(cardPaths)
+    // console.log(e.offsetX, e.offsetY)
+
+    const CLICK_X = e.offsetX * scale;
+    const CLICK_Y = e.offsetY * scale;
 
     //monopoly input
     if(showMonopolyMenu){
@@ -110,7 +113,7 @@ canvas.addEventListener('click', function(e) {
     //buttons
 
     //dice Button
-    if(ctx.isPointInPath(dicePath, e.offsetX, e.offsetY)){
+    if(ctx.isPointInPath(dicePath, CLICK_X, CLICK_Y)){
         if(diceButtonEnabled){
             diceButton()
         }
@@ -118,7 +121,7 @@ canvas.addEventListener('click', function(e) {
     }
 
     //trade button
-    if(ctx.isPointInPath(tradeButtonPath, e.offsetX, e.offsetY)){
+    if(ctx.isPointInPath(tradeButtonPath, CLICK_X, CLICK_Y)){
         if(tradeButtonEnabled){
             tradeButton()
         }
@@ -126,7 +129,7 @@ canvas.addEventListener('click', function(e) {
     }
 
     //dev button
-    if(ctx.isPointInPath(devButtonPath, e.offsetX, e.offsetY)){
+    if(ctx.isPointInPath(devButtonPath, CLICK_X, CLICK_Y)){
         if(devButtonEnabled){
             devButton()
         }
@@ -134,7 +137,7 @@ canvas.addEventListener('click', function(e) {
     }
 
     //road button
-    if(ctx.isPointInPath(roadButtonPath, e.offsetX, e.offsetY)){
+    if(ctx.isPointInPath(roadButtonPath, CLICK_X, CLICK_Y)){
         if(roadButtonEnabled && !buildingRoad){
             roadButton()
         }else if(roadButtonEnabled && buildingRoad){
@@ -144,7 +147,7 @@ canvas.addEventListener('click', function(e) {
     }
 
     //settlement button
-    if(ctx.isPointInPath(settlementButtonPath, e.offsetX, e.offsetY)){
+    if(ctx.isPointInPath(settlementButtonPath, CLICK_X, CLICK_Y)){
         if(settlementButtonEnabled && !buildingSettlement){
             settlementButton()
         }else if(settlementButtonEnabled && buildingSettlement){
@@ -155,7 +158,7 @@ canvas.addEventListener('click', function(e) {
     }
 
     //city Button
-    if(ctx.isPointInPath(cityButtonPath, e.offsetX, e.offsetY)){
+    if(ctx.isPointInPath(cityButtonPath, CLICK_X, CLICK_Y)){
         if(cityButtonEnabled && !buildingCity){
             cityButton()
         }else if(cityButtonEnabled && buildingCity){
@@ -165,7 +168,7 @@ canvas.addEventListener('click', function(e) {
     }
 
     //turn button
-    if(ctx.isPointInPath(turnButtonPath, e.offsetX, e.offsetY)){
+    if(ctx.isPointInPath(turnButtonPath, CLICK_X, CLICK_Y)){
         if(turnButtonEnabled){
             turnButton()
         }
@@ -181,7 +184,7 @@ canvas.addEventListener('click', function(e) {
 
     for(let i = 0; i < cardPaths.length; i++){
 
-        if(ctx.isPointInPath(cardPaths[i].path, e.offsetX, e.offsetY)){
+        if(ctx.isPointInPath(cardPaths[i].path, CLICK_X, CLICK_Y)){
             console.log(cardPaths[i].type + " card clicked")
 
 
@@ -221,7 +224,7 @@ canvas.addEventListener('click', function(e) {
         for(var j = 0; j < verticesArr[i].length; j++){
 
             //if click occurred in vertex hitbox do something
-            if (ctx.isPointInPath(verticesArr[i][j].hitbox, e.offsetX, e.offsetY)){
+            if (ctx.isPointInPath(verticesArr[i][j].hitbox, CLICK_X, CLICK_Y)){
                 
                 console.log(verticesArr[i][j])
 
@@ -277,7 +280,7 @@ canvas.addEventListener('click', function(e) {
         for(var j = 0; j < tilesArr[i].length; j++){
 
             //if click occurred in tile hitbox do something
-            if (ctx.isPointInPath(tilesArr[i][j].hitbox, e.offsetX, e.offsetY)) {
+            if (ctx.isPointInPath(tilesArr[i][j].hitbox, CLICK_X, CLICK_Y)) {
                 console.log(tilesArr[i][j]);
 
                 //TODO this should be a method
@@ -305,7 +308,6 @@ canvas.addEventListener('click', function(e) {
                 }
 
             }
-
             
         }
     }
@@ -314,7 +316,7 @@ canvas.addEventListener('click', function(e) {
     let roads = currPlayer.getBuildableRoads()
 
     for(let i = 0; i < roads.length; i++){
-        if(ctx.isPointInPath(roads[i].hitbox, e.offsetX, e.offsetY)){
+        if(ctx.isPointInPath(roads[i].hitbox, CLICK_X, CLICK_Y)){
 
             if(buildingRoad){
                 buildRoad(roads[i], currPlayer);
@@ -327,22 +329,11 @@ canvas.addEventListener('click', function(e) {
 
         for(var j = 0; j < roadsArr[i].length; j++){
 
-            if(ctx.isPointInPath(roadsArr[i][j].hitbox, e.offsetX, e.offsetY)){
+            if(ctx.isPointInPath(roadsArr[i][j].hitbox, CLICK_X, CLICK_Y)){
                 console.log(roadsArr[i][j])
-
-
-                // if(buildingRoad){
-                //     buildRoad(roadsArr[i][j], currPlayer)
-                // }
-
             }
-
         }
-
     }
-
-
-
 });
 
 canvas.addEventListener('mousemove', function(e) {
@@ -509,27 +500,6 @@ function drawDice(){
                 break;
         }
     }
-
-
-    // var diceImgs = []
-    // for(i=0; i<diceArr.length; i++){
-  
-    //     //this thing is called a closure but idk how it works tbh
-    //     (function (i) {
-    //         var xPos = (canvas.width - ((i + 1) * 65));
-    //         var yPos = 3 * tileRadius;
-    //         diceImgs[i] = new Image();
-    //         diceImgs[i].src = diceArr[i].getImg();
-
-    //         diceImgs[i].onload = function () {
-    //             ctx.drawImage(diceImgs[i], xPos, yPos, 60, 60);
-    //         };
-
-    //     })(i);
-  
-    // }
-    //remove me I don't belong here
-    //drawCircles()
 }
 
 function initDicePath(){
@@ -549,8 +519,6 @@ function initDicePath(){
     dicePath.lineTo(rX, tY)
     dicePath.lineTo(lX, tY)
     ctx.closePath()
-
-
 }
 
 function drawButtons(){
@@ -3023,5 +2991,5 @@ function drawFrame(){
     drawCanvas()
 }
 
-setInterval(drawFrame, 80)
+setInterval(drawFrame, 120)
 

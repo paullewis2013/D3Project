@@ -1128,6 +1128,9 @@ function cityButton(){
 //eventually move this and other button functions to a seperate js file
 function graphicButton(){
 
+    //TODO remove me
+    return;
+
     var graphic = document.getElementById("displayOptions").value
     //console.log(graphic)
 

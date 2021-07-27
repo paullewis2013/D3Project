@@ -3,8 +3,7 @@
 
     <head>
         <title>BoardGame</title>
-
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+       
         <link rel="stylesheet" type="text/css" href="index.css">
 
         <script src="https://d3js.org/d3.v5.min.js"></script>
@@ -13,84 +12,37 @@
 
     <body>
 
-        <div class="container-fluid">
-            <div class="row" id="big-row">
+        <canvas id="canvas"></canvas>
                 
+            <!-- <div id="right">
                 
-                <div class="col-8" id="left">
-                    <!-- <div class="row" id="controls">
-                        
-                        <div class="col-5" id="buttons">
-                            
-                            <div class="row button-row">
-                                <button class="btn btn-secondary" id="tradeButton">Trade Button</button>
-                                <button class="btn btn-secondary" onclick="devButton()" id="devButton">Draw Dev</button>
-                                <button class="btn btn-danger" onclick="cancelAction()" id="cancelButton" disabled="disabled">Cancel</button>
-                            </div>
-
-                            <div class="row button-row">
-                                <button class="btn btn-secondary" onclick="roadButton()" id="roadButton">Build Road</button>
-                                <button class="btn btn-secondary" onclick="settlementButton()" id="settlementButton">Build Settlement</button>
-                                <button class="btn btn-secondary" onclick="cityButton()" id="cityButton">Build City</button>
-                            </div>
-                           
-                        </div>
-                        
-                    </div> -->
-
-                    <div class="row" id="canvasDiv">
-                        <canvas id="canvas" height="688"></canvas>
-                    </div>
-                    
+                <div class="row">
+                    <svg id = "display" height="300" visibility="visible"></svg> 
                 </div>
                 
-                <div class="col-4" id="right">
-                    
-                    <div class="row">
-                        <svg id = "display" height="300"  style = "background-color:cornsilk;" visibility= "visible"></svg> 
-                    </div>
-                    
-                    <div class="row left-row">
-                        <select name="displayOptions" id="displayOptions" onchange="graphicButton()">
-                            <option value="Dice Distribution">Dice Distribution</option>
-                            <option value="dev played">Played Dev Cards</option>
-                            <option value="dev unplayed">Unplayed Dev Cards</option>
-                            <option value="prod">Production Capacity</option>
-                            <option value="None">None</option>
-                        </select>
-
-                        <button class="btn btn-secondary" onclick="giveResources()">Free Cards</button>
-                        <!-- <button class="btn btn-secondary" onclick="quickStart()">Quick Start</button> -->
-
-                        <!-- <select name="playerDisplayOption" id="playerDisplayOptions" disabled="disabled">
-                            <option value="P1">Player 1</option>
-                            <option value="P2">Player 2</option>
-                            <option value="P3">Player 3</option>
-                            <option value="P4">Player 4</option>
-                        </select> -->
-
-                        <!-- <input type="checkbox" id="textureCheck" checked onclick="toggleTexture()">
-                        <label for="textureCheck">Textures</label> -->
-                    </div>
-                    
-                    <div class="row left-row" id="playerDiv">
-                        <canvas id="playerInfo"></canvas>
-                    </div>
-                    
-                    
+                <div class="row left-row">
+                    <select name="displayOptions" id="displayOptions" onchange="graphicButton()">
+                        <option value="Dice Distribution">Dice Distribution</option>
+                        <option value="dev played">Played Dev Cards</option>
+                        <option value="dev unplayed">Unplayed Dev Cards</option>
+                        <option value="prod">Production Capacity</option>
+                        <option value="None">None</option>
+                    </select>
                 </div>
+                
+                <div class="row left-row" id="playerDiv">
+                    <canvas id="playerInfo"></canvas>
+                </div>
+                
+            </div> -->
 
-            </div>
-        </div>
         
         <script src="objects.js"></script>
-        <script src=canvas.js></script>
-        <script src=infoDisplay.js></script>
+        <script src="canvas.js"></script>
+        <!-- <script src="infoDisplay.js"></script> -->
         <script src="playerInfo.js"></script>
-        <script src=board.js></script>
-
+        <script src="board.js"></script>
 
     </body>
-
 
 </html>

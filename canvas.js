@@ -1,18 +1,24 @@
 //this file is to handle all of the code related to the canvas element
 
+var canvas = document.getElementById("canvas")
 
-//TODO move this setup to its own method
-
-//basic setup to work with canvas element
-var canvas = document.getElementById('canvas')
-var canvasDiv = document.getElementById('canvasDiv')
-
-canvasDiv.height = document.getElementById("left").clientHeight
-
-canvas.width  = canvasDiv.clientWidth 
-canvas.height = document.getElementById("left").clientHeight
+canvas.style.width = window.innerWidth + "px";
+canvas.style.height = window.innerHeight + "px";  
 
 var ctx = canvas.getContext('2d')
+
+// Set actual size in memory (scaled to account for extra pixel density).
+var scale = window.devicePixelRatio; // Change to 1 on retina screens to see blurry canvas.
+canvas.width = Math.floor(window.innerWidth * scale);
+canvas.height = Math.floor(window.innerHeight * scale);
+
+const c_WIDTH = canvas.width/scale;
+const c_HEIGHT = canvas.height/scale;
+
+var ctx = canvas.getContext('2d');
+
+// Normalize coordinate system to use css pixels.
+ctx.scale(scale, scale);
 
 //determines if images are drawn
 var textured = true;
@@ -468,7 +474,7 @@ function drawDice(){
     //new and improved
     for(i=0; i<diceArr.length; i++){
 
-        var xPos = (canvas.width - ((i + 1) * 65));
+        var xPos = (c_WIDTH - ((i + 1) * 65));
         var yPos = 3 * tileRadius;
 
         let size = 60
@@ -530,8 +536,8 @@ function initDicePath(){
     
     dicePath = new Path2D();
     
-    let lX = (canvas.width - ((2) * 65))
-    let rX = (canvas.width - ((2) * 65)) + 125
+    let lX = (c_WIDTH - ((2) * 65))
+    let rX = (c_WIDTH - ((2) * 65)) + 125
 
     let tY = 3 * tileRadius
     let bY = tY + 65
@@ -558,13 +564,13 @@ function drawButtons(){
     let buttonAreaPath = new Path2D()
 
     //draw shape for bank to go in
-    let x = (canvas.width/2) - 1.8*tileRadius
-    let y = canvas.height - 1.5 * tileRadius
-    let w = canvas.width - x
+    let x = (c_WIDTH/2) - 1.8*tileRadius
+    let y = c_HEIGHT - 1.5 * tileRadius
+    let w = c_WIDTH - x
     let h = 1.5 * tileRadius
     let radius = 20
 
-    let textY = canvas.height - tileRadius + 10/2
+    let textY = c_HEIGHT - tileRadius + 10/2
 
     let textX = x + buttonWidth/2 + 0.3*tileRadius
 
@@ -663,7 +669,7 @@ function drawButtons(){
     ctx.fillStyle = "white"
     ctx.fillText("Settlement", textX, textY, 70)
 
-    //ctx.drawImage(images[7], canvas.width - 90, 260, 80, 80)
+    //ctx.drawImage(images[7], c_WIDTH - 90, 260, 80, 80)
 
     textX += buttonWidth
 
@@ -699,9 +705,9 @@ function drawButtons(){
 function initButtons(){
 
     //x y width height and curve radius for rectangle path
-    let x = (canvas.width/2) - 1.5*tileRadius
-    let y = canvas.height - tileRadius * 1.8
-    let w = (canvas.width - x) / 7
+    let x = (c_WIDTH/2) - 1.5*tileRadius
+    let y = c_HEIGHT - tileRadius * 1.8
+    let w = (c_WIDTH - x) / 7
     let h = tileRadius * 1.5
     let radius = 10
 
@@ -830,30 +836,30 @@ function drawTileTextures(){
 
     var centerX;
     var centerY;
-    //var radius = canvas.height/11.5;
+    //var radius = c_HEIGHT/11.5;
     var radius = 60
 
     for(var i = 0; i < 5; i++){
-        //centerY = ((2 + i) * (canvas.height / 7)) - radius;
+        //centerY = ((2 + i) * (c_HEIGHT / 7)) - radius;
 
         //some circle packing magic thats like a 30-60-90 triangle
-        centerY = (canvas.height * 3/7) - Math.sqrt(3)*radius*(2-i);
+        centerY = (c_HEIGHT * 3/7) - Math.sqrt(3)*radius*(2-i);
 
         var times;
 
         //first and last row
         if(i === 0 || i === 4){
-            centerX = (canvas.width/2) - 3.5*radius
+            centerX = (c_WIDTH/2) - 3.5*radius
             times = 3;
         }
         //second and second to last row
         if(i === 1 || i === 3){
-            centerX = (canvas.width/2) - 4.5*radius
+            centerX = (c_WIDTH/2) - 4.5*radius
             times = 4;
         }
         //middle row
         if(i === 2){
-            centerX = (canvas.width/2) - 5.5*radius
+            centerX = (c_WIDTH/2) - 5.5*radius
             times = 5;
         }
 
@@ -1602,7 +1608,7 @@ function initPorts(){
 function drawTiles(){
     var centerX;
     var centerY;
-    //tileRadius = canvas.height/15;
+    //tileRadius = c_HEIGHT/15;
     tileRadius = 60;
 
     ctx.textAlign = "center"
@@ -1611,23 +1617,23 @@ function drawTiles(){
     for(var i = 0; i < 5; i++){
 
         //some circle packing magic that makes a 30-60-90 triangle
-        centerY = (canvas.height * 3/7) - Math.sqrt(3)*tileRadius*(2-i);
+        centerY = (c_HEIGHT * 3/7) - Math.sqrt(3)*tileRadius*(2-i);
 
         var times;
 
         //first and last row
         if(i === 0 || i === 4){
-            centerX = (canvas.width/2) - 3.5*tileRadius
+            centerX = (c_WIDTH/2) - 3.5*tileRadius
             times = 3;
         }
         //second and second to last row
         if(i === 1 || i === 3){
-            centerX = (canvas.width/2) - 4.5*tileRadius
+            centerX = (c_WIDTH/2) - 4.5*tileRadius
             times = 4;
         }
         //middle row
         if(i === 2){
-            centerX = (canvas.width/2) - 5.5*tileRadius
+            centerX = (c_WIDTH/2) - 5.5*tileRadius
             times = 5;
         }
 
@@ -1734,7 +1740,7 @@ function drawBank(){
     let bankPath = new Path2D()
 
     //draw shape for bank to go in
-    let x = canvas.width - tileRadius * 5
+    let x = c_WIDTH - tileRadius * 5
     let y = 0
     let w = tileRadius * 5
     let h = 3 * tileRadius
@@ -1914,7 +1920,7 @@ function initIslandPath(){
 
 function drawIsland(){
 
-    var gradient = ctx.createRadialGradient(canvas.width/2 - 90,canvas.height/2, 150, canvas.width/2 - 90,canvas.height/2, 200);
+    var gradient = ctx.createRadialGradient(c_WIDTH/2 - 90,c_HEIGHT/2, 150, c_WIDTH/2 - 90,c_HEIGHT/2, 200);
     gradient.addColorStop(0, "#DEB887");
     gradient.addColorStop(1, 'wheat');
 
@@ -2038,8 +2044,8 @@ function drawRobber(){
 function drawTradeMenu(){
 
     //define boundaries of trade menu
-    let menu_x = canvas.width - 300
-    let menu_y = canvas.height - 6 * tileRadius
+    let menu_x = c_WIDTH - 300
+    let menu_y = c_HEIGHT - 6 * tileRadius
     let width = 290
     let height = 225
 
@@ -2116,8 +2122,8 @@ function drawHand(){
     let handPath = new Path2D()
 
     let x = 0
-    let y = canvas.height - 2 * tileRadius
-    let w = canvas.width - ((canvas.width/2) + 1.8*tileRadius)
+    let y = c_HEIGHT - 2 * tileRadius
+    let w = c_WIDTH - ((c_WIDTH/2) + 1.8*tileRadius)
     let h = 2 * tileRadius
     let radius = 25
     let buttonRadius = 10
@@ -2144,13 +2150,13 @@ function drawHand(){
 
     //draw player circle
     ctx.beginPath();
-    ctx.arc(w/6, canvas.height - h/2, tileRadius/2, 0, 2 * Math.PI, false);
+    ctx.arc(w/6, c_HEIGHT - h/2, tileRadius/2, 0, 2 * Math.PI, false);
     ctx.closePath();
     ctx.fillStyle = currPlayer.color;
     ctx.fill()
 
     //draw user icon on top of player circle
-    ctx.drawImage(images[9], w/6 - tileRadius/1.95, canvas.height - h/2 - .6*tileRadius, tileRadius * 1.05, tileRadius)
+    ctx.drawImage(images[9], w/6 - tileRadius/1.95, c_HEIGHT - h/2 - .6*tileRadius, tileRadius * 1.05, tileRadius)
 
     cardPaths = [];
 
@@ -2436,8 +2442,8 @@ function drawVisited(){
 
 function drawYOPMenu(){
     //define boundaries of trade menu
-    let menu_x = canvas.width - 300
-    let menu_y = canvas.height - 5.5 * tileRadius
+    let menu_x = c_WIDTH - 300
+    let menu_y = c_HEIGHT - 5.5 * tileRadius
     let w = 290
     let h = 3 * tileRadius
 
@@ -2691,8 +2697,8 @@ function drawYOPMenu(){
 
 function drawMonopolyMenu(){
     //define boundaries of trade menu
-    let menu_x = canvas.width - 300
-    let menu_y = canvas.height - 4.5 * tileRadius
+    let menu_x = c_WIDTH - 300
+    let menu_y = c_HEIGHT - 4.5 * tileRadius
     let w = 290
     let h = 2 * tileRadius
 
@@ -2846,11 +2852,11 @@ function initBackgroundDots(){
         //push custom x y coordinate structure into array
         for(let j = 0; j < 45; j++){
             dotsArray[i].push([x, y, 0, 0])
-            x += canvas.width/35
+            x += c_WIDTH/35
         }
 
         //move y up a row
-        y += canvas.height/35
+        y += c_HEIGHT/35
 
         //stagger every other row
         if(!offset){
@@ -2858,7 +2864,7 @@ function initBackgroundDots(){
             x = -100
         }else{
             offset = false;
-            x = -100 - canvas.width/80
+            x = -100 - c_WIDTH/80
         }
         
         
@@ -2930,10 +2936,11 @@ function drawBackgroundAnimated(){
 function drawCanvas(){
 
     //draw the background
-    ctx.rect(0, 0, canvas.width, canvas.height)
+    ctx.rect(0, 0, c_WIDTH, c_HEIGHT)
     ctx.fillStyle = "#7CB9E6"
     ctx.fill()
 
+    // Don't delete this just commented it out during development
     drawBackgroundAnimated()
     
     //elements unrelated to board
@@ -2954,7 +2961,6 @@ function drawCanvas(){
     if(showYOPMenu){
         drawYOPMenu()
     }
-    
 
     //elements under board
     drawPorts()
@@ -2976,14 +2982,9 @@ function drawCanvas(){
     if(showVerts){
         drawVertices()
     }
-    
-    
 
     //player info in rightside column
     drawPlayerInfo()
-
-    
-
 }
 
 

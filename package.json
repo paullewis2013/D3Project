@@ -1,0 +1,22 @@
+{
+  "name": "board_game",
+  "version": "1.0.0",
+  "description": "A board game",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paullewis2013/D3Project.git"
+  },
+  "author": "Paul Lewis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/paullewis2013/D3Project/issues"
+  },
+  "homepage": "https://github.com/paullewis2013/D3Project#readme",
+  "devDependencies": {
+    "electron": "^13.1.7"
+  }
+}

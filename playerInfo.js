@@ -13,6 +13,9 @@ p_ctx = p_canvas.getContext("2d");
 //this is the only thing this entire file does
 function drawPlayerInfo(){
 
+    //TODO remove me
+    return;
+
     var offset = p_canvas.height / playersArr.length;
 
     for(let i = 0; i < playersArr.length; i++){

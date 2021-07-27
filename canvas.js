@@ -57,6 +57,7 @@ var selectedResource = null;
 var yop1 = false;
 var yop2 = false;
 
+var islandCenterX = c_WIDTH * 0.58;
 
 canvas.addEventListener('click', function(e) {
 
@@ -213,8 +214,6 @@ canvas.addEventListener('click', function(e) {
 
     }
 
-
-
     //–––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
 
@@ -306,29 +305,24 @@ canvas.addEventListener('click', function(e) {
                     // //it just makes me uncomfortable
                     // return;
                 }
-
             }
-            
         }
     }
 
-    //loop through all roads
+    //loop through all buildable roads
     let roads = currPlayer.getBuildableRoads()
 
-    for(let i = 0; i < roads.length; i++){
-        if(ctx.isPointInPath(roads[i].hitbox, CLICK_X, CLICK_Y)){
-
-            if(buildingRoad){
+    if(buildingRoad){
+        for(let i = 0; i < roads.length; i++){
+            if(ctx.isPointInPath(roads[i].hitbox, CLICK_X, CLICK_Y)){
                 buildRoad(roads[i], currPlayer);
             }
         }
-
     }
 
+    // loop through all roads to print location of click event
     for(var i = 0; i < 11; i++){
-
         for(var j = 0; j < roadsArr[i].length; j++){
-
             if(ctx.isPointInPath(roadsArr[i][j].hitbox, CLICK_X, CLICK_Y)){
                 console.log(roadsArr[i][j])
             }
@@ -525,7 +519,6 @@ function drawButtons(){
     
     setButtons()
 
-
     //draw a path behind the buttons
     ctx.strokeStyle = "black";
     ctx.lineWidth = 1;
@@ -568,8 +561,8 @@ function drawButtons(){
 
     //the text isn't really linked to the locations of the buttons and must be updated separately if moved
     let disabledColor = 'slategrey'
-    let enabledColor = '#2c3e50'
-    let strokeColor = "#2980b9"
+    let enabledColor = '#073642'
+    let strokeColor = "#dc322f"
 
     //trade button
     ctx.fillStyle = enabledColor
@@ -817,17 +810,17 @@ function drawTileTextures(){
 
         //first and last row
         if(i === 0 || i === 4){
-            centerX = (c_WIDTH/2) - 3.5*radius
+            centerX = (islandCenterX) - 3.5*radius
             times = 3;
         }
         //second and second to last row
         if(i === 1 || i === 3){
-            centerX = (c_WIDTH/2) - 4.5*radius
+            centerX = (islandCenterX) - 4.5*radius
             times = 4;
         }
         //middle row
         if(i === 2){
-            centerX = (c_WIDTH/2) - 5.5*radius
+            centerX = (islandCenterX) - 5.5*radius
             times = 5;
         }
 
@@ -1574,6 +1567,7 @@ function initPorts(){
 }
 
 function drawTiles(){
+
     var centerX;
     var centerY;
     //tileRadius = c_HEIGHT/15;
@@ -1591,17 +1585,17 @@ function drawTiles(){
 
         //first and last row
         if(i === 0 || i === 4){
-            centerX = (c_WIDTH/2) - 3.5*tileRadius
+            centerX = (islandCenterX) - 3.5*tileRadius
             times = 3;
         }
         //second and second to last row
         if(i === 1 || i === 3){
-            centerX = (c_WIDTH/2) - 4.5*tileRadius
+            centerX = (islandCenterX) - 4.5*tileRadius
             times = 4;
         }
         //middle row
         if(i === 2){
-            centerX = (c_WIDTH/2) - 5.5*tileRadius
+            centerX = (islandCenterX) - 5.5*tileRadius
             times = 5;
         }
 
@@ -1708,9 +1702,9 @@ function drawBank(){
     let bankPath = new Path2D()
 
     //draw shape for bank to go in
-    let x = c_WIDTH - tileRadius * 5
+    let x = c_WIDTH - tileRadius * 6
     let y = 0
-    let w = tileRadius * 5
+    let w = tileRadius * 6
     let h = 3 * tileRadius
     
     let radius = 30
@@ -1888,7 +1882,7 @@ function initIslandPath(){
 
 function drawIsland(){
 
-    var gradient = ctx.createRadialGradient(c_WIDTH/2 - 90,c_HEIGHT/2, 150, c_WIDTH/2 - 90,c_HEIGHT/2, 200);
+    var gradient = ctx.createRadialGradient(islandCenterX - 90,c_HEIGHT/2, 150, islandCenterX - 90,c_HEIGHT/2, 200);
     gradient.addColorStop(0, "#DEB887");
     gradient.addColorStop(1, 'wheat');
 
@@ -2842,7 +2836,7 @@ function initBackgroundDots(){
 
 function drawBackgroundAnimated(){
 
-    ctx.strokeStyle = "#128CD2"
+    ctx.strokeStyle = "#167bc2"//"#128CD2"
 
     //defines distance that coordinates travel from their original locations
     let movement = 6
@@ -2854,10 +2848,12 @@ function drawBackgroundAnimated(){
 
         for(let j = 0; j < dotsArray[i].length; j++){
 
-            let randomColor = '#7CB9'+ Math.floor(randomTable[i%10][j%10]/(2*Math.PI) * 56 + 200).toString(16);
+            // important note only downwards pointing triangales are actually filled in as paths
+
+            let randomColor = '#eee8'+ Math.floor(randomTable[i%10][j%10] * 56 + 200).toString(16);
             //let randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
-            ctx.fillStyle = randomColor
-            ctx.lineWidth = 1;
+            ctx.fillStyle = "#268bd2"//randomColor
+            ctx.lineWidth = 2;
 
             let drawX = dotsArray[i][j][0] - movement * Math.sin(aState.slowAngle + randomTable[i][j])
             let drawY = dotsArray[i][j][1] - movement * Math.sin(aState.slowAngle + randomTable[i][j])
@@ -2905,7 +2901,7 @@ function drawCanvas(){
 
     //draw the background
     ctx.rect(0, 0, c_WIDTH, c_HEIGHT)
-    ctx.fillStyle = "#7CB9E6"
+    ctx.fillStyle = "#268bd2"
     ctx.fill()
 
     // Don't delete this just commented it out during development

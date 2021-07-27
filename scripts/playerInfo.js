@@ -1,15 +1,4 @@
-// this file controls a different canvas for drawing player info
-
-// var p_canvas = document.getElementById("playerInfo");
-// p_canvas.width = document.getElementById("playerDiv").clientWidth;
-// p_canvas.height = document.getElementById("playerDiv").clientHeight;
-
-// p_ctx = p_canvas.getContext("2d");
-
 const playersInfoWidth = 350;
-
-//important note everything coordinate wise is off by 15 for some reason
-//the visible point that should be the origin is actually at (15,15)
 
 //this is the only thing this entire file does
 function drawPlayerInfo(){
@@ -29,8 +18,9 @@ function drawPlayerInfo(){
             ctx.fillStyle = "#9dd9b8"
         }
 
-        ctx.fill()
-        ctx.stroke()
+        ctx.fill();
+        ctx.lineWidth = 1;
+        ctx.stroke();
 
         //draw player circle
         ctx.beginPath();

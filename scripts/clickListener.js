@@ -19,8 +19,6 @@ canvas.addEventListener('click', function(e) {
                 selectedResource = i
             }
         }
-
-
     }
 
     if(showYOPMenu){

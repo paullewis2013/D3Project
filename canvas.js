@@ -126,8 +126,8 @@ function drawDice(){
     //new and improved
     for(i=0; i<diceArr.length; i++){
 
-        var xPos = (c_WIDTH - ((i + 1) * 65));
-        var yPos = 3 * tileRadius;
+        var xPos = 10 + i * 65;
+        var yPos = 8 * tileRadius;
 
         let size = 60
 
@@ -167,10 +167,10 @@ function initDicePath(){
     
     dicePath = new Path2D();
     
-    let lX = (c_WIDTH - ((2) * 65))
-    let rX = (c_WIDTH - ((2) * 65)) + 125
+    let lX = 10
+    let rX = 125
 
-    let tY = 3 * tileRadius
+    let tY = 8 * tileRadius
     let bY = tY + 65
 
     ctx.beginPath();
@@ -189,14 +189,12 @@ function drawButtons(){
     //draw a path behind the buttons
     ctx.strokeStyle = "black";
     ctx.lineWidth = 1;
-    let buttonAreaPath = new Path2D()
 
     //draw shape for bank to go in
-    let x = (c_WIDTH/2) - 1.8*tileRadius
+    let x = (c_WIDTH/2) - 1.8 * tileRadius
     let y = c_HEIGHT - 1.5 * tileRadius
     let w = c_WIDTH - x
     let h = 1.5 * tileRadius
-    let radius = 20
 
     let textY = c_HEIGHT - tileRadius + 10/2
 
@@ -206,30 +204,19 @@ function drawButtons(){
     let b = y + h;
     ctx.beginPath()
     ctx.rect(x, y, w, h)
-    // buttonAreaPath.moveTo(x, y);
-    // buttonAreaPath.lineTo(r, y);
-    // buttonAreaPath.quadraticCurveTo(r, y, r, y+radius);
-    // buttonAreaPath.lineTo(r, y+h-radius);
-    // buttonAreaPath.quadraticCurveTo(r, b, r-radius, b);
-    // buttonAreaPath.lineTo(x+radius, b);
-    // buttonAreaPath.quadraticCurveTo(x, b, x, b-radius);
-    // buttonAreaPath.lineTo(x, y+radius);
-    // buttonAreaPath.quadraticCurveTo(x, y, x, y);
     ctx.closePath()
 
     ctx.lineWidth = 4;
-    ctx.fillStyle = "#a8bbcf"
+    ctx.fillStyle = "#586e75"
     ctx.fill()
     ctx.lineWidth = 1;
     ctx.strokeStyle = "black"
     ctx.stroke()
 
-
-
     //the text isn't really linked to the locations of the buttons and must be updated separately if moved
-    let disabledColor = 'slategrey'
+    let disabledColor = "#839496"
     let enabledColor = '#073642'
-    let strokeColor = "#dc322f"
+    let strokeColor = "#2aa198"
 
     //trade button
     ctx.fillStyle = enabledColor
@@ -259,7 +246,7 @@ function drawButtons(){
     ctx.fill(devButtonPath)
 
     ctx.fillStyle = "white"
-    ctx.fillText("Dev Card", textX, textY, 70)
+    ctx.fillText("Dev Card", textX, textY, 100)
 
     textX += buttonWidth
 
@@ -277,7 +264,7 @@ function drawButtons(){
     }
 
     ctx.fillStyle = "white"
-    ctx.fillText("Road", textX, textY, 70)
+    ctx.fillText("Road", textX, textY, 100)
 
     textX += buttonWidth
 
@@ -295,7 +282,7 @@ function drawButtons(){
     }
 
     ctx.fillStyle = "white"
-    ctx.fillText("Settlement", textX, textY, 70)
+    ctx.fillText("Settlement", textX, textY, 100)
 
     //ctx.drawImage(images[7], c_WIDTH - 90, 260, 80, 80)
 
@@ -315,7 +302,7 @@ function drawButtons(){
     }
 
     ctx.fillStyle = "white"
-    ctx.fillText("City", textX, textY, 70)
+    ctx.fillText("City", textX, textY, 100)
 
     textX += buttonWidth
 
@@ -327,7 +314,7 @@ function drawButtons(){
     ctx.fill(turnButtonPath)
 
     ctx.fillStyle = "white"
-    ctx.fillText("End Turn", textX, textY, 70)
+    ctx.fillText("End Turn", textX, textY, 100)
 }
 
 function initButtons(){
@@ -1389,7 +1376,7 @@ function drawBank(){
     ctx.lineWidth = 4;
     // ctx.strokeStyle = "#B0E0E6"
     ctx.stroke(bankPath);
-    ctx.fillStyle = "#ecf0f1"
+    ctx.fillStyle = "#fdf6e3"
     ctx.fill(bankPath)
     ctx.lineWidth = 1;
     ctx.strokeStyle = "black"
@@ -1657,10 +1644,15 @@ function drawTimer(){
 }
 
 function drawTurnNum(){
+
+    ctx.fillStyle = "#fdf6e3"
+    ctx.rect(0, 400, 100, 65)
+    ctx.fill()
+
     ctx.textAlign = "left"
-    ctx.font = "Arial 15px"
+    ctx.font = "20px Arial"
     ctx.fillStyle = "black"
-    ctx.fillText("Turn: " + turnNumber, 25, 25)
+    ctx.fillText("Turn: " + turnNumber, 12, 450)
 }
 
 function drawRobber(){
@@ -1772,20 +1764,24 @@ function drawHand(){
     ctx.lineWidth = 4;
     // ctx.strokeStyle = "#B0E0E6"
     ctx.stroke(handPath);
-    ctx.fillStyle = "#d9e2ea"
+    ctx.fillStyle = "#fdf6e3"
     ctx.fill(handPath)
     ctx.lineWidth = 1;
     ctx.strokeStyle = "black"
 
     //draw player circle
     ctx.beginPath();
-    ctx.arc(w/6, c_HEIGHT - h/2, tileRadius/2, 0, 2 * Math.PI, false);
+    ctx.arc(w/6, c_HEIGHT - 2 * h/3, tileRadius/2, 0, 2 * Math.PI, false);
     ctx.closePath();
     ctx.fillStyle = currPlayer.color;
     ctx.fill()
 
     //draw user icon on top of player circle
-    ctx.drawImage(images[9], w/6 - tileRadius/1.95, c_HEIGHT - h/2 - .6*tileRadius, tileRadius * 1.05, tileRadius)
+    ctx.drawImage(images[9], w/6 - tileRadius/1.95, c_HEIGHT - 2 * h/3 - .6 * tileRadius, tileRadius * 1.05, tileRadius)
+
+    ctx.font = "20px Arial"
+    ctx.fillStyle = "black"
+    ctx.fillText("PLAYER_NAME", w/6, c_HEIGHT - h/6, 200)
 
     cardPaths = [];
 
@@ -2575,11 +2571,11 @@ function drawCanvas(){
     drawBackgroundAnimated()
     
     //elements unrelated to board
-    drawDice()
-    drawButtons()
-    drawTurnNum()
-    drawHand()
-    drawBank()
+    drawDice();
+    drawTurnNum();
+    drawBank();
+    drawButtons();
+    drawHand();
 
     if(currentlyTrading){
         drawTradeMenu()

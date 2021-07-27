@@ -1155,7 +1155,6 @@ Tile.prototype.getPath = function () {
     return this.path;
 }
 
-
 //define port object
 function Port(trade, verts){
     this.vertices = verts;
@@ -1163,4 +1162,3 @@ function Port(trade, verts){
     this.cx = 0;
     this.cy = 0;
 }
-

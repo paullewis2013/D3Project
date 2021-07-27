@@ -590,7 +590,6 @@ async function waitForRobberMoved(){
             //console.log("waiting for resource num")
             await sleep(100)
         }
-
     }
 }
 
@@ -627,11 +626,9 @@ async function waitForRoad(player, num){
         }else{
             await sleep(100)
         }
-
     }
 
-    return true
-
+    return true;
 }
 
 async function waitForTurnButton(currentTurn){
@@ -665,11 +662,8 @@ async function waitForDiceRoll(){
             diceRollFinished = true;
         }else{
             await sleep(100)
-        }
-        
+        } 
     }
-
-
 }
 
 //populate dev card array and unplayed dev card array then shuffle the dev card array 
@@ -761,17 +755,6 @@ function checkWinCondition(){
 
     drawCanvas()
     drawPlayerInfo()
-}
-
-function giveResources(){
-
-    for(let i = 0; i < playersArr.length; i++){
-        playersArr[i].resources = [10, 10, 10, 10, 10]
-        playersArr[i].devCards = [1, 1, 1, 1, 1]
-    }
-
-    drawCanvas()
-
 }
 
 //generates a dice roll between 1 and 12 by summing two d6
@@ -937,10 +920,7 @@ function moveRobber(){
     //disable all other actions until robber is moved
     movingRobber = true;
     freeze()
-
 }
-
-
 
 function buildRoad(road, player){
 
@@ -959,7 +939,6 @@ function buildRoad(road, player){
     buildingRoad = false;
     showRoads = false;
     unfreeze();
-
 }
 
 function buildSettlement(vertex, player){
@@ -989,7 +968,6 @@ function buildSettlement(vertex, player){
     unfreeze();
 }
 
-
 function buildCity(settlement, player){
 
     settlement.isCity = true;
@@ -1013,9 +991,6 @@ function cancelAction(){
 
     //unfreeze()
     drawCanvas()
-
-    
-
 }
 
 function turnButton(){
@@ -1158,7 +1133,6 @@ function graphicButton(){
         default:
             break;
     }
-    
 }
 
 

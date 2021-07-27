@@ -114,46 +114,159 @@ preloadImages(imageSrcs, images);
 //end of preloading images code
 //––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
+function drawBackgroundAnimated(){
 
-function drawDice(){
+    ctx.strokeStyle = "#167bc2"//"#128CD2"
 
-    //new and improved
-    for(i=0; i<diceArr.length; i++){
+    //defines distance that coordinates travel from their original locations
+    let movement = 6
 
-        var xPos = 10 + i * 65;
-        var yPos = 8 * tileRadius;
+    let drawX = dotsArray[0][0][0] - movement * Math.sin(aState.slowAngle + randomTable[0][0])
+    let drawY = dotsArray[0][0][1] - movement * Math.sin(aState.slowAngle + randomTable[0][0])
 
-        let size = 60
+    for(let i = 0; i < dotsArray.length; i++){
 
-        if(initialPlacementsComplete && diceButtonEnabled){
-            size = aState.vertSize * 4
+        for(let j = 0; j < dotsArray[i].length; j++){
+
+            // important note only downwards pointing triangales are actually filled in as paths
+
+            let randomColor = '#eee8'+ Math.floor(randomTable[i%10][j%10] * 56 + 200).toString(16);
+            //let randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
+            ctx.fillStyle = "#268bd2"//randomColor
+            ctx.lineWidth = 2;
+
+            let drawX = dotsArray[i][j][0] - movement * Math.sin(aState.slowAngle + randomTable[i][j])
+            let drawY = dotsArray[i][j][1] - movement * Math.sin(aState.slowAngle + randomTable[i][j])
+
+            dotsArray[i][j][2] = drawX
+            dotsArray[i][j][3] = drawY
+
+            if(i < dotsArray.length - 1 && i%2 != 0 && j < dotsArray[i].length - 1 && j > 0){
+
+                ctx.beginPath()
+                ctx.moveTo(drawX, drawY)
+                ctx.lineTo(dotsArray[i+1][j][2], dotsArray[i+1][j][3])
+                ctx.lineTo(dotsArray[i][j-1][2], dotsArray[i][j-1][3])
+                ctx.lineTo(dotsArray[i][j][2], dotsArray[i][j][3])
+                ctx.closePath()
+                ctx.fill()
+                ctx.stroke()
+            }
+
+            else if(i < dotsArray.length - 1 && i%2 == 0 && j < dotsArray[i].length && j > 0){
+
+                ctx.beginPath()
+                ctx.moveTo(drawX, drawY)
+                ctx.lineTo(dotsArray[i+1][j-1][2], dotsArray[i+1][j-1][3])
+                ctx.lineTo(dotsArray[i][j-1][2], dotsArray[i][j-1][3])
+                ctx.lineTo(dotsArray[i][j][2], dotsArray[i][j][3])
+                ctx.closePath()
+                ctx.fill()
+                ctx.stroke()
+            }   
+        }   
+    }
+}
+
+function drawBank(){
+
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 1;
+    let bankPath = new Path2D()
+
+    //draw shape for bank to go in
+    let x = c_WIDTH - tileRadius * 6
+    let y = 0
+    let w = tileRadius * 6
+    let h = 3 * tileRadius
+    
+    let radius = 30
+    let r = x + w;
+    let b = y + h;
+    ctx.beginPath()
+    bankPath.moveTo(x, y);
+    bankPath.lineTo(r, y);
+    bankPath.lineTo(r, b);
+    bankPath.lineTo(x + radius, b);
+    bankPath.quadraticCurveTo(x, b, x, b-radius);
+    bankPath.lineTo(x, y);
+    ctx.closePath() 
+
+    ctx.lineWidth = 4;
+    // ctx.strokeStyle = "#B0E0E6"
+    ctx.stroke(bankPath);
+    ctx.fillStyle = "#fdf6e3"
+    ctx.fill(bankPath)
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "black"
+
+    //draw bank image
+    ctx.drawImage(images[8], x + w/2 - tileRadius/2, 0, tileRadius, tileRadius)
+
+    let cardHeight = 0.8 * tileRadius
+    let cardWidth = 5 * cardHeight/7
+
+    let startX = x + tileRadius/6
+    let cardY = 1.3 * tileRadius
+    
+    //draw numbers for resources
+    for(var i = 0; i < 6; i++){
+        ctx.fillStyle = "black"
+        ctx.font = "15px Arial"
+        if(i<5){
+            ctx.beginPath()
+            ctx.rect(startX + (i * w/6), cardY + (i%2) * 40, cardWidth, cardHeight)
+            ctx.stroke()
+            ctx.fillStyle = colorVals[i]
+            ctx.fill()
+            ctx.fillStyle = "black"
+            //ctx.fillText(bank[i], 160 + ((i%3)*320/4), 40 + Math.floor(i/3) * 40)
+
+            let cardX = startX + (i * w/6)
+            let currCardY = cardY + (i%2) * 40
+
+            //draw circle for number of cards
+            ctx.beginPath()
+            ctx.arc(cardX, currCardY, tileRadius * 0.15, 0, 2 * Math.PI, false)
+            ctx.stroke()
+            ctx.fillStyle = "white"
+            ctx.fill()
+
+            //draw number to show how many the user has
+            ctx.fillStyle = "black"
+            ctx.textAlign = "center"
+            ctx.font = "12px Arial"
+            ctx.fillText(bank[i], cardX, currCardY + 5)
+
+
+
+
+        }else{
+            ctx.beginPath()
+            ctx.rect(startX + (i * w/6), cardY + (i%2) * 40, cardWidth, cardHeight)
+            ctx.stroke()
+            ctx.fillStyle = colorVals[i]
+            ctx.fill()
+            ctx.fillStyle = "black"
+            //ctx.fillText(devCardArray.length, 160 + ((i%3)*320/4), 40 + Math.floor(i/3) * 40)
+
+            let cardX = startX + (i * w/6)
+            let currCardY = cardY + (i%2) * 40
+
+            //draw circle for number of cards
+            ctx.beginPath()
+            ctx.arc(cardX, currCardY, tileRadius * 0.15, 0, 2 * Math.PI, false)
+            ctx.stroke()
+            ctx.fillStyle = "white"
+            ctx.fill()
+
+            //draw number to show how many the user has
+            ctx.fillStyle = "black"
+            ctx.textAlign = "center"
+            ctx.font = "12px Arial"
+            ctx.fillText(devCardArray.length, cardX, currCardY + 5)
         }
-
-        switch(diceArr[i].getImg()){
-            case "assets/Dice-1.png":
-                ctx.drawImage(images[10], xPos, yPos, size, size);
-                break;
-
-            case "assets/Dice-2.png":
-                ctx.drawImage(images[11], xPos, yPos, size, size);
-                break;
-
-            case "assets/Dice-3.png":
-                ctx.drawImage(images[12], xPos, yPos, size, size);
-                break;
-
-            case "assets/Dice-4.png":
-                ctx.drawImage(images[13], xPos, yPos, size, size);
-                break;
-
-            case "assets/Dice-5.png":
-                ctx.drawImage(images[14], xPos, yPos, size, size);
-                break;
-
-            case "assets/Dice-6.png":
-                ctx.drawImage(images[15], xPos, yPos, size, size);
-                break;
-        }
+        
     }
 }
 
@@ -292,170 +405,604 @@ function drawButtons(){
     ctx.fillText("End Turn", textX, textY, 100)
 }
 
-function drawTileTextures(){
+function drawDice(){
 
-    var centerX;
-    var centerY;
-    //var radius = c_HEIGHT/11.5;
-    var radius = 60
+    //new and improved
+    for(i=0; i<diceArr.length; i++){
 
-    for(var i = 0; i < 5; i++){
-        //centerY = ((2 + i) * (c_HEIGHT / 7)) - radius;
+        var xPos = 10 + i * 65;
+        var yPos = 8 * tileRadius;
 
-        //some circle packing magic thats like a 30-60-90 triangle
-        centerY = (c_HEIGHT * 3/7) - Math.sqrt(3)*radius*(2-i);
+        let size = 60
 
-        var times;
-
-        //first and last row
-        if(i === 0 || i === 4){
-            centerX = (islandCenterX) - 3.5*radius
-            times = 3;
-        }
-        //second and second to last row
-        if(i === 1 || i === 3){
-            centerX = (islandCenterX) - 4.5*radius
-            times = 4;
-        }
-        //middle row
-        if(i === 2){
-            centerX = (islandCenterX) - 5.5*radius
-            times = 5;
+        if(initialPlacementsComplete && diceButtonEnabled){
+            size = aState.vertSize * 4
         }
 
-        for(var j = 0; j < times; j++){
+        switch(diceArr[i].getImg()){
+            case "assets/Dice-1.png":
+                ctx.drawImage(images[10], xPos, yPos, size, size);
+                break;
 
-            //draw hexagon
-            var hexAngle = ((2 * Math.PI) / 6)
+            case "assets/Dice-2.png":
+                ctx.drawImage(images[11], xPos, yPos, size, size);
+                break;
 
-            //7/6 makes the hexagons flush 6.9/6 looks nicer anything below leaves a gap
-            var hexRad = radius * 6.5/6
-            
-            let r = tilesArr[i][j].resourceCard;
+            case "assets/Dice-3.png":
+                ctx.drawImage(images[12], xPos, yPos, size, size);
+                break;
 
-            switch(r){
-                case "wood":
-                    tilesArr[i][j].img = images[1];
-                    break;
-                
-                case "brick":
-                    tilesArr[i][j].img = images[2];
-                    break;
+            case "assets/Dice-4.png":
+                ctx.drawImage(images[13], xPos, yPos, size, size);
+                break;
 
-                case "sheep":
-                    tilesArr[i][j].img = images[3];
-                    break;
+            case "assets/Dice-5.png":
+                ctx.drawImage(images[14], xPos, yPos, size, size);
+                break;
 
-                case "wheat":
-                    tilesArr[i][j].img = images[4];
-                    break;
-
-                case "ore":
-                    tilesArr[i][j].img = images[5];
-                    break;
-                
-                default:
-                    tilesArr[i][j].img = images[6];
-                    break;
-            }
-
-            //save state of canvas define a closed path on canvas
-            ctx.save();
-            ctx.beginPath()
-            ctx.moveTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
-            ctx.lineTo(centerX + hexRad * Math.cos(0.5*hexAngle), centerY + hexRad * Math.sin(0.5*hexAngle))
-            ctx.lineTo(centerX + hexRad * Math.cos(1.5*hexAngle), centerY + hexRad * Math.sin(1.5*hexAngle))
-            ctx.lineTo(centerX + hexRad * Math.cos(2.5*hexAngle), centerY + hexRad * Math.sin(2.5*hexAngle))
-            ctx.lineTo(centerX + hexRad * Math.cos(3.5*hexAngle), centerY + hexRad * Math.sin(3.5*hexAngle))
-            ctx.lineTo(centerX + hexRad * Math.cos(4.5*hexAngle), centerY + hexRad * Math.sin(4.5*hexAngle))
-            ctx.lineTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
-            ctx.closePath()
-            ctx.clip();
-            
-
-            let drawX = centerX - (hexRad) - 50 - 50 * Math.sin(randomTable[i][j])
-            let drawY = centerY - (hexRad) - 50 - 50 * Math.sin(randomTable[j][i])
-
-            //draw image(inside of path only)
-            ctx.drawImage(tilesArr[i][j].img, drawX, drawY, 300, 300);
-
-            //remove path and restore canvas to normal
-            ctx.restore();
-
-            centerX += radius * 2 
-            
+            case "assets/Dice-6.png":
+                ctx.drawImage(images[15], xPos, yPos, size, size);
+                break;
         }
-
-    } 
-    
-    //draw rest of tile on top of image
-    drawTiles()
+    }
 }
 
-function drawVertices(){
-    
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = 'black';
-    ctx.fillStyle = "white";
-    ctx.font = "15px Arial"
+function drawHand(){
 
-    //draw all vertices which could be built on 
-    if(!initialPlacementsComplete){
-        for(var i = 0; i < 12; i++){
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 1;
 
-            for(var j = 0; j < verticesArr[i].length; j++){
+    let handPath = new Path2D()
+
+    let x = 0
+    let y = c_HEIGHT - 2 * tileRadius
+    let w = c_WIDTH - ((c_WIDTH/2) + 1.8*tileRadius)
+    let h = 2 * tileRadius
+    let radius = 25
+    let buttonRadius = 10
+
+    let r = x + w;
+    let b = y + h;
+    ctx.beginPath()
+    handPath.moveTo(x, y);
+    handPath.lineTo(r-buttonRadius, y);
+    handPath.quadraticCurveTo(r, y, r, y+buttonRadius);
+    handPath.lineTo(r, y+h-radius);
+    handPath.quadraticCurveTo(r, b + 3, r+radius, b + 3);
+    handPath.lineTo(x, b);
+    handPath.lineTo(x, y);
+    ctx.closePath()
+
+    ctx.lineWidth = 4;
+    // ctx.strokeStyle = "#B0E0E6"
+    ctx.stroke(handPath);
+    ctx.fillStyle = "#fdf6e3"
+    ctx.fill(handPath)
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "black"
+
+    //draw player circle
+    ctx.beginPath();
+    ctx.arc(w/6, c_HEIGHT - 2 * h/3, tileRadius/2, 0, 2 * Math.PI, false);
+    ctx.closePath();
+    ctx.fillStyle = currPlayer.color;
+    ctx.fill()
+
+    //draw user icon on top of player circle
+    ctx.drawImage(images[9], w/6 - tileRadius/1.95, c_HEIGHT - 2 * h/3 - .6 * tileRadius, tileRadius * 1.05, tileRadius)
+
+    ctx.font = "20px Arial"
+    ctx.fillStyle = "black"
+    ctx.fillText("PLAYER_NAME", w/6, c_HEIGHT - h/6, 200)
+
+    cardPaths = [];
+
+    let cardTypes = 0
+    let cardHeight = 0.8 * tileRadius
+    let cardWidth = 5 * cardHeight/7
+    let buffer = (((2*w)/3) - 5 * cardWidth) / 5
+    let boxWidth = 10 * cardWidth + 11 * buffer
+    let cardY = y + 0.1 * tileRadius
+    let cardX = w/3
+
+    //loop through all of current players resources
+    for(let i = 0; i < currPlayer.resources.length; i++){
+
+        //only draw resource types that the player actually has
+        if(currPlayer.resources[i] != 0){
+
+            //define boundaries of resource card
+            let currCard = new Path2D
+
+            ctx.beginPath()
+            currCard.rect(cardX, cardY, cardWidth, cardHeight);
+            ctx.stroke(currCard);
+
+            //get style for resource card
+            switch(i){
                 
-                if(verticesArr[i][j].settlement === null && verticesArr[i][j].dead !== true){
-                    
-                    //set vert color to white by default
-                    ctx.fillStyle = "white";
+                //wood
+                case 0:
 
-                    //set vert color to player color if hovering
-                    if(verticesArr[i][j] == hoveredVert){
-                        ctx.fillStyle = currPlayer.color
-                    }
+                    ctx.fillStyle = "Green"
+                    ctx.fill(currCard)
+
+                    cardPaths.push({path:currCard, type:resourceCard.WOOD});
+
+                    break;
+
+                //brick
+                case 1:
+
+                    ctx.fillStyle = "Firebrick"
+                    ctx.fill(currCard)
+
+                    cardPaths.push({path:currCard, type:resourceCard.BRICK});
+
+                    break;
+
+                //sheep
+                case 2:
+
+                    ctx.fillStyle = "lightgreen"
+                    ctx.fill(currCard)
+
+                    cardPaths.push({path:currCard, type:resourceCard.SHEEP});
+
+                    break;
                     
-                    ctx.strokeStyle = "black";
-                    ctx.beginPath()
-                    ctx.arc(verticesArr[i][j].cx, verticesArr[i][j].cy, aState.vertSize, 0, Math.PI * 2, false)
-                    ctx.fill()
-                    ctx.stroke()
-                    ctx.closePath()
-                    // ctx.fill(verticesArr[i][j].hitbox)
-                    // ctx.stroke(verticesArr[i][j].hitbox)
+                //wheat
+                case 3:
+
+                    ctx.fillStyle = "#ffff99"
+                    ctx.fill(currCard)
+
+                    cardPaths.push({path:currCard, type:resourceCard.WHEAT});
+
+                    break;
+
+                //ore
+                case 4:
+
+                    ctx.fillStyle = "slategrey"
+                    ctx.fill(currCard)
+
+                    cardPaths.push({path:currCard, type:resourceCard.ORE});
+
+                    break;
+
+                default:
+
+            }
+            
+            //draw circle for number of cards
+            ctx.beginPath()
+            ctx.arc(cardX, cardY, tileRadius * 0.15, 0, 2 * Math.PI, false)
+            ctx.stroke()
+            ctx.fillStyle = "white"
+            ctx.fill()
+
+            //draw number to show how many the user has
+            ctx.fillStyle = "black"
+            ctx.textAlign = "center"
+            ctx.font = "12px Arial"
+            ctx.fillText(currPlayer.resources[i], cardX, cardY + 5)
+            
+            cardX += buffer + cardWidth
+            cardTypes++;
+        }
+        //for resources the player doesnt have draw a stroked line
+        else{
+
+            //define boundaries of resource card
+            let currCard = new Path2D
+
+            ctx.beginPath()
+            currCard.rect(cardX, cardY, cardWidth, cardHeight);
+
+            ctx.setLineDash([5,3])
+            ctx.stroke(currCard)
+
+            cardX += buffer + cardWidth
+        }
+        //disables stroked lines
+        ctx.setLineDash([])
+    } 
+
+    //move to next row of cards
+    cardY += tileRadius
+    cardX = w/3
+
+    //loop though all of current players dev cards and draw them
+    for(let i = 0; i < currPlayer.devCards.length; i++){
+        
+        //only draw resource types that the player actually has
+        if(currPlayer.devCards[i] != 0){
+            
+            //define boundaries of resource card
+            let currCard = new Path2D
+
+            ctx.beginPath()
+            currCard.rect(cardX, cardY, cardWidth, cardHeight);
+            ctx.stroke(currCard);
+
+            let printMe = ""
+
+            //get style for resource card
+            switch(i){
+                
+                //knight
+                case 0:
+
+                    ctx.fillStyle = "Grey"
+                    ctx.fill(currCard)
+                    printMe += "K"
+
+                    cardPaths.push({path:currCard, type:devCard.KNIGHT});
+
+                    break;
+
+                //VP
+                case 1:
+
+                    ctx.fillStyle = "grey"
+                    ctx.fill(currCard)
+                    printMe += "VP"
+
+                    cardPaths.push({path:currCard, type:devCard.VP});
+
+                    break;
+
+                //monopoly
+                case 2:
+
+                    ctx.fillStyle = "grey"
+                    ctx.fill(currCard)
+                    printMe += "M"
+
+                    cardPaths.push({path:currCard, type:devCard.MONOPOLY});
+
+                    break;
+                    
+                //road
+                case 3:
+
+                    ctx.fillStyle = "grey"
+                    ctx.fill(currCard)
+                    printMe += "R"
+
+                    cardPaths.push({path:currCard, type:devCard.ROAD});
+
+                    break;
+
+                //plenty
+                case 4:
+
+                    ctx.fillStyle = "grey"
+                    ctx.fill(currCard)
+                    printMe += "P"
+
+                    cardPaths.push({path:currCard, type:devCard.PLENTY});
+
+                    break;
+
+                default:
+            }
+
+            //draw circle for number of cards
+            ctx.beginPath()
+            ctx.arc(cardX, cardY, tileRadius * 0.15, 0, 2 * Math.PI, false)
+            ctx.stroke()
+            ctx.fillStyle = "white"
+            ctx.fill()
+
+            //draw number to show how many the user has
+            ctx.fillStyle = "black"
+            ctx.textAlign = "center"
+            ctx.font = "12px Arial"
+            ctx.fillText(currPlayer.devCards[i], cardX, cardY + 5)
+            
+            //draw dev card type
+            ctx.fillStyle = "black"
+            ctx.textAlign = "center"
+            ctx.font = "15px Arial"
+            ctx.fillText(printMe, cardX + cardWidth/2, cardY + cardHeight/2)
+            
+            cardX += buffer + cardWidth
+            cardTypes++;
+        }
+        
+        //for resources the player doesnt have draw a stroked line
+        else{
+
+            //define boundaries of resource card
+            let currCard = new Path2D
+
+            ctx.beginPath()
+            currCard.rect(cardX, cardY, cardWidth, cardHeight);
+
+            ctx.setLineDash([5,3])
+            ctx.stroke(currCard)
+
+            cardX += buffer + cardWidth
+        }
+        //disables stroked lines
+        ctx.setLineDash([])   
+    }
+}
+
+function drawIsland(){
+
+    var gradient = ctx.createRadialGradient(islandCenterX - 90,c_HEIGHT/2, 150, islandCenterX - 90,c_HEIGHT/2, 200);
+    gradient.addColorStop(0, "#DEB887");
+    gradient.addColorStop(1, 'wheat');
+
+
+    //this color is called burly wood
+    ctx.fillStyle = gradient
+    ctx.lineWidth = 8;
+    ctx.strokeStyle = "wheat"
+    ctx.stroke(islandPath);
+    ctx.fill(islandPath);
+
+}
+
+function drawMonopolyMenu(){
+    //define boundaries of trade menu
+    let menu_x = c_WIDTH - 300
+    let menu_y = c_HEIGHT - 4.5 * tileRadius
+    let w = 290
+    let h = 2 * tileRadius
+
+    let x = menu_x
+    let y = menu_y
+    let radius = 10
+
+    let r = x + w;
+    let b = y + h;
+
+    //draw the trade menu box
+    let monopolyMenuPath = new Path2D
+
+    ctx.beginPath()
+    monopolyMenuPath.moveTo(x+radius, y);
+    monopolyMenuPath.lineTo(r-radius, y);
+    monopolyMenuPath.quadraticCurveTo(r, y, r, y+radius);
+    monopolyMenuPath.lineTo(r, y+h-radius);
+    monopolyMenuPath.quadraticCurveTo(r, b, r-radius, b);
+    monopolyMenuPath.lineTo(x+radius, b);
+    monopolyMenuPath.quadraticCurveTo(x, b, x, b-radius);
+    monopolyMenuPath.lineTo(x, y+radius);
+    monopolyMenuPath.quadraticCurveTo(x, y, x+radius, y);
+    ctx.closePath()
+    ctx.fillStyle = "#d9e2ea"
+    ctx.fill(monopolyMenuPath)
+    ctx.strokeColor = "black"
+    ctx.stroke(monopolyMenuPath)
+
+    //add a message at the top
+    ctx.fillStyle = "black"
+    ctx.fillText("Please select a resource type:", menu_x + w/2, menu_y + 15)
+
+    monopolyMenuCardPaths = [];
+
+    let cardHeight = 0.8 * tileRadius
+    let cardWidth = 5 * cardHeight/7
+    let buffer = (w - 5 * cardWidth) / 5
+    //let boxWidth = 10 * cardWidth + 11 * buffer
+    let cardY = menu_y + (h - cardHeight)/2
+    let cardX = menu_x + buffer/2
+
+    //loop through all of current players resources
+    for(let i = 0; i < bank.length; i++){
+
+        //only draw resource types that the player actually has
+        if(bank[i] != 0){
+
+            //define boundaries of resource card
+            let currCard = new Path2D
+
+            ctx.beginPath()
+            currCard.rect(cardX, cardY, cardWidth, cardHeight);
+            ctx.stroke(currCard);
+
+            //get style for resource card
+            switch(i){
+                
+                //wood
+                case 0:
+
+                    ctx.fillStyle = "Green"
+                    ctx.fill(currCard)
+
+                    monopolyMenuCardPaths.push(currCard);
+
+                    break;
+
+                //brick
+                case 1:
+
+                    ctx.fillStyle = "Firebrick"
+                    ctx.fill(currCard)
+
+                    monopolyMenuCardPaths.push(currCard);
+
+                    break;
+
+                //sheep
+                case 2:
+
+                    ctx.fillStyle = "lightgreen"
+                    ctx.fill(currCard)
+
+                    monopolyMenuCardPaths.push(currCard);
+
+                    break;
+                    
+                //wheat
+                case 3:
+
+                    ctx.fillStyle = "#ffff99"
+                    ctx.fill(currCard)
+
+                    monopolyMenuCardPaths.push(currCard);
+
+                    break;
+
+                //ore
+                case 4:
+
+                    ctx.fillStyle = "slategrey"
+                    ctx.fill(currCard)
+
+                    monopolyMenuCardPaths.push(currCard);
+
+                    break;
+
+                default:
+
+            }
+            
+            cardX += buffer + cardWidth
+        }
+        //for resources the player doesnt have draw a stroked line
+        else{
+
+            //define boundaries of resource card
+            let currCard = new Path2D
+
+            ctx.beginPath()
+            currCard.rect(cardX, cardY, cardWidth, cardHeight);
+
+            ctx.setLineDash([5,3])
+            ctx.stroke(currCard)
+
+            cardX += buffer + cardWidth
+
+            monopolyMenuCardPaths.push(null)
+        }
+        //disables stroked lines
+        ctx.setLineDash([])
+    } 
+}
+
+function drawPorts(){
+
+    for(var i = 0; i < portsArr.length; i++){
+
+        ctx.textAlign = "center"
+        ctx.strokeStyle = "PERU"
+        ctx.setLineDash([5,1])
+        ctx.lineWidth = 8;
+
+        //draw lines to ports
+        ctx.beginPath();
+        ctx.moveTo(portsArr[i].cx, portsArr[i].cy)
+        ctx.lineTo(portsArr[i].vertices[0].cx, portsArr[i].vertices[0].cy)
+        ctx.stroke()
+
+        ctx.beginPath();
+        ctx.moveTo(portsArr[i].cx, portsArr[i].cy)
+        ctx.lineTo(portsArr[i].vertices[1].cx, portsArr[i].vertices[1].cy)
+        ctx.stroke()
+
+        ctx.lineWidth = 3
+        ctx.setLineDash([])
+
+        //draw port itself
+        ctx.beginPath();
+        ctx.arc(portsArr[i].cx, portsArr[i].cy, 20, 0, 2 * Math.PI, false);
+        ctx.lineWidth = 0;
+        ctx.strokeStyle = 'black';
+        ctx.closePath()
+        ctx.stroke();
+        ctx.fillStyle = "white"
+        ctx.fill()
+
+        //draw text on top
+        ctx.fillStyle = "black"
+        ctx.font = "12px Arial"
+        ctx.fillText(portsArr[i].trade, portsArr[i].cx, portsArr[i].cy + 5)
+    }
+}
+
+function drawRoads(){
+
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "black"
+
+
+    for(var i = 0; i < 11; i++){
+
+        for(var j = 0; j < roadsArr[i].length; j++){
+            
+            if(roadsArr[i][j].player != null){
+
+                //change color to color of player who owns it
+                ctx.fillStyle = roadsArr[i][j].player.color;
+                ctx.fill(roadsArr[i][j].hitbox)
+                ctx.stroke(roadsArr[i][j].hitbox)
+
+            }
+            
+        }
+
+    }
+    if(showRoads){
+        let adjRoads = currPlayer.getBuildableRoads();
+
+        //show buildable roads
+        for(let i = 0; i < adjRoads.length; i++){
+            //draw the road
+            if(adjRoads[i].player === null){
+                            
+                ctx.fillStyle = "white";
+
+                if(adjRoads[i] == hoveredRoad){
+                    ctx.fillStyle = currPlayer.color
+                }
+
+                ctx.fill(adjRoads[i].hitbox)
+                ctx.stroke(adjRoads[i].hitbox)
+
+            }
+        }
+    }
     
-                    //for debug
-                    // ctx.fillStyle = "black"
-                    // ctx.fillText(i + "," + j, verticesArr[i][j].cx, verticesArr[i][j].cy + 5)
+}
+
+function drawRobber(){
+    ctx.drawImage(images[0], robberLocation.cx - 55, robberLocation.cy - 20, 40, 40);
+}
+
+function drawSettlements(){
+
+    //loop through all vertices
+    for(var i = 0; i < 12; i++){
+        for(var j = 0; j < verticesArr[i].length; j++){
+            
+            //draw the settlement at vertex if found
+            if(verticesArr[i][j].settlement != null){
+                
+                //change color to color of player who owns it
+                ctx.fillStyle = verticesArr[i][j].settlement.player.color;
+                ctx.fill(verticesArr[i][j].hitbox)
+                ctx.stroke(verticesArr[i][j].hitbox)
+
+                //if the settlement is a city
+                if(verticesArr[i][j].settlement.isCity){
+
+                    let cx = verticesArr[i][j].cx;
+                    let cy = verticesArr[i][j].cy;
+
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, 5, 0, Math.PI * 2, false);
+                    ctx.closePath();
+                    ctx.stroke()
                 }
             }
-    
         }
     }
-
-    //draw only buildable vertices reachable by currPlayer
-    else{
-
-        let verts = currPlayer.getBuildableVertices();
-
-        for(var i = 0; i < verts.length; i++){
-            ctx.fillStyle = "white";
-
-            if(verts[i] == hoveredVert){
-                ctx.fillStyle = currPlayer.color
-            }
-
-            ctx.strokeStyle = "black";
-            ctx.beginPath()
-            ctx.arc(verts[i].cx, verts[i].cy, aState.vertSize, 0, Math.PI * 2, false)
-            ctx.fill()
-            ctx.stroke()
-            ctx.closePath()
-        }
-
-    }
-
-    
 }
 
 function drawTiles(){
@@ -576,261 +1123,111 @@ function drawTiles(){
                     }
                     ctx.fill()
                 }
-                
             }
 
             centerX += tileRadius * 2 
         }
-
     }
-
-    //console.log(tilesArr)
 }
 
-function drawBank(){
+function drawTileTextures(){
 
-    ctx.strokeStyle = "black";
-    ctx.lineWidth = 1;
-    let bankPath = new Path2D()
+    var centerX;
+    var centerY;
+    //var radius = c_HEIGHT/11.5;
+    var radius = 60
 
-    //draw shape for bank to go in
-    let x = c_WIDTH - tileRadius * 6
-    let y = 0
-    let w = tileRadius * 6
-    let h = 3 * tileRadius
-    
-    let radius = 30
-    let r = x + w;
-    let b = y + h;
-    ctx.beginPath()
-    bankPath.moveTo(x, y);
-    bankPath.lineTo(r, y);
-    bankPath.lineTo(r, b);
-    bankPath.lineTo(x + radius, b);
-    bankPath.quadraticCurveTo(x, b, x, b-radius);
-    bankPath.lineTo(x, y);
-    ctx.closePath() 
+    for(var i = 0; i < 5; i++){
+        //centerY = ((2 + i) * (c_HEIGHT / 7)) - radius;
 
-    ctx.lineWidth = 4;
-    // ctx.strokeStyle = "#B0E0E6"
-    ctx.stroke(bankPath);
-    ctx.fillStyle = "#fdf6e3"
-    ctx.fill(bankPath)
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = "black"
+        //some circle packing magic thats like a 30-60-90 triangle
+        centerY = (c_HEIGHT * 3/7) - Math.sqrt(3)*radius*(2-i);
 
-    //draw bank image
-    ctx.drawImage(images[8], x + w/2 - tileRadius/2, 0, tileRadius, tileRadius)
+        var times;
 
-    let cardHeight = 0.8 * tileRadius
-    let cardWidth = 5 * cardHeight/7
-
-    let startX = x + tileRadius/6
-    let cardY = 1.3 * tileRadius
-    
-    //draw numbers for resources
-    for(var i = 0; i < 6; i++){
-        ctx.fillStyle = "black"
-        ctx.font = "15px Arial"
-        if(i<5){
-            ctx.beginPath()
-            ctx.rect(startX + (i * w/6), cardY + (i%2) * 40, cardWidth, cardHeight)
-            ctx.stroke()
-            ctx.fillStyle = colorVals[i]
-            ctx.fill()
-            ctx.fillStyle = "black"
-            //ctx.fillText(bank[i], 160 + ((i%3)*320/4), 40 + Math.floor(i/3) * 40)
-
-            let cardX = startX + (i * w/6)
-            let currCardY = cardY + (i%2) * 40
-
-            //draw circle for number of cards
-            ctx.beginPath()
-            ctx.arc(cardX, currCardY, tileRadius * 0.15, 0, 2 * Math.PI, false)
-            ctx.stroke()
-            ctx.fillStyle = "white"
-            ctx.fill()
-
-            //draw number to show how many the user has
-            ctx.fillStyle = "black"
-            ctx.textAlign = "center"
-            ctx.font = "12px Arial"
-            ctx.fillText(bank[i], cardX, currCardY + 5)
-
-
-
-
-        }else{
-            ctx.beginPath()
-            ctx.rect(startX + (i * w/6), cardY + (i%2) * 40, cardWidth, cardHeight)
-            ctx.stroke()
-            ctx.fillStyle = colorVals[i]
-            ctx.fill()
-            ctx.fillStyle = "black"
-            //ctx.fillText(devCardArray.length, 160 + ((i%3)*320/4), 40 + Math.floor(i/3) * 40)
-
-            let cardX = startX + (i * w/6)
-            let currCardY = cardY + (i%2) * 40
-
-            //draw circle for number of cards
-            ctx.beginPath()
-            ctx.arc(cardX, currCardY, tileRadius * 0.15, 0, 2 * Math.PI, false)
-            ctx.stroke()
-            ctx.fillStyle = "white"
-            ctx.fill()
-
-            //draw number to show how many the user has
-            ctx.fillStyle = "black"
-            ctx.textAlign = "center"
-            ctx.font = "12px Arial"
-            ctx.fillText(devCardArray.length, cardX, currCardY + 5)
+        //first and last row
+        if(i === 0 || i === 4){
+            centerX = (islandCenterX) - 3.5*radius
+            times = 3;
         }
-        
-    }
-}
-
-function drawPorts(){
-
-    for(var i = 0; i < portsArr.length; i++){
-
-        ctx.textAlign = "center"
-        ctx.strokeStyle = "PERU"
-        ctx.setLineDash([5,1])
-        ctx.lineWidth = 8;
-
-        //draw lines to ports
-        ctx.beginPath();
-        ctx.moveTo(portsArr[i].cx, portsArr[i].cy)
-        ctx.lineTo(portsArr[i].vertices[0].cx, portsArr[i].vertices[0].cy)
-        ctx.stroke()
-
-        ctx.beginPath();
-        ctx.moveTo(portsArr[i].cx, portsArr[i].cy)
-        ctx.lineTo(portsArr[i].vertices[1].cx, portsArr[i].vertices[1].cy)
-        ctx.stroke()
-
-        ctx.lineWidth = 3
-        ctx.setLineDash([])
-
-        //draw port itself
-        ctx.beginPath();
-        ctx.arc(portsArr[i].cx, portsArr[i].cy, 20, 0, 2 * Math.PI, false);
-        ctx.lineWidth = 0;
-        ctx.strokeStyle = 'black';
-        ctx.closePath()
-        ctx.stroke();
-        ctx.fillStyle = "white"
-        ctx.fill()
-
-        //draw text on top
-        ctx.fillStyle = "black"
-        ctx.font = "12px Arial"
-        ctx.fillText(portsArr[i].trade, portsArr[i].cx, portsArr[i].cy + 5)
-    }
-}
-
-function drawIsland(){
-
-    var gradient = ctx.createRadialGradient(islandCenterX - 90,c_HEIGHT/2, 150, islandCenterX - 90,c_HEIGHT/2, 200);
-    gradient.addColorStop(0, "#DEB887");
-    gradient.addColorStop(1, 'wheat');
-
-
-    //this color is called burly wood
-    ctx.fillStyle = gradient
-    ctx.lineWidth = 8;
-    ctx.strokeStyle = "wheat"
-    ctx.stroke(islandPath);
-    ctx.fill(islandPath);
-
-}
-
-function drawRoads(){
-
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = "black"
-
-
-    for(var i = 0; i < 11; i++){
-
-        for(var j = 0; j < roadsArr[i].length; j++){
-            
-            if(roadsArr[i][j].player != null){
-
-                //change color to color of player who owns it
-                ctx.fillStyle = roadsArr[i][j].player.color;
-                ctx.fill(roadsArr[i][j].hitbox)
-                ctx.stroke(roadsArr[i][j].hitbox)
-
-            }
-            
+        //second and second to last row
+        if(i === 1 || i === 3){
+            centerX = (islandCenterX) - 4.5*radius
+            times = 4;
+        }
+        //middle row
+        if(i === 2){
+            centerX = (islandCenterX) - 5.5*radius
+            times = 5;
         }
 
-    }
-    if(showRoads){
-        let adjRoads = currPlayer.getBuildableRoads();
+        for(var j = 0; j < times; j++){
 
-        //show buildable roads
-        for(let i = 0; i < adjRoads.length; i++){
-            //draw the road
-            if(adjRoads[i].player === null){
-                            
-                ctx.fillStyle = "white";
+            //draw hexagon
+            var hexAngle = ((2 * Math.PI) / 6)
 
-                if(adjRoads[i] == hoveredRoad){
-                    ctx.fillStyle = currPlayer.color
-                }
-
-                ctx.fill(adjRoads[i].hitbox)
-                ctx.stroke(adjRoads[i].hitbox)
-
-            }
-        }
-    }
-    
-}
-
-function drawSettlements(){
-    
-    // ctx.lineWidth = 3;
-    // ctx.strokeStyle = 'black';
-    // ctx.fillStyle = "white";
-    // ctx.font = "15px Arial"
-
-    for(var i = 0; i < 12; i++){
-
-        for(var j = 0; j < verticesArr[i].length; j++){
+            //7/6 makes the hexagons flush 6.9/6 looks nicer anything below leaves a gap
+            var hexRad = radius * 6.5/6
             
-            //draw the settlement
-            if(verticesArr[i][j].settlement != null){
+            let r = tilesArr[i][j].resourceCard;
+
+            switch(r){
+                case "wood":
+                    tilesArr[i][j].img = images[1];
+                    break;
                 
-                //change color to color of player who owns it
-                ctx.fillStyle = verticesArr[i][j].settlement.player.color;
-                ctx.fill(verticesArr[i][j].hitbox)
-                ctx.stroke(verticesArr[i][j].hitbox)
+                case "brick":
+                    tilesArr[i][j].img = images[2];
+                    break;
 
-                //console.log(verticesArr[i][j])
+                case "sheep":
+                    tilesArr[i][j].img = images[3];
+                    break;
 
-                if(verticesArr[i][j].settlement.isCity){
+                case "wheat":
+                    tilesArr[i][j].img = images[4];
+                    break;
 
-                    let cx = verticesArr[i][j].cx;
-                    let cy = verticesArr[i][j].cy;
-
-                    ctx.beginPath();
-                    ctx.arc(cx, cy, 5, 0, Math.PI * 2, false);
-                    ctx.closePath();
-                    ctx.stroke()
-                    // ctx.fillStyle = "black"
-                    // ctx.fill();
-
-                }
+                case "ore":
+                    tilesArr[i][j].img = images[5];
+                    break;
+                
+                default:
+                    tilesArr[i][j].img = images[6];
+                    break;
             }
 
+            //save state of canvas define a closed path on canvas
+            ctx.save();
+            ctx.beginPath()
+            ctx.moveTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
+            ctx.lineTo(centerX + hexRad * Math.cos(0.5*hexAngle), centerY + hexRad * Math.sin(0.5*hexAngle))
+            ctx.lineTo(centerX + hexRad * Math.cos(1.5*hexAngle), centerY + hexRad * Math.sin(1.5*hexAngle))
+            ctx.lineTo(centerX + hexRad * Math.cos(2.5*hexAngle), centerY + hexRad * Math.sin(2.5*hexAngle))
+            ctx.lineTo(centerX + hexRad * Math.cos(3.5*hexAngle), centerY + hexRad * Math.sin(3.5*hexAngle))
+            ctx.lineTo(centerX + hexRad * Math.cos(4.5*hexAngle), centerY + hexRad * Math.sin(4.5*hexAngle))
+            ctx.lineTo(centerX + hexRad * Math.cos(5.5*hexAngle), centerY + hexRad * Math.sin(5.5*hexAngle))
+            ctx.closePath()
+            ctx.clip();
+            
 
+            let drawX = centerX - (hexRad) - 50 - 50 * Math.sin(randomTable[i][j])
+            let drawY = centerY - (hexRad) - 50 - 50 * Math.sin(randomTable[j][i])
+
+            //draw image(inside of path only)
+            ctx.drawImage(tilesArr[i][j].img, drawX, drawY, 300, 300);
+
+            //remove path and restore canvas to normal
+            ctx.restore();
+
+            centerX += radius * 2 
             
         }
 
-    }
+    } 
+    
+    //draw rest of tile on top of image
+    drawTiles()
 }
 
 //TODO write me
@@ -838,23 +1235,6 @@ function drawTimer(){
 
 }
 
-function drawTurnNum(){
-
-    ctx.fillStyle = "#fdf6e3"
-    ctx.rect(0, 400, 100, 65)
-    ctx.fill()
-
-    ctx.textAlign = "left"
-    ctx.font = "20px Arial"
-    ctx.fillStyle = "black"
-    ctx.fillText("Turn: " + turnNumber, 12, 450)
-}
-
-function drawRobber(){
-    ctx.drawImage(images[0], robberLocation.cx - 55, robberLocation.cy - 20, 40, 40);
-}
-
-//draws a trade menu in lower right corner of canvas
 function drawTradeMenu(){
 
     //define boundaries of trade menu
@@ -928,331 +1308,82 @@ function drawTradeMenu(){
 
 }
 
-function drawHand(){
+function drawTurnNum(){
 
-    ctx.strokeStyle = "black";
-    ctx.lineWidth = 1;
-
-    let handPath = new Path2D()
-
-    let x = 0
-    let y = c_HEIGHT - 2 * tileRadius
-    let w = c_WIDTH - ((c_WIDTH/2) + 1.8*tileRadius)
-    let h = 2 * tileRadius
-    let radius = 25
-    let buttonRadius = 10
-
-    let r = x + w;
-    let b = y + h;
-    ctx.beginPath()
-    handPath.moveTo(x, y);
-    handPath.lineTo(r-buttonRadius, y);
-    handPath.quadraticCurveTo(r, y, r, y+buttonRadius);
-    handPath.lineTo(r, y+h-radius);
-    handPath.quadraticCurveTo(r, b + 3, r+radius, b + 3);
-    handPath.lineTo(x, b);
-    handPath.lineTo(x, y);
-    ctx.closePath()
-
-    ctx.lineWidth = 4;
-    // ctx.strokeStyle = "#B0E0E6"
-    ctx.stroke(handPath);
     ctx.fillStyle = "#fdf6e3"
-    ctx.fill(handPath)
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = "black"
-
-    //draw player circle
-    ctx.beginPath();
-    ctx.arc(w/6, c_HEIGHT - 2 * h/3, tileRadius/2, 0, 2 * Math.PI, false);
-    ctx.closePath();
-    ctx.fillStyle = currPlayer.color;
+    ctx.rect(0, 400, 100, 65)
     ctx.fill()
 
-    //draw user icon on top of player circle
-    ctx.drawImage(images[9], w/6 - tileRadius/1.95, c_HEIGHT - 2 * h/3 - .6 * tileRadius, tileRadius * 1.05, tileRadius)
-
+    ctx.textAlign = "left"
     ctx.font = "20px Arial"
     ctx.fillStyle = "black"
-    ctx.fillText("PLAYER_NAME", w/6, c_HEIGHT - h/6, 200)
-
-    cardPaths = [];
-
-    let cardTypes = 0
-    let cardHeight = 0.8 * tileRadius
-    let cardWidth = 5 * cardHeight/7
-    let buffer = (((2*w)/3) - 5 * cardWidth) / 5
-    let boxWidth = 10 * cardWidth + 11 * buffer
-    let cardY = y + 0.1 * tileRadius
-    let cardX = w/3
-
-
-    //loop through all of current players resources
-    for(let i = 0; i < currPlayer.resources.length; i++){
-
-        //only draw resource types that the player actually has
-        if(currPlayer.resources[i] != 0){
-
-            //define boundaries of resource card
-            let currCard = new Path2D
-
-            ctx.beginPath()
-            currCard.rect(cardX, cardY, cardWidth, cardHeight);
-            ctx.stroke(currCard);
-
-            //get style for resource card
-            switch(i){
-                
-                //wood
-                case 0:
-
-                    ctx.fillStyle = "Green"
-                    ctx.fill(currCard)
-
-                    cardPaths.push({path:currCard, type:resourceCard.WOOD});
-
-                    break;
-
-                //brick
-                case 1:
-
-                    ctx.fillStyle = "Firebrick"
-                    ctx.fill(currCard)
-
-                    cardPaths.push({path:currCard, type:resourceCard.BRICK});
-
-                    break;
-
-                //sheep
-                case 2:
-
-                    ctx.fillStyle = "lightgreen"
-                    ctx.fill(currCard)
-
-                    cardPaths.push({path:currCard, type:resourceCard.SHEEP});
-
-                    break;
-                    
-                //wheat
-                case 3:
-
-                    ctx.fillStyle = "#ffff99"
-                    ctx.fill(currCard)
-
-                    cardPaths.push({path:currCard, type:resourceCard.WHEAT});
-
-                    break;
-
-                //ore
-                case 4:
-
-                    ctx.fillStyle = "slategrey"
-                    ctx.fill(currCard)
-
-                    cardPaths.push({path:currCard, type:resourceCard.ORE});
-
-                    break;
-
-                default:
-
-            }
-            
-
-            //draw circle for number of cards
-            ctx.beginPath()
-            ctx.arc(cardX, cardY, tileRadius * 0.15, 0, 2 * Math.PI, false)
-            ctx.stroke()
-            ctx.fillStyle = "white"
-            ctx.fill()
-
-            //draw number to show how many the user has
-            ctx.fillStyle = "black"
-            ctx.textAlign = "center"
-            ctx.font = "12px Arial"
-            ctx.fillText(currPlayer.resources[i], cardX, cardY + 5)
-            
-            cardX += buffer + cardWidth
-            cardTypes++;
-        }
-        //for resources the player doesnt have draw a stroked line
-        else{
-
-            //define boundaries of resource card
-            let currCard = new Path2D
-
-            ctx.beginPath()
-            currCard.rect(cardX, cardY, cardWidth, cardHeight);
-
-            ctx.setLineDash([5,3])
-            ctx.stroke(currCard)
-
-            cardX += buffer + cardWidth
-        }
-        //disables stroked lines
-        ctx.setLineDash([])
-    } 
-
-
-    //move to next row of cards
-    cardY += tileRadius
-    cardX = w/3
-
-
-    //loop though all of current players dev cards and draw them
-    for(let i = 0; i < currPlayer.devCards.length; i++){
-        
-        //only draw resource types that the player actually has
-        if(currPlayer.devCards[i] != 0){
-            
-            //define boundaries of resource card
-            let currCard = new Path2D
-
-            ctx.beginPath()
-            currCard.rect(cardX, cardY, cardWidth, cardHeight);
-            ctx.stroke(currCard);
-
-            let printMe = ""
-
-            //get style for resource card
-            switch(i){
-                
-                //knight
-                case 0:
-
-                    ctx.fillStyle = "Grey"
-                    ctx.fill(currCard)
-                    printMe += "K"
-
-                    cardPaths.push({path:currCard, type:devCard.KNIGHT});
-
-                    break;
-
-                //VP
-                case 1:
-
-                    ctx.fillStyle = "grey"
-                    ctx.fill(currCard)
-                    printMe += "VP"
-
-                    cardPaths.push({path:currCard, type:devCard.VP});
-
-                    break;
-
-                //monopoly
-                case 2:
-
-                    ctx.fillStyle = "grey"
-                    ctx.fill(currCard)
-                    printMe += "M"
-
-                    cardPaths.push({path:currCard, type:devCard.MONOPOLY});
-
-                    break;
-                    
-                //road
-                case 3:
-
-                    ctx.fillStyle = "grey"
-                    ctx.fill(currCard)
-                    printMe += "R"
-
-                    cardPaths.push({path:currCard, type:devCard.ROAD});
-
-                    break;
-
-                //plenty
-                case 4:
-
-                    ctx.fillStyle = "grey"
-                    ctx.fill(currCard)
-                    printMe += "P"
-
-                    cardPaths.push({path:currCard, type:devCard.PLENTY});
-
-                    break;
-
-                default:
-
-            }
-
-
-            //draw circle for number of cards
-            ctx.beginPath()
-            ctx.arc(cardX, cardY, tileRadius * 0.15, 0, 2 * Math.PI, false)
-            ctx.stroke()
-            ctx.fillStyle = "white"
-            ctx.fill()
-
-            //draw number to show how many the user has
-            ctx.fillStyle = "black"
-            ctx.textAlign = "center"
-            ctx.font = "12px Arial"
-            ctx.fillText(currPlayer.devCards[i], cardX, cardY + 5)
-            
-            //draw dev card type
-            ctx.fillStyle = "black"
-            ctx.textAlign = "center"
-            ctx.font = "15px Arial"
-            ctx.fillText(printMe, cardX + cardWidth/2, cardY + cardHeight/2)
-            
-            cardX += buffer + cardWidth
-            cardTypes++;
-        }
-        
-        //for resources the player doesnt have draw a stroked line
-        else{
-
-            //define boundaries of resource card
-            let currCard = new Path2D
-
-            ctx.beginPath()
-            currCard.rect(cardX, cardY, cardWidth, cardHeight);
-
-            ctx.setLineDash([5,3])
-            ctx.stroke(currCard)
-
-            cardX += buffer + cardWidth
-        }
-        //disables stroked lines
-        ctx.setLineDash([])
-        
-    }
-
-
-
-
-
+    ctx.fillText("Turn: " + turnNumber, 12, 450)
 }
 
-//TODO find out what this method is here for
-function drawVisited(){
+function drawVertices(){
+    
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = 'black';
+    ctx.fillStyle = "white";
+    ctx.font = "15px Arial"
 
-    //roads first
-    for(var i = 0; i < 11; i++){
+    //draw all vertices which could be built on 
+    if(!initialPlacementsComplete){
+        for(var i = 0; i < 12; i++){
 
-        for(var j = 0; j < roadsArr[i].length; j++){
-            
-            if(currPlayer.visited.includes(roadsArr[i][j])){
+            for(var j = 0; j < verticesArr[i].length; j++){
+                
+                if(verticesArr[i][j].settlement === null && verticesArr[i][j].dead !== true){
+                    
+                    //set vert color to white by default
+                    ctx.fillStyle = "white";
 
-                //change color to color of player who owns it
-                ctx.fillStyle = "black";
-                ctx.fill(roadsArr[i][j].hitbox)
-                ctx.stroke(roadsArr[i][j].hitbox)
-
-            }   
-        }
-    }
-
-    //vertices next
-    for(let i = 0; i < 12; i++){
-        for(let j = 0; j < verticesArr[i].length; j++){
-
-            if(currPlayer.visited.includes(verticesArr[i][j])){
-                ctx.fillStyle = "black"
-                ctx.fill(verticesArr[i][j].hitbox)
+                    //set vert color to player color if hovering
+                    if(verticesArr[i][j] == hoveredVert){
+                        ctx.fillStyle = currPlayer.color
+                    }
+                    
+                    ctx.strokeStyle = "black";
+                    ctx.beginPath()
+                    ctx.arc(verticesArr[i][j].cx, verticesArr[i][j].cy, aState.vertSize, 0, Math.PI * 2, false)
+                    ctx.fill()
+                    ctx.stroke()
+                    ctx.closePath()
+                    // ctx.fill(verticesArr[i][j].hitbox)
+                    // ctx.stroke(verticesArr[i][j].hitbox)
+    
+                    //for debug
+                    // ctx.fillStyle = "black"
+                    // ctx.fillText(i + "," + j, verticesArr[i][j].cx, verticesArr[i][j].cy + 5)
+                }
             }
+    
         }
     }
+
+    //draw only buildable vertices reachable by currPlayer
+    else{
+
+        let verts = currPlayer.getBuildableVertices();
+
+        for(var i = 0; i < verts.length; i++){
+            ctx.fillStyle = "white";
+
+            if(verts[i] == hoveredVert){
+                ctx.fillStyle = currPlayer.color
+            }
+
+            ctx.strokeStyle = "black";
+            ctx.beginPath()
+            ctx.arc(verts[i].cx, verts[i].cy, aState.vertSize, 0, Math.PI * 2, false)
+            ctx.fill()
+            ctx.stroke()
+            ctx.closePath()
+        }
+
+    }
+
+    
 }
 
 function drawYOPMenu(){
@@ -1303,7 +1434,6 @@ function drawYOPMenu(){
     let cardY = menu_y + (h - 2 * cardHeight)/3
     let cardX = menu_x + buffer/2
 
-
     //loop through all of banks resources
     for(let i = 0; i < bank.length; i++){
 
@@ -1326,7 +1456,6 @@ function drawYOPMenu(){
             
             ctx.stroke(currCard);
             
-
             //get style for resource card
             switch(i){
                 
@@ -1383,7 +1512,6 @@ function drawYOPMenu(){
                 default:
 
             }
-            
             cardX += buffer + cardWidth
         }
         //for resources the player doesnt have draw a stroked line
@@ -1481,9 +1609,7 @@ function drawYOPMenu(){
                     yopMenuCardPaths.push(currCard);
 
                     break;
-
                 default:
-
             }
             
             cardX += buffer + cardWidth
@@ -1507,210 +1633,46 @@ function drawYOPMenu(){
         //disables stroked lines
         ctx.setLineDash([])
     } 
-
 }
 
-function drawMonopolyMenu(){
-    //define boundaries of trade menu
-    let menu_x = c_WIDTH - 300
-    let menu_y = c_HEIGHT - 4.5 * tileRadius
-    let w = 290
-    let h = 2 * tileRadius
-
-    let x = menu_x
-    let y = menu_y
-    let radius = 10
-
-    let r = x + w;
-    let b = y + h;
-
-    //draw the trade menu box
-    let monopolyMenuPath = new Path2D
-
-    ctx.beginPath()
-    monopolyMenuPath.moveTo(x+radius, y);
-    monopolyMenuPath.lineTo(r-radius, y);
-    monopolyMenuPath.quadraticCurveTo(r, y, r, y+radius);
-    monopolyMenuPath.lineTo(r, y+h-radius);
-    monopolyMenuPath.quadraticCurveTo(r, b, r-radius, b);
-    monopolyMenuPath.lineTo(x+radius, b);
-    monopolyMenuPath.quadraticCurveTo(x, b, x, b-radius);
-    monopolyMenuPath.lineTo(x, y+radius);
-    monopolyMenuPath.quadraticCurveTo(x, y, x+radius, y);
-    ctx.closePath()
-    ctx.fillStyle = "#d9e2ea"
-    ctx.fill(monopolyMenuPath)
-    ctx.strokeColor = "black"
-    ctx.stroke(monopolyMenuPath)
-
-    //add a message at the top
-    ctx.fillStyle = "black"
-    ctx.fillText("Please select a resource type:", menu_x + w/2, menu_y + 15)
-
-    monopolyMenuCardPaths = [];
-
-    let cardHeight = 0.8 * tileRadius
-    let cardWidth = 5 * cardHeight/7
-    let buffer = (w - 5 * cardWidth) / 5
-    //let boxWidth = 10 * cardWidth + 11 * buffer
-    let cardY = menu_y + (h - cardHeight)/2
-    let cardX = menu_x + buffer/2
 
 
-    //loop through all of current players resources
-    for(let i = 0; i < bank.length; i++){
 
-        //only draw resource types that the player actually has
-        if(bank[i] != 0){
 
-            //define boundaries of resource card
-            let currCard = new Path2D
+//TODO find out what this method is here for
+function drawVisited(){
 
-            ctx.beginPath()
-            currCard.rect(cardX, cardY, cardWidth, cardHeight);
-            ctx.stroke(currCard);
+    //roads first
+    for(var i = 0; i < 11; i++){
 
-            //get style for resource card
-            switch(i){
-                
-                //wood
-                case 0:
-
-                    ctx.fillStyle = "Green"
-                    ctx.fill(currCard)
-
-                    monopolyMenuCardPaths.push(currCard);
-
-                    break;
-
-                //brick
-                case 1:
-
-                    ctx.fillStyle = "Firebrick"
-                    ctx.fill(currCard)
-
-                    monopolyMenuCardPaths.push(currCard);
-
-                    break;
-
-                //sheep
-                case 2:
-
-                    ctx.fillStyle = "lightgreen"
-                    ctx.fill(currCard)
-
-                    monopolyMenuCardPaths.push(currCard);
-
-                    break;
-                    
-                //wheat
-                case 3:
-
-                    ctx.fillStyle = "#ffff99"
-                    ctx.fill(currCard)
-
-                    monopolyMenuCardPaths.push(currCard);
-
-                    break;
-
-                //ore
-                case 4:
-
-                    ctx.fillStyle = "slategrey"
-                    ctx.fill(currCard)
-
-                    monopolyMenuCardPaths.push(currCard);
-
-                    break;
-
-                default:
-
-            }
+        for(var j = 0; j < roadsArr[i].length; j++){
             
-            cardX += buffer + cardWidth
+            if(currPlayer.visited.includes(roadsArr[i][j])){
+
+                //change color to color of player who owns it
+                ctx.fillStyle = "black";
+                ctx.fill(roadsArr[i][j].hitbox)
+                ctx.stroke(roadsArr[i][j].hitbox)
+
+            }   
         }
-        //for resources the player doesnt have draw a stroked line
-        else{
-
-            //define boundaries of resource card
-            let currCard = new Path2D
-
-            ctx.beginPath()
-            currCard.rect(cardX, cardY, cardWidth, cardHeight);
-
-            ctx.setLineDash([5,3])
-            ctx.stroke(currCard)
-
-            cardX += buffer + cardWidth
-
-            monopolyMenuCardPaths.push(null)
-        }
-        //disables stroked lines
-        ctx.setLineDash([])
-    } 
-}
-
-function drawBackgroundAnimated(){
-
-    ctx.strokeStyle = "#167bc2"//"#128CD2"
-
-    //defines distance that coordinates travel from their original locations
-    let movement = 6
-
-    let drawX = dotsArray[0][0][0] - movement * Math.sin(aState.slowAngle + randomTable[0][0])
-    let drawY = dotsArray[0][0][1] - movement * Math.sin(aState.slowAngle + randomTable[0][0])
-
-    for(let i = 0; i < dotsArray.length; i++){
-
-        for(let j = 0; j < dotsArray[i].length; j++){
-
-            // important note only downwards pointing triangales are actually filled in as paths
-
-            let randomColor = '#eee8'+ Math.floor(randomTable[i%10][j%10] * 56 + 200).toString(16);
-            //let randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
-            ctx.fillStyle = "#268bd2"//randomColor
-            ctx.lineWidth = 2;
-
-            let drawX = dotsArray[i][j][0] - movement * Math.sin(aState.slowAngle + randomTable[i][j])
-            let drawY = dotsArray[i][j][1] - movement * Math.sin(aState.slowAngle + randomTable[i][j])
-
-            dotsArray[i][j][2] = drawX
-            dotsArray[i][j][3] = drawY
-
-            // ctx.beginPath()
-            // ctx.arc(drawX, drawY, 5, 0, 2 * Math.PI, false)
-            // ctx.fill()
-
-            // if(     (i < dotsArray.length - 1) && (j < dotsArray[i].length - 1)     ){
-            if(i < dotsArray.length - 1 && i%2 != 0 && j < dotsArray[i].length - 1 && j > 0){
-
-                ctx.beginPath()
-                ctx.moveTo(drawX, drawY)
-                ctx.lineTo(dotsArray[i+1][j][2], dotsArray[i+1][j][3])
-                ctx.lineTo(dotsArray[i][j-1][2], dotsArray[i][j-1][3])
-                ctx.lineTo(dotsArray[i][j][2], dotsArray[i][j][3])
-                ctx.closePath()
-                ctx.fill()
-                ctx.stroke()
-            }
-
-            else if(i < dotsArray.length - 1 && i%2 == 0 && j < dotsArray[i].length && j > 0){
-
-                ctx.beginPath()
-                ctx.moveTo(drawX, drawY)
-                ctx.lineTo(dotsArray[i+1][j-1][2], dotsArray[i+1][j-1][3])
-                ctx.lineTo(dotsArray[i][j-1][2], dotsArray[i][j-1][3])
-                ctx.lineTo(dotsArray[i][j][2], dotsArray[i][j][3])
-                ctx.closePath()
-                ctx.fill()
-                ctx.stroke()
-            }
-            
-        }
-        
     }
 
+    //vertices next
+    for(let i = 0; i < 12; i++){
+        for(let j = 0; j < verticesArr[i].length; j++){
+
+            if(currPlayer.visited.includes(verticesArr[i][j])){
+                ctx.fillStyle = "black"
+                ctx.fill(verticesArr[i][j].hitbox)
+            }
+        }
+    }
 }
+
+
+
+
 
 //this one is really important
 function drawCanvas(){
@@ -1799,4 +1761,4 @@ function drawFrame(){
     drawCanvas()
 }
 
-setInterval(drawFrame, 120)
+setInterval(drawFrame, 100)

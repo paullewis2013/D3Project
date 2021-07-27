@@ -740,8 +740,6 @@ function generatePorts(){
 
 }
 
-
-
 //--------------------------------------------------
 //functions for game events
 //--------------------------------------------------
@@ -1135,7 +1133,7 @@ function graphicButton(){
     }
 }
 
-
+//TODO does this method do anything useful?
 function quickStart(){
     quickStarting = true
 }
@@ -1151,15 +1149,12 @@ function initRandomTable(){
             randomTable[i].push(Math.random() * 2 * Math.PI)
         }
     }
-
 }
 
 
 //--------------------------------------------------
 //End of button controls
 //--------------------------------------------------
-
-
 
 //where does this belong??
 //sums up dot values for each resource by checking all tiles
@@ -1178,8 +1173,6 @@ function calcProduction(){
             }else if(tilesArr[i][j].resourceCard === "ore"){
                 productionCapacity[4] += (6 - Math.abs(7 - tilesArr[i][j].number))
             }
-
         }
     }
 }
-

@@ -14,11 +14,11 @@ function initBackgroundDots(){
     for(let i = 0; i < 45; i++){
 
         //add a new array to populate
-        dotsArray.push([])
+        c_State.dotsArray.push([])
 
         //push custom x y coordinate structure into array
         for(let j = 0; j < 45; j++){
-            dotsArray[i].push([x, y, 0, 0])
+            c_State.dotsArray[i].push([x, y, 0, 0])
             x += c_WIDTH/35
         }
 
@@ -39,15 +39,15 @@ function initBackgroundDots(){
 function initButtons(){
 
     //x y width height and curve radius for rectangle path
-    let x = (c_WIDTH/2) - 1.5*tileRadius
-    let y = c_HEIGHT - tileRadius * 1.8
+    let x = (c_WIDTH/2) - 1.5*c_State.tileRadius
+    let y = c_HEIGHT - c_State.tileRadius * 1.8
     let w = (c_WIDTH - x) / 7
-    let h = tileRadius * 1.5
+    let h = c_State.tileRadius * 1.5
     let radius = 10
 
-    buttonWidth = w * 7/6
+    c_State.buttonWidth = w * 7/6
 
-    tradeButtonPath = new Path2D();
+    c_State.tradeButtonPath = new Path2D();
 
     x += (w * 14/13) - w
 
@@ -55,18 +55,18 @@ function initButtons(){
     let r = x + w;
     let b = y + h;
     ctx.beginPath()
-    tradeButtonPath.moveTo(x+radius, y);
-    tradeButtonPath.lineTo(r-radius, y);
-    tradeButtonPath.quadraticCurveTo(r, y, r, y+radius);
-    tradeButtonPath.lineTo(r, y+h-radius);
-    tradeButtonPath.quadraticCurveTo(r, b, r-radius, b);
-    tradeButtonPath.lineTo(x+radius, b);
-    tradeButtonPath.quadraticCurveTo(x, b, x, b-radius);
-    tradeButtonPath.lineTo(x, y+radius);
-    tradeButtonPath.quadraticCurveTo(x, y, x+radius, y);
+    c_State.tradeButtonPath.moveTo(x+radius, y);
+    c_State.tradeButtonPath.lineTo(r-radius, y);
+    c_State.tradeButtonPath.quadraticCurveTo(r, y, r, y+radius);
+    c_State.tradeButtonPath.lineTo(r, y+h-radius);
+    c_State.tradeButtonPath.quadraticCurveTo(r, b, r-radius, b);
+    c_State.tradeButtonPath.lineTo(x+radius, b);
+    c_State.tradeButtonPath.quadraticCurveTo(x, b, x, b-radius);
+    c_State.tradeButtonPath.lineTo(x, y+radius);
+    c_State.tradeButtonPath.quadraticCurveTo(x, y, x+radius, y);
     ctx.closePath()
 
-    devButtonPath = new Path2D();
+    c_State.devButtonPath = new Path2D();
 
     //update y for new button
     x += w * 7/6
@@ -74,18 +74,18 @@ function initButtons(){
     r = x + w;
     b = y + h;
     ctx.beginPath()
-    devButtonPath.moveTo(x+radius, y);
-    devButtonPath.lineTo(r-radius, y);
-    devButtonPath.quadraticCurveTo(r, y, r, y+radius);
-    devButtonPath.lineTo(r, y+h-radius);
-    devButtonPath.quadraticCurveTo(r, b, r-radius, b);
-    devButtonPath.lineTo(x+radius, b);
-    devButtonPath.quadraticCurveTo(x, b, x, b-radius);
-    devButtonPath.lineTo(x, y+radius);
-    devButtonPath.quadraticCurveTo(x, y, x+radius, y);
+    c_State.devButtonPath.moveTo(x+radius, y);
+    c_State.devButtonPath.lineTo(r-radius, y);
+    c_State.devButtonPath.quadraticCurveTo(r, y, r, y+radius);
+    c_State.devButtonPath.lineTo(r, y+h-radius);
+    c_State.devButtonPath.quadraticCurveTo(r, b, r-radius, b);
+    c_State.devButtonPath.lineTo(x+radius, b);
+    c_State.devButtonPath.quadraticCurveTo(x, b, x, b-radius);
+    c_State.devButtonPath.lineTo(x, y+radius);
+    c_State.devButtonPath.quadraticCurveTo(x, y, x+radius, y);
     ctx.closePath()
 
-    roadButtonPath = new Path2D();
+    c_State.roadButtonPath = new Path2D();
 
     //update y for new button
     x += w * 7/6
@@ -93,56 +93,18 @@ function initButtons(){
     r = x + w;
     b = y + h;
     ctx.beginPath()
-    roadButtonPath.moveTo(x+radius, y);
-    roadButtonPath.lineTo(r-radius, y);
-    roadButtonPath.quadraticCurveTo(r, y, r, y+radius);
-    roadButtonPath.lineTo(r, y+h-radius);
-    roadButtonPath.quadraticCurveTo(r, b, r-radius, b);
-    roadButtonPath.lineTo(x+radius, b);
-    roadButtonPath.quadraticCurveTo(x, b, x, b-radius);
-    roadButtonPath.lineTo(x, y+radius);
-    roadButtonPath.quadraticCurveTo(x, y, x+radius, y);
-    ctx.closePath()
-    
-    settlementButtonPath = new Path2D();
-
-    //update y for new button
-    x += w * 7/6
-
-    r = x + w;
-    b = y + h;
-    ctx.beginPath()
-    settlementButtonPath.moveTo(x+radius, y);
-    settlementButtonPath.lineTo(r-radius, y);
-    settlementButtonPath.quadraticCurveTo(r, y, r, y+radius);
-    settlementButtonPath.lineTo(r, y+h-radius);
-    settlementButtonPath.quadraticCurveTo(r, b, r-radius, b);
-    settlementButtonPath.lineTo(x+radius, b);
-    settlementButtonPath.quadraticCurveTo(x, b, x, b-radius);
-    settlementButtonPath.lineTo(x, y+radius);
-    settlementButtonPath.quadraticCurveTo(x, y, x+radius, y);
-    ctx.closePath()
-
-    cityButtonPath = new Path2D();
-
-    //update y for new button
-    x += w * 7/6
-
-    r = x + w;
-    b = y + h;
-    ctx.beginPath()
-    cityButtonPath.moveTo(x+radius, y);
-    cityButtonPath.lineTo(r-radius, y);
-    cityButtonPath.quadraticCurveTo(r, y, r, y+radius);
-    cityButtonPath.lineTo(r, y+h-radius);
-    cityButtonPath.quadraticCurveTo(r, b, r-radius, b);
-    cityButtonPath.lineTo(x+radius, b);
-    cityButtonPath.quadraticCurveTo(x, b, x, b-radius);
-    cityButtonPath.lineTo(x, y+radius);
-    cityButtonPath.quadraticCurveTo(x, y, x+radius, y);
+    c_State.roadButtonPath.moveTo(x+radius, y);
+    c_State.roadButtonPath.lineTo(r-radius, y);
+    c_State.roadButtonPath.quadraticCurveTo(r, y, r, y+radius);
+    c_State.roadButtonPath.lineTo(r, y+h-radius);
+    c_State.roadButtonPath.quadraticCurveTo(r, b, r-radius, b);
+    c_State.roadButtonPath.lineTo(x+radius, b);
+    c_State.roadButtonPath.quadraticCurveTo(x, b, x, b-radius);
+    c_State.roadButtonPath.lineTo(x, y+radius);
+    c_State.roadButtonPath.quadraticCurveTo(x, y, x+radius, y);
     ctx.closePath()
     
-    turnButtonPath = new Path2D();
+    c_State.settlementButtonPath = new Path2D();
 
     //update y for new button
     x += w * 7/6
@@ -150,21 +112,59 @@ function initButtons(){
     r = x + w;
     b = y + h;
     ctx.beginPath()
-    turnButtonPath.moveTo(x+radius, y);
-    turnButtonPath.lineTo(r-radius, y);
-    turnButtonPath.quadraticCurveTo(r, y, r, y+radius);
-    turnButtonPath.lineTo(r, y+h-radius);
-    turnButtonPath.quadraticCurveTo(r, b, r-radius, b);
-    turnButtonPath.lineTo(x+radius, b);
-    turnButtonPath.quadraticCurveTo(x, b, x, b-radius);
-    turnButtonPath.lineTo(x, y+radius);
-    turnButtonPath.quadraticCurveTo(x, y, x+radius, y);
+    c_State.settlementButtonPath.moveTo(x+radius, y);
+    c_State.settlementButtonPath.lineTo(r-radius, y);
+    c_State.settlementButtonPath.quadraticCurveTo(r, y, r, y+radius);
+    c_State.settlementButtonPath.lineTo(r, y+h-radius);
+    c_State.settlementButtonPath.quadraticCurveTo(r, b, r-radius, b);
+    c_State.settlementButtonPath.lineTo(x+radius, b);
+    c_State.settlementButtonPath.quadraticCurveTo(x, b, x, b-radius);
+    c_State.settlementButtonPath.lineTo(x, y+radius);
+    c_State.settlementButtonPath.quadraticCurveTo(x, y, x+radius, y);
+    ctx.closePath()
+
+    c_State.cityButtonPath = new Path2D();
+
+    //update y for new button
+    x += w * 7/6
+
+    r = x + w;
+    b = y + h;
+    ctx.beginPath()
+    c_State.cityButtonPath.moveTo(x+radius, y);
+    c_State.cityButtonPath.lineTo(r-radius, y);
+    c_State.cityButtonPath.quadraticCurveTo(r, y, r, y+radius);
+    c_State.cityButtonPath.lineTo(r, y+h-radius);
+    c_State.cityButtonPath.quadraticCurveTo(r, b, r-radius, b);
+    c_State.cityButtonPath.lineTo(x+radius, b);
+    c_State.cityButtonPath.quadraticCurveTo(x, b, x, b-radius);
+    c_State.cityButtonPath.lineTo(x, y+radius);
+    c_State.cityButtonPath.quadraticCurveTo(x, y, x+radius, y);
+    ctx.closePath()
+    
+    c_State.turnButtonPath = new Path2D();
+
+    //update y for new button
+    x += w * 7/6
+
+    r = x + w;
+    b = y + h;
+    ctx.beginPath()
+    c_State.turnButtonPath.moveTo(x+radius, y);
+    c_State.turnButtonPath.lineTo(r-radius, y);
+    c_State.turnButtonPath.quadraticCurveTo(r, y, r, y+radius);
+    c_State.turnButtonPath.lineTo(r, y+h-radius);
+    c_State.turnButtonPath.quadraticCurveTo(r, b, r-radius, b);
+    c_State.turnButtonPath.lineTo(x+radius, b);
+    c_State.turnButtonPath.quadraticCurveTo(x, b, x, b-radius);
+    c_State.turnButtonPath.lineTo(x, y+radius);
+    c_State.turnButtonPath.quadraticCurveTo(x, y, x+radius, y);
     ctx.closePath()
 }
 
 function initDicePath(){
     
-    dicePath = new Path2D();
+    c_State.dicePath = new Path2D();
     
     let lX = 55
     let rX = 175
@@ -173,52 +173,52 @@ function initDicePath(){
     let bY = tY + 65
 
     ctx.beginPath();
-    dicePath.moveTo(lX, tY)
-    dicePath.lineTo(lX, bY)
-    dicePath.lineTo(rX, bY)
-    dicePath.lineTo(rX, tY)
-    dicePath.lineTo(lX, tY)
+    c_State.dicePath.moveTo(lX, tY)
+    c_State.dicePath.lineTo(lX, bY)
+    c_State.dicePath.lineTo(rX, bY)
+    c_State.dicePath.lineTo(rX, tY)
+    c_State.dicePath.lineTo(lX, tY)
     ctx.closePath()
 }
 
 function initIslandPath(){
 
     //defines a path around the perimeter of the island
-    islandPath = new Path2D();
+    c_State.islandPath = new Path2D();
 
     ctx.beginPath();
-    islandPath.moveTo(verticesArr[0][0].cx, verticesArr[0][0].cy);
-    islandPath.lineTo(verticesArr[1][1].cx, verticesArr[1][1].cy);
-    islandPath.lineTo(verticesArr[0][1].cx, verticesArr[0][1].cy);
-    islandPath.lineTo(verticesArr[1][2].cx, verticesArr[1][2].cy);
-    islandPath.lineTo(verticesArr[0][2].cx, verticesArr[0][2].cy);
-    islandPath.lineTo(verticesArr[1][3].cx, verticesArr[1][3].cy);
-    islandPath.lineTo(verticesArr[2][3].cx, verticesArr[2][3].cy);
-    islandPath.lineTo(verticesArr[3][4].cx, verticesArr[3][4].cy);
-    islandPath.lineTo(verticesArr[4][4].cx, verticesArr[4][4].cy);
-    islandPath.lineTo(verticesArr[5][5].cx, verticesArr[5][5].cy);
-    islandPath.lineTo(verticesArr[6][5].cx, verticesArr[6][5].cy);
-    islandPath.lineTo(verticesArr[7][4].cx, verticesArr[7][4].cy);
-    islandPath.lineTo(verticesArr[8][4].cx, verticesArr[8][4].cy);
-    islandPath.lineTo(verticesArr[9][3].cx, verticesArr[9][3].cy);
-    islandPath.lineTo(verticesArr[10][3].cx, verticesArr[10][3].cy);
-    islandPath.lineTo(verticesArr[11][2].cx, verticesArr[11][2].cy);
-    islandPath.lineTo(verticesArr[10][2].cx, verticesArr[10][2].cy);
-    islandPath.lineTo(verticesArr[11][1].cx, verticesArr[11][1].cy);
-    islandPath.lineTo(verticesArr[10][1].cx, verticesArr[10][1].cy);
-    islandPath.lineTo(verticesArr[11][0].cx, verticesArr[11][0].cy);
-    islandPath.lineTo(verticesArr[10][0].cx, verticesArr[10][0].cy);
-    islandPath.lineTo(verticesArr[9][0].cx, verticesArr[9][0].cy);
-    islandPath.lineTo(verticesArr[8][0].cx, verticesArr[8][0].cy);
-    islandPath.lineTo(verticesArr[7][0].cx, verticesArr[7][0].cy);
-    islandPath.lineTo(verticesArr[6][0].cx, verticesArr[6][0].cy);
-    islandPath.lineTo(verticesArr[5][0].cx, verticesArr[5][0].cy);
-    islandPath.lineTo(verticesArr[4][0].cx, verticesArr[4][0].cy);
-    islandPath.lineTo(verticesArr[3][0].cx, verticesArr[3][0].cy);
-    islandPath.lineTo(verticesArr[2][0].cx, verticesArr[2][0].cy);
-    islandPath.lineTo(verticesArr[1][0].cx, verticesArr[1][0].cy);
-    islandPath.lineTo(verticesArr[0][0].cx, verticesArr[0][0].cy);
-    islandPath.lineTo(verticesArr[1][1].cx, verticesArr[1][1].cy);
+    c_State.islandPath.moveTo(verticesArr[0][0].cx, verticesArr[0][0].cy);
+    c_State.islandPath.lineTo(verticesArr[1][1].cx, verticesArr[1][1].cy);
+    c_State.islandPath.lineTo(verticesArr[0][1].cx, verticesArr[0][1].cy);
+    c_State.islandPath.lineTo(verticesArr[1][2].cx, verticesArr[1][2].cy);
+    c_State.islandPath.lineTo(verticesArr[0][2].cx, verticesArr[0][2].cy);
+    c_State.islandPath.lineTo(verticesArr[1][3].cx, verticesArr[1][3].cy);
+    c_State.islandPath.lineTo(verticesArr[2][3].cx, verticesArr[2][3].cy);
+    c_State.islandPath.lineTo(verticesArr[3][4].cx, verticesArr[3][4].cy);
+    c_State.islandPath.lineTo(verticesArr[4][4].cx, verticesArr[4][4].cy);
+    c_State.islandPath.lineTo(verticesArr[5][5].cx, verticesArr[5][5].cy);
+    c_State.islandPath.lineTo(verticesArr[6][5].cx, verticesArr[6][5].cy);
+    c_State.islandPath.lineTo(verticesArr[7][4].cx, verticesArr[7][4].cy);
+    c_State.islandPath.lineTo(verticesArr[8][4].cx, verticesArr[8][4].cy);
+    c_State.islandPath.lineTo(verticesArr[9][3].cx, verticesArr[9][3].cy);
+    c_State.islandPath.lineTo(verticesArr[10][3].cx, verticesArr[10][3].cy);
+    c_State.islandPath.lineTo(verticesArr[11][2].cx, verticesArr[11][2].cy);
+    c_State.islandPath.lineTo(verticesArr[10][2].cx, verticesArr[10][2].cy);
+    c_State.islandPath.lineTo(verticesArr[11][1].cx, verticesArr[11][1].cy);
+    c_State.islandPath.lineTo(verticesArr[10][1].cx, verticesArr[10][1].cy);
+    c_State.islandPath.lineTo(verticesArr[11][0].cx, verticesArr[11][0].cy);
+    c_State.islandPath.lineTo(verticesArr[10][0].cx, verticesArr[10][0].cy);
+    c_State.islandPath.lineTo(verticesArr[9][0].cx, verticesArr[9][0].cy);
+    c_State.islandPath.lineTo(verticesArr[8][0].cx, verticesArr[8][0].cy);
+    c_State.islandPath.lineTo(verticesArr[7][0].cx, verticesArr[7][0].cy);
+    c_State.islandPath.lineTo(verticesArr[6][0].cx, verticesArr[6][0].cy);
+    c_State.islandPath.lineTo(verticesArr[5][0].cx, verticesArr[5][0].cy);
+    c_State.islandPath.lineTo(verticesArr[4][0].cx, verticesArr[4][0].cy);
+    c_State.islandPath.lineTo(verticesArr[3][0].cx, verticesArr[3][0].cy);
+    c_State.islandPath.lineTo(verticesArr[2][0].cx, verticesArr[2][0].cy);
+    c_State.islandPath.lineTo(verticesArr[1][0].cx, verticesArr[1][0].cy);
+    c_State.islandPath.lineTo(verticesArr[0][0].cx, verticesArr[0][0].cy);
+    c_State.islandPath.lineTo(verticesArr[1][1].cx, verticesArr[1][1].cy);
     ctx.closePath();
 }
 

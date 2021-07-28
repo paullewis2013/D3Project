@@ -20,44 +20,58 @@ var ctx = canvas.getContext('2d');
 // Normalize coordinate system to use css pixels.
 ctx.scale(scale, scale);
 
-//determines if images are drawn
-var textured = true;
+// information about canvas state which may be needed in other files
+var c_State = {
 
-var movingRobber = false;
-var showRoads = false;
-var showVerts = false;
-var showMonopolyMenu = false;
-var showYOPMenu = false;
-var hoveredVert = null;
-var hoveredRoad = null;
+    //textured refers to tile images
+    textured: true,
 
-var colorVals = ["green", "firebrick", "lightgreen", "#ffff99", "slategrey", "blue"]
+    movingRobber: false,
 
-var islandPath; 
-var dicePath;
-var tradeButtonPath;
-var devButtonPath;
-var roadButtonPath;
-var settlementButtonPath;
-var cityButtonPath;
-var turnButtonPath;
+    showMonopolyMenu: false,
+    showRoads: false,
+    showVerts: false,
+    showYOPMenu: false,
 
-var tileRadius;
-var buttonWidth;
+    hoveredRoad: null,
+    hoveredVert: null,
 
-//place to store on screen location of drawn cards in hand
-var cardPaths = [];
-var monopolyMenuCardPaths = [];
-var yopMenuCardPaths = [];
+    colorVals: ["green", "firebrick", "lightgreen", "#ffff99", "slategrey", "blue"],
 
-//for moving background things
-var dotsArray = []
+    cityButtonPath: null,
+    devButtonPath: null,
+    dicePath: null,
+    islandPath: null,
+    roadButtonPath: null,
+    settlementButtonPath: null,
+    tradeButtonPath: null,
+    turnButtonPath: null,
 
-var selectedResource = null;
-var yop1 = false;
-var yop2 = false;
+    buttonWidth: 0,
+    islandCenterX: c_WIDTH * 0.58,
+    tileRadius: 60,
 
-var islandCenterX = c_WIDTH * 0.58;
+    cardPaths: [],
+    monopolyMenuCardPaths: [],
+    yopMenuCardPaths: [],
+
+    // background vertices in animation
+    dotsArray: [],
+
+    selectedResource: null,
+    yop1: false,
+    yop2: false,
+}
+
+function initCanvas(){
+    initRoads()
+    initBackgroundDots();
+    initIslandPath();
+    initPorts();
+    initDicePath();
+    initButtons();
+}
+
 
 //––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 //preloading images code
@@ -83,7 +97,9 @@ function preloadImages(srcs, imgs) {
 }
 
 //any new image has to be added here and you need to append it otherwise it shifts all other indices
-var imageSrcs = ["assets/robber.svg", 
+var imageSrcs = [
+                //0
+                "assets/robber.svg", 
                 "assets/WoodTexture.png", 
                 "assets/BrickTexture.png", 
                 "assets/SheepTexture.png", 
@@ -121,12 +137,12 @@ function drawBackgroundAnimated(){
     //defines distance that coordinates travel from their original locations
     let movement = 6
 
-    let drawX = dotsArray[0][0][0] - movement * Math.sin(aState.slowAngle + randomTable[0][0])
-    let drawY = dotsArray[0][0][1] - movement * Math.sin(aState.slowAngle + randomTable[0][0])
+    let drawX = c_State.dotsArray[0][0][0] - movement * Math.sin(aState.slowAngle + randomTable[0][0])
+    let drawY = c_State.dotsArray[0][0][1] - movement * Math.sin(aState.slowAngle + randomTable[0][0])
 
-    for(let i = 0; i < dotsArray.length; i++){
+    for(let i = 0; i < c_State.dotsArray.length; i++){
 
-        for(let j = 0; j < dotsArray[i].length; j++){
+        for(let j = 0; j < c_State.dotsArray[i].length; j++){
 
             // important note only downwards pointing triangales are actually filled in as paths
 
@@ -135,31 +151,31 @@ function drawBackgroundAnimated(){
             ctx.fillStyle = "#268bd2"//randomColor
             ctx.lineWidth = 2;
 
-            let drawX = dotsArray[i][j][0] - movement * Math.sin(aState.slowAngle + randomTable[i][j])
-            let drawY = dotsArray[i][j][1] - movement * Math.sin(aState.slowAngle + randomTable[i][j])
+            let drawX = c_State.dotsArray[i][j][0] - movement * Math.sin(aState.slowAngle + randomTable[i][j])
+            let drawY = c_State.dotsArray[i][j][1] - movement * Math.sin(aState.slowAngle + randomTable[i][j])
 
-            dotsArray[i][j][2] = drawX
-            dotsArray[i][j][3] = drawY
+            c_State.dotsArray[i][j][2] = drawX
+            c_State.dotsArray[i][j][3] = drawY
 
-            if(i < dotsArray.length - 1 && i%2 != 0 && j < dotsArray[i].length - 1 && j > 0){
+            if(i < c_State.dotsArray.length - 1 && i%2 != 0 && j < c_State.dotsArray[i].length - 1 && j > 0){
 
                 ctx.beginPath()
                 ctx.moveTo(drawX, drawY)
-                ctx.lineTo(dotsArray[i+1][j][2], dotsArray[i+1][j][3])
-                ctx.lineTo(dotsArray[i][j-1][2], dotsArray[i][j-1][3])
-                ctx.lineTo(dotsArray[i][j][2], dotsArray[i][j][3])
+                ctx.lineTo(c_State.dotsArray[i+1][j][2], c_State.dotsArray[i+1][j][3])
+                ctx.lineTo(c_State.dotsArray[i][j-1][2], c_State.dotsArray[i][j-1][3])
+                ctx.lineTo(c_State.dotsArray[i][j][2], c_State.dotsArray[i][j][3])
                 ctx.closePath()
                 ctx.fill()
                 ctx.stroke()
             }
 
-            else if(i < dotsArray.length - 1 && i%2 == 0 && j < dotsArray[i].length && j > 0){
+            else if(i < c_State.dotsArray.length - 1 && i%2 == 0 && j < c_State.dotsArray[i].length && j > 0){
 
                 ctx.beginPath()
                 ctx.moveTo(drawX, drawY)
-                ctx.lineTo(dotsArray[i+1][j-1][2], dotsArray[i+1][j-1][3])
-                ctx.lineTo(dotsArray[i][j-1][2], dotsArray[i][j-1][3])
-                ctx.lineTo(dotsArray[i][j][2], dotsArray[i][j][3])
+                ctx.lineTo(c_State.dotsArray[i+1][j-1][2], c_State.dotsArray[i+1][j-1][3])
+                ctx.lineTo(c_State.dotsArray[i][j-1][2], c_State.dotsArray[i][j-1][3])
+                ctx.lineTo(c_State.dotsArray[i][j][2], c_State.dotsArray[i][j][3])
                 ctx.closePath()
                 ctx.fill()
                 ctx.stroke()
@@ -175,10 +191,10 @@ function drawBank(){
     let bankPath = new Path2D()
 
     //draw shape for bank to go in
-    let x = c_WIDTH - tileRadius * 6
+    let x = c_WIDTH - c_State.tileRadius * 6
     let y = 0
-    let w = tileRadius * 6
-    let h = 3 * tileRadius
+    let w = c_State.tileRadius * 6
+    let h = 3 * c_State.tileRadius
     
     let radius = 30
     let r = x + w;
@@ -201,13 +217,13 @@ function drawBank(){
     ctx.strokeStyle = "black"
 
     //draw bank image
-    ctx.drawImage(images[8], x + w/2 - tileRadius/2, 0, tileRadius, tileRadius)
+    ctx.drawImage(images[8], x + w/2 - c_State.tileRadius/2, 0, c_State.tileRadius, c_State.tileRadius)
 
-    let cardHeight = 0.8 * tileRadius
+    let cardHeight = 0.8 * c_State.tileRadius
     let cardWidth = 5 * cardHeight/7
 
-    let startX = x + tileRadius/6
-    let cardY = 1.3 * tileRadius
+    let startX = x + c_State.tileRadius/6
+    let cardY = 1.3 * c_State.tileRadius
     
     //draw numbers for resources
     for(var i = 0; i < 6; i++){
@@ -217,7 +233,7 @@ function drawBank(){
             ctx.beginPath()
             ctx.rect(startX + (i * w/6), cardY + (i%2) * 40, cardWidth, cardHeight)
             ctx.stroke()
-            ctx.fillStyle = colorVals[i]
+            ctx.fillStyle = c_State.colorVals[i]
             ctx.fill()
             ctx.fillStyle = "black"
             //ctx.fillText(bank[i], 160 + ((i%3)*320/4), 40 + Math.floor(i/3) * 40)
@@ -227,7 +243,7 @@ function drawBank(){
 
             //draw circle for number of cards
             ctx.beginPath()
-            ctx.arc(cardX, currCardY, tileRadius * 0.15, 0, 2 * Math.PI, false)
+            ctx.arc(cardX, currCardY, c_State.tileRadius * 0.15, 0, 2 * Math.PI, false)
             ctx.stroke()
             ctx.fillStyle = "white"
             ctx.fill()
@@ -245,7 +261,7 @@ function drawBank(){
             ctx.beginPath()
             ctx.rect(startX + (i * w/6), cardY + (i%2) * 40, cardWidth, cardHeight)
             ctx.stroke()
-            ctx.fillStyle = colorVals[i]
+            ctx.fillStyle = c_State.colorVals[i]
             ctx.fill()
             ctx.fillStyle = "black"
             //ctx.fillText(devCardArray.length, 160 + ((i%3)*320/4), 40 + Math.floor(i/3) * 40)
@@ -255,7 +271,7 @@ function drawBank(){
 
             //draw circle for number of cards
             ctx.beginPath()
-            ctx.arc(cardX, currCardY, tileRadius * 0.15, 0, 2 * Math.PI, false)
+            ctx.arc(cardX, currCardY, c_State.tileRadius * 0.15, 0, 2 * Math.PI, false)
             ctx.stroke()
             ctx.fillStyle = "white"
             ctx.fill()
@@ -279,14 +295,14 @@ function drawButtons(){
     ctx.lineWidth = 1;
 
     //draw shape for bank to go in
-    let x = (c_WIDTH/2) - 1.8 * tileRadius
-    let y = c_HEIGHT - 1.5 * tileRadius
+    let x = (c_WIDTH/2) - 1.8 * c_State.tileRadius
+    let y = c_HEIGHT - 1.5 * c_State.tileRadius
     let w = c_WIDTH - x
-    let h = 1.5 * tileRadius
+    let h = 1.5 * c_State.tileRadius
 
-    let textY = c_HEIGHT - tileRadius + 10/2
+    let textY = c_HEIGHT - c_State.tileRadius + 10/2
 
-    let textX = x + buttonWidth/2 + 0.3*tileRadius
+    let textX = x + c_State.buttonWidth/2 + 0.3*c_State.tileRadius
 
     let r = x + w;
     let b = y + h;
@@ -311,12 +327,12 @@ function drawButtons(){
     if(!tradeButtonEnabled){
         ctx.fillStyle = disabledColor
     }
-    ctx.fill(tradeButtonPath)
+    ctx.fill(c_State.tradeButtonPath)
 
     if(currentlyTrading){
         ctx.lineWidth = 4;
         ctx.strokeStyle = strokeColor
-        ctx.stroke(tradeButtonPath)
+        ctx.stroke(c_State.tradeButtonPath)
     }
 
     ctx.textAlign = "center"
@@ -324,49 +340,49 @@ function drawButtons(){
     ctx.font = "20px Arial"
     ctx.fillText("Trade", textX, textY, 70)
 
-    textX += buttonWidth
+    textX += c_State.buttonWidth
 
     //dev Button
     ctx.fillStyle = enabledColor
     if(!devButtonEnabled){
         ctx.fillStyle = disabledColor
     }
-    ctx.fill(devButtonPath)
+    ctx.fill(c_State.devButtonPath)
 
     ctx.fillStyle = "white"
     ctx.fillText("Dev Card", textX, textY, 100)
 
-    textX += buttonWidth
+    textX += c_State.buttonWidth
 
     //road Button
     ctx.fillStyle = enabledColor
     if(!roadButtonEnabled){
         ctx.fillStyle = disabledColor
     }
-    ctx.fill(roadButtonPath)
+    ctx.fill(c_State.roadButtonPath)
 
     if(buildingRoad && initialPlacementsComplete){
         ctx.lineWidth = 4;
         ctx.strokeStyle = strokeColor
-        ctx.stroke(roadButtonPath)
+        ctx.stroke(c_State.roadButtonPath)
     }
 
     ctx.fillStyle = "white"
     ctx.fillText("Road", textX, textY, 100)
 
-    textX += buttonWidth
+    textX += c_State.buttonWidth
 
     //settlement Button
     ctx.fillStyle = enabledColor
     if(!settlementButtonEnabled){
         ctx.fillStyle = disabledColor
     }
-    ctx.fill(settlementButtonPath)
+    ctx.fill(c_State.settlementButtonPath)
 
     if(buildingSettlement && initialPlacementsComplete){
         ctx.lineWidth = 4;
         ctx.strokeStyle = strokeColor
-        ctx.stroke(settlementButtonPath)
+        ctx.stroke(c_State.settlementButtonPath)
     }
 
     ctx.fillStyle = "white"
@@ -374,32 +390,32 @@ function drawButtons(){
 
     //ctx.drawImage(images[7], c_WIDTH - 90, 260, 80, 80)
 
-    textX += buttonWidth
+    textX += c_State.buttonWidth
 
     //city Button
     ctx.fillStyle = enabledColor
     if(!cityButtonEnabled){
         ctx.fillStyle = disabledColor
     }
-    ctx.fill(cityButtonPath)
+    ctx.fill(c_State.cityButtonPath)
 
     if(buildingCity && initialPlacementsComplete){
         ctx.lineWidth = 4;
         ctx.strokeStyle = strokeColor
-        ctx.stroke(cityButtonPath)
+        ctx.stroke(c_State.cityButtonPath)
     }
 
     ctx.fillStyle = "white"
     ctx.fillText("City", textX, textY, 100)
 
-    textX += buttonWidth
+    textX += c_State.buttonWidth
 
     //turn Button
     ctx.fillStyle = enabledColor
     if(!turnButtonEnabled){
         ctx.fillStyle = disabledColor
     }
-    ctx.fill(turnButtonPath)
+    ctx.fill(c_State.turnButtonPath)
 
     ctx.fillStyle = "white"
     ctx.fillText("End Turn", textX, textY, 100)
@@ -455,9 +471,9 @@ function drawHand(){
     let handPath = new Path2D()
 
     let x = 0
-    let y = c_HEIGHT - 2 * tileRadius
-    let w = c_WIDTH - ((c_WIDTH/2) + 1.8*tileRadius)
-    let h = 2 * tileRadius
+    let y = c_HEIGHT - 2 * c_State.tileRadius
+    let w = c_WIDTH - ((c_WIDTH/2) + 1.8*c_State.tileRadius)
+    let h = 2 * c_State.tileRadius
     let radius = 25
     let buttonRadius = 10
 
@@ -483,26 +499,26 @@ function drawHand(){
 
     //draw player circle
     ctx.beginPath();
-    ctx.arc(w/6, c_HEIGHT - 2 * h/3, tileRadius/2, 0, 2 * Math.PI, false);
+    ctx.arc(w/6, c_HEIGHT - 2 * h/3, c_State.tileRadius/2, 0, 2 * Math.PI, false);
     ctx.closePath();
     ctx.fillStyle = currPlayer.color;
     ctx.fill()
 
     //draw user icon on top of player circle
-    ctx.drawImage(images[9], w/6 - tileRadius/1.95, c_HEIGHT - 2 * h/3 - .6 * tileRadius, tileRadius * 1.05, tileRadius)
+    ctx.drawImage(images[9], w/6 - c_State.tileRadius/1.95, c_HEIGHT - 2 * h/3 - .6 * c_State.tileRadius, c_State.tileRadius * 1.05, c_State.tileRadius)
 
     ctx.font = "20px Arial"
     ctx.fillStyle = "black"
     ctx.fillText("PLAYER_NAME", w/6, c_HEIGHT - h/6, 200)
 
-    cardPaths = [];
+    c_State.cardPaths = [];
 
     let cardTypes = 0
-    let cardHeight = 0.8 * tileRadius
+    let cardHeight = 0.8 * c_State.tileRadius
     let cardWidth = 5 * cardHeight/7
     let buffer = (((2*w)/3) - 5 * cardWidth) / 5
     let boxWidth = 10 * cardWidth + 11 * buffer
-    let cardY = y + 0.1 * tileRadius
+    let cardY = y + 0.1 * c_State.tileRadius
     let cardX = w/3
 
     //loop through all of current players resources
@@ -527,7 +543,7 @@ function drawHand(){
                     ctx.fillStyle = "Green"
                     ctx.fill(currCard)
 
-                    cardPaths.push({path:currCard, type:resourceCard.WOOD});
+                    c_State.cardPaths.push({path:currCard, type:resourceCard.WOOD});
 
                     break;
 
@@ -537,7 +553,7 @@ function drawHand(){
                     ctx.fillStyle = "Firebrick"
                     ctx.fill(currCard)
 
-                    cardPaths.push({path:currCard, type:resourceCard.BRICK});
+                    c_State.cardPaths.push({path:currCard, type:resourceCard.BRICK});
 
                     break;
 
@@ -547,7 +563,7 @@ function drawHand(){
                     ctx.fillStyle = "lightgreen"
                     ctx.fill(currCard)
 
-                    cardPaths.push({path:currCard, type:resourceCard.SHEEP});
+                    c_State.cardPaths.push({path:currCard, type:resourceCard.SHEEP});
 
                     break;
                     
@@ -557,7 +573,7 @@ function drawHand(){
                     ctx.fillStyle = "#ffff99"
                     ctx.fill(currCard)
 
-                    cardPaths.push({path:currCard, type:resourceCard.WHEAT});
+                    c_State.cardPaths.push({path:currCard, type:resourceCard.WHEAT});
 
                     break;
 
@@ -567,7 +583,7 @@ function drawHand(){
                     ctx.fillStyle = "slategrey"
                     ctx.fill(currCard)
 
-                    cardPaths.push({path:currCard, type:resourceCard.ORE});
+                    c_State.cardPaths.push({path:currCard, type:resourceCard.ORE});
 
                     break;
 
@@ -577,7 +593,7 @@ function drawHand(){
             
             //draw circle for number of cards
             ctx.beginPath()
-            ctx.arc(cardX, cardY, tileRadius * 0.15, 0, 2 * Math.PI, false)
+            ctx.arc(cardX, cardY, c_State.tileRadius * 0.15, 0, 2 * Math.PI, false)
             ctx.stroke()
             ctx.fillStyle = "white"
             ctx.fill()
@@ -610,7 +626,7 @@ function drawHand(){
     } 
 
     //move to next row of cards
-    cardY += tileRadius
+    cardY += c_State.tileRadius
     cardX = w/3
 
     //loop though all of current players dev cards and draw them
@@ -638,7 +654,7 @@ function drawHand(){
                     ctx.fill(currCard)
                     printMe += "K"
 
-                    cardPaths.push({path:currCard, type:devCard.KNIGHT});
+                    c_State.cardPaths.push({path:currCard, type:devCard.KNIGHT});
 
                     break;
 
@@ -649,7 +665,7 @@ function drawHand(){
                     ctx.fill(currCard)
                     printMe += "VP"
 
-                    cardPaths.push({path:currCard, type:devCard.VP});
+                    c_State.cardPaths.push({path:currCard, type:devCard.VP});
 
                     break;
 
@@ -660,7 +676,7 @@ function drawHand(){
                     ctx.fill(currCard)
                     printMe += "M"
 
-                    cardPaths.push({path:currCard, type:devCard.MONOPOLY});
+                    c_State.cardPaths.push({path:currCard, type:devCard.MONOPOLY});
 
                     break;
                     
@@ -671,7 +687,7 @@ function drawHand(){
                     ctx.fill(currCard)
                     printMe += "R"
 
-                    cardPaths.push({path:currCard, type:devCard.ROAD});
+                    c_State.cardPaths.push({path:currCard, type:devCard.ROAD});
 
                     break;
 
@@ -682,7 +698,7 @@ function drawHand(){
                     ctx.fill(currCard)
                     printMe += "P"
 
-                    cardPaths.push({path:currCard, type:devCard.PLENTY});
+                    c_State.cardPaths.push({path:currCard, type:devCard.PLENTY});
 
                     break;
 
@@ -691,7 +707,7 @@ function drawHand(){
 
             //draw circle for number of cards
             ctx.beginPath()
-            ctx.arc(cardX, cardY, tileRadius * 0.15, 0, 2 * Math.PI, false)
+            ctx.arc(cardX, cardY, c_State.tileRadius * 0.15, 0, 2 * Math.PI, false)
             ctx.stroke()
             ctx.fillStyle = "white"
             ctx.fill()
@@ -733,7 +749,7 @@ function drawHand(){
 
 function drawIsland(){
 
-    var gradient = ctx.createRadialGradient(islandCenterX - 90,c_HEIGHT/2, 150, islandCenterX - 90,c_HEIGHT/2, 200);
+    var gradient = ctx.createRadialGradient(c_State.islandCenterX - 90,c_HEIGHT/2, 150, c_State.islandCenterX - 90,c_HEIGHT/2, 200);
     gradient.addColorStop(0, "#DEB887");
     gradient.addColorStop(1, 'wheat');
 
@@ -742,17 +758,17 @@ function drawIsland(){
     ctx.fillStyle = gradient
     ctx.lineWidth = 8;
     ctx.strokeStyle = "wheat"
-    ctx.stroke(islandPath);
-    ctx.fill(islandPath);
+    ctx.stroke(c_State.islandPath);
+    ctx.fill(c_State.islandPath);
 
 }
 
 function drawMonopolyMenu(){
     //define boundaries of trade menu
     let menu_x = c_WIDTH - 300
-    let menu_y = c_HEIGHT - 4.5 * tileRadius
+    let menu_y = c_HEIGHT - 4.5 * c_State.tileRadius
     let w = 290
-    let h = 2 * tileRadius
+    let h = 2 * c_State.tileRadius
 
     let x = menu_x
     let y = menu_y
@@ -784,9 +800,9 @@ function drawMonopolyMenu(){
     ctx.fillStyle = "black"
     ctx.fillText("Please select a resource type:", menu_x + w/2, menu_y + 15)
 
-    monopolyMenuCardPaths = [];
+    c_State.monopolyMenuCardPaths = [];
 
-    let cardHeight = 0.8 * tileRadius
+    let cardHeight = 0.8 * c_State.tileRadius
     let cardWidth = 5 * cardHeight/7
     let buffer = (w - 5 * cardWidth) / 5
     //let boxWidth = 10 * cardWidth + 11 * buffer
@@ -815,7 +831,7 @@ function drawMonopolyMenu(){
                     ctx.fillStyle = "Green"
                     ctx.fill(currCard)
 
-                    monopolyMenuCardPaths.push(currCard);
+                    c_State.monopolyMenuCardPaths.push(currCard);
 
                     break;
 
@@ -825,7 +841,7 @@ function drawMonopolyMenu(){
                     ctx.fillStyle = "Firebrick"
                     ctx.fill(currCard)
 
-                    monopolyMenuCardPaths.push(currCard);
+                    c_State.monopolyMenuCardPaths.push(currCard);
 
                     break;
 
@@ -835,7 +851,7 @@ function drawMonopolyMenu(){
                     ctx.fillStyle = "lightgreen"
                     ctx.fill(currCard)
 
-                    monopolyMenuCardPaths.push(currCard);
+                    c_State.monopolyMenuCardPaths.push(currCard);
 
                     break;
                     
@@ -845,7 +861,7 @@ function drawMonopolyMenu(){
                     ctx.fillStyle = "#ffff99"
                     ctx.fill(currCard)
 
-                    monopolyMenuCardPaths.push(currCard);
+                    c_State.monopolyMenuCardPaths.push(currCard);
 
                     break;
 
@@ -855,7 +871,7 @@ function drawMonopolyMenu(){
                     ctx.fillStyle = "slategrey"
                     ctx.fill(currCard)
 
-                    monopolyMenuCardPaths.push(currCard);
+                    c_State.monopolyMenuCardPaths.push(currCard);
 
                     break;
 
@@ -879,7 +895,7 @@ function drawMonopolyMenu(){
 
             cardX += buffer + cardWidth
 
-            monopolyMenuCardPaths.push(null)
+            c_State.monopolyMenuCardPaths.push(null)
         }
         //disables stroked lines
         ctx.setLineDash([])
@@ -948,7 +964,7 @@ function drawRoads(){
         }
 
     }
-    if(showRoads){
+    if(c_State.showRoads){
         let adjRoads = currPlayer.getBuildableRoads();
 
         //show buildable roads
@@ -958,7 +974,7 @@ function drawRoads(){
                             
                 ctx.fillStyle = "white";
 
-                if(adjRoads[i] == hoveredRoad){
+                if(adjRoads[i] == c_State.hoveredRoad){
                     ctx.fillStyle = currPlayer.color
                 }
 
@@ -1009,8 +1025,6 @@ function drawTiles(){
 
     var centerX;
     var centerY;
-    //tileRadius = c_HEIGHT/15;
-    tileRadius = 60;
 
     ctx.textAlign = "center"
     ctx.font = "20px Arial";
@@ -1018,23 +1032,23 @@ function drawTiles(){
     for(var i = 0; i < 5; i++){
 
         //some circle packing magic that makes a 30-60-90 triangle
-        centerY = (c_HEIGHT * 3/7) - Math.sqrt(3)*tileRadius*(2-i);
+        centerY = (c_HEIGHT * 3/7) - Math.sqrt(3)*c_State.tileRadius*(2-i);
 
         var times;
 
         //first and last row
         if(i === 0 || i === 4){
-            centerX = (islandCenterX) - 3.5*tileRadius
+            centerX = (c_State.islandCenterX) - 3.5*c_State.tileRadius
             times = 3;
         }
         //second and second to last row
         if(i === 1 || i === 3){
-            centerX = (islandCenterX) - 4.5*tileRadius
+            centerX = (c_State.islandCenterX) - 4.5*c_State.tileRadius
             times = 4;
         }
         //middle row
         if(i === 2){
-            centerX = (islandCenterX) - 5.5*tileRadius
+            centerX = (c_State.islandCenterX) - 5.5*c_State.tileRadius
             times = 5;
         }
 
@@ -1044,7 +1058,7 @@ function drawTiles(){
             var hexAngle = ((2 * Math.PI) / 6)
 
             //7/6 makes the hexagons flush 6.9/6 looks nicer anything below leaves a gap
-            var hexRad = tileRadius * 6.5/6
+            var hexRad = c_State.tileRadius * 6.5/6
 
             tilesArr[i][j].cx = centerX;
             tilesArr[i][j].cy = centerY;
@@ -1065,9 +1079,8 @@ function drawTiles(){
             ctx.strokeStyle = 'black';
             ctx.closePath()
             
-            if(!textured){
+            if(!c_State.textured){
                 ctx.stroke(tilesArr[i][j].hitbox)
-                
                 
                 ctx.fillStyle = tilesArr[i][j].color
                 ctx.fill(tilesArr[i][j].hitbox)
@@ -1125,7 +1138,7 @@ function drawTiles(){
                 }
             }
 
-            centerX += tileRadius * 2 
+            centerX += c_State.tileRadius * 2 
         }
     }
 }
@@ -1147,17 +1160,17 @@ function drawTileTextures(){
 
         //first and last row
         if(i === 0 || i === 4){
-            centerX = (islandCenterX) - 3.5*radius
+            centerX = (c_State.islandCenterX) - 3.5*radius
             times = 3;
         }
         //second and second to last row
         if(i === 1 || i === 3){
-            centerX = (islandCenterX) - 4.5*radius
+            centerX = (c_State.islandCenterX) - 4.5*radius
             times = 4;
         }
         //middle row
         if(i === 2){
-            centerX = (islandCenterX) - 5.5*radius
+            centerX = (c_State.islandCenterX) - 5.5*radius
             times = 5;
         }
 
@@ -1242,7 +1255,7 @@ function drawTradeMenu(){
 
     //define boundaries of trade menu
     let menu_x = c_WIDTH - 300
-    let menu_y = c_HEIGHT - 6 * tileRadius
+    let menu_y = c_HEIGHT - 6 * c_State.tileRadius
     let width = 290
     let height = 225
 
@@ -1338,7 +1351,7 @@ function drawVertices(){
                     ctx.fillStyle = "white";
 
                     //set vert color to player color if hovering
-                    if(verticesArr[i][j] == hoveredVert){
+                    if(verticesArr[i][j] == c_State.hoveredVert){
                         ctx.fillStyle = currPlayer.color
                     }
                     
@@ -1368,7 +1381,7 @@ function drawVertices(){
         for(var i = 0; i < verts.length; i++){
             ctx.fillStyle = "white";
 
-            if(verts[i] == hoveredVert){
+            if(verts[i] == c_State.hoveredVert){
                 ctx.fillStyle = currPlayer.color
             }
 
@@ -1388,9 +1401,9 @@ function drawVertices(){
 function drawYOPMenu(){
     //define boundaries of trade menu
     let menu_x = c_WIDTH - 300
-    let menu_y = c_HEIGHT - 5.5 * tileRadius
+    let menu_y = c_HEIGHT - 5.5 * c_State.tileRadius
     let w = 290
-    let h = 3 * tileRadius
+    let h = 3 * c_State.tileRadius
 
     let x = menu_x
     let y = menu_y
@@ -1424,9 +1437,9 @@ function drawYOPMenu(){
     ctx.fillStyle = "black"
     ctx.fillText("Please select resource 1:", menu_x + w/2, menu_y + 15)
 
-    yopMenuCardPaths = [];
+    c_State.yopMenuCardPaths = [];
 
-    let cardHeight = 0.8 * tileRadius
+    let cardHeight = 0.8 * c_State.tileRadius
     let cardWidth = 5 * cardHeight/7
     let buffer = (w - 5 * cardWidth) / 5
     //let boxWidth = 10 * cardWidth + 11 * buffer
@@ -1448,7 +1461,7 @@ function drawYOPMenu(){
             ctx.strokeColor = "black"
             ctx.lineWidth = 1
 
-            if(yop1 && selectedResource[0] == i){
+            if(c_State.yop1 && c_State.selectedResource[0] == i){
                 ctx.strokeColor = "#2980b9"
                 ctx.lineWidth = 4
             }
@@ -1464,7 +1477,7 @@ function drawYOPMenu(){
                     ctx.fillStyle = "Green"
                     ctx.fill(currCard)
 
-                    yopMenuCardPaths.push(currCard);
+                    c_State.yopMenuCardPaths.push(currCard);
 
                     break;
 
@@ -1474,7 +1487,7 @@ function drawYOPMenu(){
                     ctx.fillStyle = "Firebrick"
                     ctx.fill(currCard)
 
-                    yopMenuCardPaths.push(currCard);
+                    c_State.yopMenuCardPaths.push(currCard);
 
                     break;
 
@@ -1484,7 +1497,7 @@ function drawYOPMenu(){
                     ctx.fillStyle = "lightgreen"
                     ctx.fill(currCard)
 
-                    yopMenuCardPaths.push(currCard);
+                    c_State.yopMenuCardPaths.push(currCard);
 
                     break;
                     
@@ -1494,7 +1507,7 @@ function drawYOPMenu(){
                     ctx.fillStyle = "#ffff99"
                     ctx.fill(currCard)
 
-                    yopMenuCardPaths.push(currCard);
+                    c_State.yopMenuCardPaths.push(currCard);
 
                     break;
 
@@ -1504,7 +1517,7 @@ function drawYOPMenu(){
                     ctx.fillStyle = "slategrey"
                     ctx.fill(currCard)
 
-                    yopMenuCardPaths.push(currCard);
+                    c_State.yopMenuCardPaths.push(currCard);
 
                     break;
 
@@ -1527,7 +1540,7 @@ function drawYOPMenu(){
 
             cardX += buffer + cardWidth
 
-            yopMenuCardPaths.push(null)
+            c_State.yopMenuCardPaths.push(null)
         }
         //disables stroked lines
         ctx.setLineDash([])
@@ -1547,7 +1560,7 @@ function drawYOPMenu(){
     for(let i = 0; i < bank.length; i++){
 
         //only draw resource types that the bank actually has
-        if(bank[i] != 0 && yop1 && !(i == selectedResource[0] && bank[selectedResource[0]] == 1)){
+        if(bank[i] != 0 && c_State.yop1 && !(i == c_State.selectedResource[0] && bank[c_State.selectedResource[0]] == 1)){
 
             //define boundaries of resource card
             let currCard = new Path2D
@@ -1565,7 +1578,7 @@ function drawYOPMenu(){
                     ctx.fillStyle = "Green"
                     ctx.fill(currCard)
 
-                    yopMenuCardPaths.push(currCard);
+                    c_State.yopMenuCardPaths.push(currCard);
 
                     break;
 
@@ -1575,7 +1588,7 @@ function drawYOPMenu(){
                     ctx.fillStyle = "Firebrick"
                     ctx.fill(currCard)
 
-                    yopMenuCardPaths.push(currCard);
+                    c_State.yopMenuCardPaths.push(currCard);
 
                     break;
 
@@ -1585,7 +1598,7 @@ function drawYOPMenu(){
                     ctx.fillStyle = "lightgreen"
                     ctx.fill(currCard)
 
-                    yopMenuCardPaths.push(currCard);
+                    c_State.yopMenuCardPaths.push(currCard);
 
                     break;
                     
@@ -1595,7 +1608,7 @@ function drawYOPMenu(){
                     ctx.fillStyle = "#ffff99"
                     ctx.fill(currCard)
 
-                    yopMenuCardPaths.push(currCard);
+                    c_State.yopMenuCardPaths.push(currCard);
 
                     break;
 
@@ -1605,7 +1618,7 @@ function drawYOPMenu(){
                     ctx.fillStyle = "slategrey"
                     ctx.fill(currCard)
 
-                    yopMenuCardPaths.push(currCard);
+                    c_State.yopMenuCardPaths.push(currCard);
 
                     break;
                 default:
@@ -1627,7 +1640,7 @@ function drawYOPMenu(){
 
             cardX += buffer + cardWidth
 
-            yopMenuCardPaths.push(null)
+            c_State.yopMenuCardPaths.push(null)
         }
         //disables stroked lines
         ctx.setLineDash([])
@@ -1693,10 +1706,10 @@ function drawCanvas(){
     if(currentlyTrading){
         drawTradeMenu()
     }
-    if(showMonopolyMenu){
+    if(c_State.showMonopolyMenu){
         drawMonopolyMenu()
     }
-    if(showYOPMenu){
+    if(c_State.showYOPMenu){
         drawYOPMenu()
     }
 
@@ -1705,7 +1718,7 @@ function drawCanvas(){
     drawIsland();
 
     //board itself
-    if(textured){
+    if(c_State.textured){
         drawTileTextures()
     }else{
         drawTiles()
@@ -1715,7 +1728,7 @@ function drawCanvas(){
     drawRoads()
     drawSettlements()
     drawRobber()
-    if(showVerts){
+    if(c_State.showVerts){
         drawVertices()
     }
 

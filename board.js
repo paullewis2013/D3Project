@@ -258,6 +258,8 @@ function setUpTiles(){
         }
     }
 
+    // don't remove this
+    drawTiles();
 }
 
 var p1 = new Player("Orange", true);
@@ -275,24 +277,25 @@ var currPlayer = playersArr[currPlayerIndex];
 //sets all game conditions initally
 //called when last image finishes loading
 function setup(){
-    console.log("entering set up method")
+    console.log("<1> entering set up method")
+
+    //TODO load settings here
 
     initRandomTable()
-    initBackgroundDots()
     populateDevCardDeck()
-    populateDiceResultsArr()
-    graphicButton()
+
     setUpTiles()
-    drawTiles()
-    calcProduction()
+
     initVertices()
-    initRoads()
     generatePorts()
-    initPorts()
-    initIslandPath()
-    initDicePath()
-    initButtons()
-    drawCanvas()
+
+    //initializes canvas elements
+    initCanvas();
+
+    // these are stat tracking method not necessary for gameplay
+    // TODO eventually all of these init methods should be handled together
+    populateDiceResultsArr();
+    calcProduction();
 
     //enter initial settlement placement phase
     initialSettlements()
@@ -300,7 +303,7 @@ function setup(){
 
 async function initialSettlements(){
 
-    console.log("entering Initial Settlements Loop")
+    console.log("<2> entering Initial Settlements Loop")
 
     //disable all buttons
     diceButtonEnabled = false;
@@ -324,7 +327,7 @@ async function initialSettlements(){
 
             //create a function that waits for settlement to be built before continuing
             await waitForSettlement(currPlayer, 1);
-            showVerts = false;
+            c_State.showVerts = false;
 
             roadButton();
 
@@ -333,7 +336,7 @@ async function initialSettlements(){
         }
         //bot placement
         else{
-            showVerts = false
+            c_State.showVerts = false
 
             currPlayer.botBestSettlement()
 
@@ -364,7 +367,7 @@ async function initialSettlements(){
 
             //create a function that waits for settlement to be built before continuing
             await waitForSettlement(currPlayer, 2);
-            showVerts = false;
+            c_State.showVerts = false;
 
             roadButton();
 
@@ -373,7 +376,7 @@ async function initialSettlements(){
         }
         //bot placement
         else{
-            showVerts = false
+            c_State.showVerts = false
 
             currPlayer.botBestSettlement()
 
@@ -397,7 +400,7 @@ async function initialSettlements(){
 }
 
 async function mainGameLoop(){
-    console.log("entering MainGameLoop")
+    console.log("<3> entering MainGameLoop")
 
     turnNumber = 1;
 
@@ -468,9 +471,7 @@ function setButtons(){
     
     let building = buildingRoad || buildingSettlement || buildingCity;
 
-
-
-    if(diceRolledThisTurn && !movingRobber && !showMonopolyMenu && !showYOPMenu){
+    if(diceRolledThisTurn && !c_State.movingRobber && !c_State.showMonopolyMenu && !c_State.showYOPMenu){
 
         //trade button
         if(!building){
@@ -567,15 +568,13 @@ async function waitForYOPChoice(){
 
     while(!finished){
 
-        if(yop2){
-            return selectedResource
+        if(c_State.yop2){
+            return c_State.selectedResource
         }else{
             //console.log("waiting for resource num")
             await sleep(100)
         }
-
     }
-
 }
 
 async function waitForRobberMoved(){
@@ -584,7 +583,7 @@ async function waitForRobberMoved(){
 
     while(!finished){
 
-        if(!movingRobber){
+        if(!c_State.movingRobber){
             return;
         }else{
             //console.log("waiting for resource num")
@@ -599,9 +598,9 @@ async function waitForMonopolyChoice(){
 
     while(resourceNum == -1){
 
-        if(selectedResource != null){
-            resourceNum = selectedResource
-            selectedResource = null
+        if(c_State.selectedResource != null){
+            resourceNum = c_State.selectedResource
+            c_State.selectedResource = null
         }else{
             //console.log("waiting for resource num")
             await sleep(100)
@@ -658,7 +657,7 @@ async function waitForDiceRoll(){
         
         if(winCondition){
             break;
-        }else if(diceRolledThisTurn && !movingRobber){
+        }else if(diceRolledThisTurn && !c_State.movingRobber){
             diceRollFinished = true;
         }else{
             await sleep(100)
@@ -727,7 +726,6 @@ function generatePorts(){
         [verticesArr[11][1], verticesArr[10][2]],
     ]
 
-
     //randomize port trades
     tradesArr = _.shuffle(tradesArr)
 
@@ -737,7 +735,6 @@ function generatePorts(){
         portsArr[i].vertices[0].port = portsArr[i]
         portsArr[i].vertices[1].port = portsArr[i]
     }
-
 }
 
 //--------------------------------------------------
@@ -916,7 +913,7 @@ function moveRobber(){
     currTile.unBlock()
 
     //disable all other actions until robber is moved
-    movingRobber = true;
+    c_State.movingRobber = true;
     freeze()
 }
 
@@ -935,7 +932,7 @@ function buildRoad(road, player){
     player.calcLongestRoad()
 
     buildingRoad = false;
-    showRoads = false;
+    c_State.showRoads = false;
     unfreeze();
 }
 
@@ -980,9 +977,9 @@ function cancelAction(){
 
     console.log("canceling")
 
-    showRoads = false;
+    c_State.showRoads = false;
 
-    movingRobber = false;
+    c_State.movingRobber = false;
     buildingRoad = false;
     buildingSettlement = false;
     buildingCity = false;
@@ -1071,7 +1068,7 @@ function devButton(){
 
 function roadButton(){
 
-    showRoads = true;
+    c_State.showRoads = true;
     buildingRoad = true;
     freeze();
     drawRoads();
@@ -1083,7 +1080,7 @@ function settlementButton(){
 
     buildingSettlement = true;
     freeze();
-    showVerts = true;
+    c_State.showVerts = true;
     drawVertices();
 
 }

@@ -501,7 +501,7 @@ Player.prototype.playDevCard = async function(card){
 
                 //set a global variable to mark that a resource is being selected
                 //draw the trade menu on the canvas
-                showMonopolyMenu = true;
+                c_State.showMonopolyMenu = true;
 
                 //block until a resouce is selected
                 resourceNum = await waitForMonopolyChoice()
@@ -509,7 +509,7 @@ Player.prototype.playDevCard = async function(card){
                 console.log("Monopoly played on resource: " + resourceNum)
 
                 //restore global variable to default state
-                showMonopolyMenu = false;
+                c_State.showMonopolyMenu = false;
             }
 
             //take the cards
@@ -606,25 +606,25 @@ Player.prototype.playDevCard = async function(card){
             //player resource selection
             else{
 
-                yop1 = false
-                yop2 = false
+                c_State.yop1 = false
+                c_State.yop2 = false
 
                 //set a global variable to mark that a resource is being selected
                 //draw the trade menu on the canvas
-                showYOPMenu = true;
+                c_State.showYOPMenu = true;
 
-                selectedResource = []
+                c_State.selectedResource = []
 
                 //block until a resouce is selected
                 await waitForYOPChoice()
 
                 //restore global variable to default state
-                showYOPMenu = false;
+                c_State.showYOPMenu = false;
 
-                resourceNum1 = selectedResource[0]
-                resourceNum2 = selectedResource[1]
+                resourceNum1 = c_State.selectedResource[0]
+                resourceNum2 = c_State.selectedResource[1]
 
-                selectedResource = null
+                c_State.selectedResource = null
 
             }
 

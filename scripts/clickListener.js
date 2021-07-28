@@ -9,39 +9,37 @@ canvas.addEventListener('click', function(e) {
     const CLICK_Y = e.offsetY * scale;
 
     //monopoly input
-    if(showMonopolyMenu){
+    if(c_State.showMonopolyMenu){
 
-        //console.log(monopolyMenuCardPaths)
-
-        for(let i = 0; i < monopolyMenuCardPaths.length; i++){
+        for(let i = 0; i < c_State.monopolyMenuCardPaths.length; i++){
            
-            if(monopolyMenuCardPaths[i] != null && ctx.isPointInPath(monopolyMenuCardPaths[i], e.offsetX, e.offsetY)){
-                selectedResource = i
+            if(c_State.monopolyMenuCardPaths[i] != null && ctx.isPointInPath(c_State.monopolyMenuCardPaths[i], e.offsetX, e.offsetY)){
+                c_State.selectedResource = i
             }
         }
     }
 
-    if(showYOPMenu){
-        for(let i = 0; i < yopMenuCardPaths.length; i++){
+    if(c_State.showYOPMenu){
+        for(let i = 0; i < c_State.yopMenuCardPaths.length; i++){
            
-            if(yopMenuCardPaths[i] != null && ctx.isPointInPath(yopMenuCardPaths[i], e.offsetX, e.offsetY)){
+            if(c_State.yopMenuCardPaths[i] != null && ctx.isPointInPath(c_State.yopMenuCardPaths[i], e.offsetX, e.offsetY)){
 
-                if(yop1 && i >= 5 && !yop2){
+                if(c_State.yop1 && i >= 5 && !c_State.yop2){
                     console.log("second resource selected")
-                    yop2 = true
-                    selectedResource.push(i%5)
+                    c_State.yop2 = true
+                    c_State.selectedResource.push(i%5)
                 }
 
-                else if(!yop1){
+                else if(!c_State.yop1){
                     console.log("first resource selected")
-                    yop1 = true
-                    selectedResource.push(i%5)
+                    c_State.yop1 = true
+                    c_State.selectedResource.push(i%5)
                 }
 
-                else if(yop1 && i<5){
+                else if(c_State.yop1 && i<5){
                     console.log("first resource changed")
-                    yop1 = true
-                    selectedResource[0] = i%5
+                    c_State.yop1 = true
+                    c_State.selectedResource[0] = i%5
                 }
 
                 
@@ -53,7 +51,7 @@ canvas.addEventListener('click', function(e) {
     //buttons
 
     //dice Button
-    if(ctx.isPointInPath(dicePath, CLICK_X, CLICK_Y)){
+    if(ctx.isPointInPath(c_State.dicePath, CLICK_X, CLICK_Y)){
         if(diceButtonEnabled){
             diceButton()
         }
@@ -61,7 +59,7 @@ canvas.addEventListener('click', function(e) {
     }
 
     //trade button
-    if(ctx.isPointInPath(tradeButtonPath, CLICK_X, CLICK_Y)){
+    if(ctx.isPointInPath(c_State.tradeButtonPath, CLICK_X, CLICK_Y)){
         if(tradeButtonEnabled){
             tradeButton()
         }
@@ -69,7 +67,7 @@ canvas.addEventListener('click', function(e) {
     }
 
     //dev button
-    if(ctx.isPointInPath(devButtonPath, CLICK_X, CLICK_Y)){
+    if(ctx.isPointInPath(c_State.devButtonPath, CLICK_X, CLICK_Y)){
         if(devButtonEnabled){
             devButton()
         }
@@ -77,7 +75,7 @@ canvas.addEventListener('click', function(e) {
     }
 
     //road button
-    if(ctx.isPointInPath(roadButtonPath, CLICK_X, CLICK_Y)){
+    if(ctx.isPointInPath(c_State.roadButtonPath, CLICK_X, CLICK_Y)){
         if(roadButtonEnabled && !buildingRoad){
             roadButton()
         }else if(roadButtonEnabled && buildingRoad){
@@ -87,18 +85,18 @@ canvas.addEventListener('click', function(e) {
     }
 
     //settlement button
-    if(ctx.isPointInPath(settlementButtonPath, CLICK_X, CLICK_Y)){
+    if(ctx.isPointInPath(c_State.settlementButtonPath, CLICK_X, CLICK_Y)){
         if(settlementButtonEnabled && !buildingSettlement){
             settlementButton()
         }else if(settlementButtonEnabled && buildingSettlement){
             cancelAction()
-            showVerts = false
+            c_State.showVerts = false
         }
         console.log("settlement button clicked")
     }
 
     //city Button
-    if(ctx.isPointInPath(cityButtonPath, CLICK_X, CLICK_Y)){
+    if(ctx.isPointInPath(c_State.cityButtonPath, CLICK_X, CLICK_Y)){
         if(cityButtonEnabled && !buildingCity){
             cityButton()
         }else if(cityButtonEnabled && buildingCity){
@@ -108,7 +106,7 @@ canvas.addEventListener('click', function(e) {
     }
 
     //turn button
-    if(ctx.isPointInPath(turnButtonPath, CLICK_X, CLICK_Y)){
+    if(ctx.isPointInPath(c_State.turnButtonPath, CLICK_X, CLICK_Y)){
         if(turnButtonEnabled){
             turnButton()
         }
@@ -122,25 +120,25 @@ canvas.addEventListener('click', function(e) {
     //–––––––––––––––––––––––––––––––––––––––––––––––––––––––
     //resource and dev cards
 
-    for(let i = 0; i < cardPaths.length; i++){
+    for(let i = 0; i < c_State.cardPaths.length; i++){
 
-        if(ctx.isPointInPath(cardPaths[i].path, CLICK_X, CLICK_Y)){
-            console.log(cardPaths[i].type + " card clicked")
+        if(ctx.isPointInPath(c_State.cardPaths[i].path, CLICK_X, CLICK_Y)){
+            console.log(c_State.cardPaths[i].type + " card clicked")
 
 
             //dev cards
             if(!devCardPlayedThisTurn){
 
                 //knight
-                if(knightsEnabled && cardPaths[i].type === "knight"){
-                    currPlayer.playDevCard(cardPaths[i].type);
+                if(knightsEnabled && c_State.cardPaths[i].type === "knight"){
+                    currPlayer.playDevCard(c_State.cardPaths[i].type);
                 }else if(anyDevCardEnabled){
                     
                     //VP are special case and cannot be played 
-                    if(cardPaths[i].type === "victory point"){
+                    if(c_State.cardPaths[i].type === "victory point"){
                         console.log("cannot play a victory point")
                     }else{
-                        currPlayer.playDevCard(cardPaths[i].type)
+                        currPlayer.playDevCard(c_State.cardPaths[i].type)
                     }
 
                 }
@@ -223,9 +221,9 @@ canvas.addEventListener('click', function(e) {
 
                 //TODO this should be a method
                 //moves robber to new tile if the robber is not already there
-                if(movingRobber && robberLocation != tilesArr[i][j]){
+                if(c_State.movingRobber && robberLocation != tilesArr[i][j]){
                     robberLocation = tilesArr[i][j]
-                    movingRobber = false;
+                    c_State.movingRobber = false;
                     tilesArr[i][j].block()
                     
                     if(textured){

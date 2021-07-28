@@ -5,23 +5,23 @@ canvas.addEventListener('mousemove', function(e) {
     const POS_X = e.offsetX * scale;
     const POS_Y = e.offsetY * scale;
 
-    if(     (ctx.isPointInPath(dicePath, POS_X, POS_Y) && diceButtonEnabled)||
-            (ctx.isPointInPath(tradeButtonPath, POS_X, POS_Y) && tradeButtonEnabled)||
-            (ctx.isPointInPath(devButtonPath, POS_X, POS_Y) && devButtonEnabled) ||
-            (ctx.isPointInPath(roadButtonPath, POS_X, POS_Y) && roadButtonEnabled) ||
-            (ctx.isPointInPath(settlementButtonPath, POS_X, POS_Y) && settlementButtonEnabled) ||
-            (ctx.isPointInPath(cityButtonPath, POS_X, POS_Y) && cityButtonEnabled)||
-            (ctx.isPointInPath(turnButtonPath, POS_X, POS_Y) && turnButtonEnabled)){
+    if(     (ctx.isPointInPath(c_State.dicePath, POS_X, POS_Y) && diceButtonEnabled)||
+            (ctx.isPointInPath(c_State.tradeButtonPath, POS_X, POS_Y) && tradeButtonEnabled)||
+            (ctx.isPointInPath(c_State.devButtonPath, POS_X, POS_Y) && devButtonEnabled) ||
+            (ctx.isPointInPath(c_State.roadButtonPath, POS_X, POS_Y) && roadButtonEnabled) ||
+            (ctx.isPointInPath(c_State.settlementButtonPath, POS_X, POS_Y) && settlementButtonEnabled) ||
+            (ctx.isPointInPath(c_State.cityButtonPath, POS_X, POS_Y) && cityButtonEnabled)||
+            (ctx.isPointInPath(c_State.turnButtonPath, POS_X, POS_Y) && turnButtonEnabled)){
             
         document.body.style.cursor = "pointer";
 
-    }else if(   (ctx.isPointInPath(dicePath, POS_X, POS_Y) && !diceButtonEnabled)||
-                (ctx.isPointInPath(tradeButtonPath, POS_X, POS_Y) && !tradeButtonEnabled)||
-                (ctx.isPointInPath(devButtonPath, POS_X, POS_Y) && !devButtonEnabled) ||
-                (ctx.isPointInPath(roadButtonPath, POS_X, POS_Y) && !roadButtonEnabled) ||
-                (ctx.isPointInPath(settlementButtonPath, POS_X, POS_Y) && !settlementButtonEnabled) ||
-                (ctx.isPointInPath(cityButtonPath, POS_X, POS_Y) && !cityButtonEnabled)||
-                (ctx.isPointInPath(turnButtonPath, POS_X, POS_Y) && !turnButtonEnabled)){
+    }else if(   (ctx.isPointInPath(c_State.dicePath, POS_X, POS_Y) && !diceButtonEnabled)||
+                (ctx.isPointInPath(c_State.tradeButtonPath, POS_X, POS_Y) && !tradeButtonEnabled)||
+                (ctx.isPointInPath(c_State.devButtonPath, POS_X, POS_Y) && !devButtonEnabled) ||
+                (ctx.isPointInPath(c_State.roadButtonPath, POS_X, POS_Y) && !roadButtonEnabled) ||
+                (ctx.isPointInPath(c_State.settlementButtonPath, POS_X, POS_Y) && !settlementButtonEnabled) ||
+                (ctx.isPointInPath(c_State.cityButtonPath, POS_X, POS_Y) && !cityButtonEnabled)||
+                (ctx.isPointInPath(c_State.turnButtonPath, POS_X, POS_Y) && !turnButtonEnabled)){
 
         document.body.style.cursor = "not-allowed";
 
@@ -32,30 +32,30 @@ canvas.addEventListener('mousemove', function(e) {
     }
 
     //if hovering over a vertex while building, color it the player color
-    if(showVerts){
+    if(c_State.showVerts){
 
-        hoveredVert = null;
+        c_State.hoveredVert = null;
 
         //loop through all verts
         for(let i = 0; i < 12; i++){
             for(let j = 0; j < verticesArr[i].length; j++){
                 if(ctx.isPointInPath(verticesArr[i][j].hitbox, POS_X, POS_Y)){
-                    hoveredVert = verticesArr[i][j]
+                    c_State.hoveredVert = verticesArr[i][j]
                 }
             }
         }
     }
 
     //if hovering over a road while building, color it the player color
-    if(showRoads){
+    if(c_State.showRoads){
 
-        hoveredRoad = null;
+        c_State.hoveredRoad = null;
 
         //loop through all verts
         for(let i = 0; i < 11; i++){
             for(let j = 0; j < roadsArr[i].length; j++){
                 if(ctx.isPointInPath(roadsArr[i][j].hitbox, POS_X, POS_Y)){
-                    hoveredRoad = roadsArr[i][j]
+                    c_State.hoveredRoad = roadsArr[i][j]
                 }
             }
         }

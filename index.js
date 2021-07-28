@@ -15,9 +15,20 @@ function createWindow () {
   mainWindow.loadFile('index.html')
 }
 
+function createSettingsWindow () {
+
+  const settingsWindow = new BrowserWindow({
+    width: 400,
+    height: 600
+  })
+
+  settingsWindow.loadFile('settings.html');
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   createWindow()
+  createSettingsWindow()
 })

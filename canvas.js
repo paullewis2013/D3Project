@@ -405,19 +405,19 @@ function drawButtons(){
     ctx.fillText("End Turn", textX, textY, 100)
 }
 
-function drawDice(){
+function drawDice(x, y){
 
     //new and improved
     for(i=0; i<diceArr.length; i++){
-
-        var xPos = 10 + i * 65;
-        var yPos = 8 * tileRadius;
 
         let size = 60
 
         if(initialPlacementsComplete && diceButtonEnabled){
             size = aState.vertSize * 4
         }
+
+        let xPos = x + (i * 65) - size/2;
+        let yPos = y - size/2;
 
         switch(diceArr[i].getImg()){
             case "assets/Dice-1.png":
@@ -1230,9 +1230,12 @@ function drawTileTextures(){
     drawTiles()
 }
 
-//TODO write me
-function drawTimer(){
+function drawTimer(x, y){
 
+    ctx.font = "20px Arial";
+    ctx.fillStyle = "black";
+    ctx.textAlign = "right";
+    ctx.fillText("Timer: 00:00", x - 5, y + 25);
 }
 
 function drawTradeMenu(){
@@ -1308,16 +1311,12 @@ function drawTradeMenu(){
 
 }
 
-function drawTurnNum(){
+function drawTurnNum(x, y){
 
-    ctx.fillStyle = "#fdf6e3"
-    ctx.rect(0, 400, 100, 65)
-    ctx.fill()
-
-    ctx.textAlign = "left"
+    ctx.textAlign = "right"
     ctx.font = "20px Arial"
     ctx.fillStyle = "black"
-    ctx.fillText("Turn: " + turnNumber, 12, 450)
+    ctx.fillText("Turn: " + turnNumber, x - 5, y + 25)
 }
 
 function drawVertices(){
@@ -1677,34 +1676,31 @@ function drawVisited(){
 //this one is really important
 function drawCanvas(){
 
-    //draw the background
+    //draw rectangle to fill the background
     ctx.rect(0, 0, c_WIDTH, c_HEIGHT)
     ctx.fillStyle = "#268bd2"
     ctx.fill()
 
-    // Don't delete this just commented it out during development
     drawBackgroundAnimated()
     
     //elements unrelated to board
-    drawDice();
-    drawTurnNum();
     drawBank();
     drawButtons();
     drawHand();
+    drawPlayerInfo();
 
+    //conditional elements
     if(currentlyTrading){
         drawTradeMenu()
     }
-
     if(showMonopolyMenu){
         drawMonopolyMenu()
     }
-
     if(showYOPMenu){
         drawYOPMenu()
     }
 
-    //elements under board
+    //elements underneath board
     drawPorts()
     drawIsland();
 
@@ -1716,8 +1712,6 @@ function drawCanvas(){
     }
 
     //elements on top of board
-
-    // drawVisited()
     drawRoads()
     drawSettlements()
     drawRobber()
@@ -1725,8 +1719,8 @@ function drawCanvas(){
         drawVertices()
     }
 
-    //player info in rightside column
-    drawPlayerInfo()
+    //visualizations
+    // drawVisited();
 }
 
 //------------------------------------------------------

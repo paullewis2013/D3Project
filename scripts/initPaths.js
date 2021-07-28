@@ -166,10 +166,10 @@ function initDicePath(){
     
     dicePath = new Path2D();
     
-    let lX = 10
-    let rX = 125
+    let lX = 55
+    let rX = 175
 
-    let tY = 8 * tileRadius
+    let tY = 435
     let bY = tY + 65
 
     ctx.beginPath();

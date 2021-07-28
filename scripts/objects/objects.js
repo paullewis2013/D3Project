@@ -888,7 +888,7 @@ Player.prototype.botBestRoad = function(base){
     let max = 0
 
     for(let i = 0; i < potentialRoadScores.length; i++){
-        console.log(potentialRoadScores[i])
+        // console.log(potentialRoadScores[i])
 
         if(potentialRoadScores[i] > max){
             index = i

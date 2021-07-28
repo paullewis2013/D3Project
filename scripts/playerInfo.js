@@ -5,6 +5,10 @@ function drawPlayerInfo(){
 
     var offset = (canvas.height * 0.25)  / playersArr.length;
 
+    //draw background
+    ctx.fillStyle = "#93a1a1"
+    ctx.fillRect(0, offset * 4, playersInfoWidth, 85);
+
     for(let i = 0; i < playersArr.length; i++){
 
         ctx.textAlign = "center"
@@ -110,5 +114,7 @@ function drawPlayerInfo(){
         // ctx.fillText("Cities: " + playersArr[i].citiesRemaining, playersInfoWidth - 10, offset * i + offset * 3/4 + fontH/2)
     }
 
-
+    drawTurnNum(playersInfoWidth - 10, 430);
+    drawTimer(playersInfoWidth - 10, 465);
+    drawDice(80, 465);
 }

@@ -1,24 +1,9 @@
 //this file is to handle all of the code related to the canvas element
 
-var canvas = document.getElementById("canvas")
-
-canvas.style.width = window.innerWidth + "px";
-canvas.style.height = window.innerHeight + "px";  
-
-var ctx = canvas.getContext('2d')
-
-// Set actual size in memory (scaled to account for extra pixel density).
-var scale = window.devicePixelRatio; // Change to 1 on retina screens to see blurry canvas.
-canvas.width = Math.floor(window.innerWidth * scale);
-canvas.height = Math.floor(window.innerHeight * scale);
-
-const c_WIDTH = canvas.width/scale;
-const c_HEIGHT = canvas.height/scale;
-
-var ctx = canvas.getContext('2d');
-
-// Normalize coordinate system to use css pixels.
-ctx.scale(scale, scale);
+var canvas;
+var c_WIDTH; 
+var c_HEIGHT;
+var ctx; 
 
 // information about canvas state which may be needed in other files
 var c_State = {
@@ -48,8 +33,9 @@ var c_State = {
     turnButtonPath: null,
 
     buttonWidth: 0,
-    islandCenterX: c_WIDTH * 0.58,
+    islandCenterX: 0,
     tileRadius: 60,
+    scale: 1,
 
     cardPaths: [],
     monopolyMenuCardPaths: [],
@@ -63,13 +49,49 @@ var c_State = {
     yop2: false,
 }
 
+// called from board.js setup method to initialize canvas itself
 function initCanvas(){
+
+    //find canvas in document
+    canvas = document.getElementById("canvas");
+
+    //expand canvas to fill window
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+    
+    // Set actual size in memory (scaled to account for extra pixel density).
+    c_State.scale = window.devicePixelRatio; // Change back to 1 on retina screens to see blurry canvas.
+    canvas.width = Math.floor(window.innerWidth * c_State.scale);
+    canvas.height = Math.floor(window.innerHeight * c_State.scale);
+
+    // create ctx object
+    ctx = canvas.getContext('2d');
+
+    // Normalize coordinate system to use css pixels.
+    ctx.scale(c_State.scale, c_State.scale);
+
+    c_WIDTH = canvas.width/c_State.scale;
+    c_HEIGHT = canvas.height/c_State.scale;
+
+    //TODO this should not be in this method
+    c_State.islandCenterX = c_WIDTH * 0.58;
+}
+
+function initCanvasElements(){
+
+    //set a few parameters needed in state
+    c_State.tileRadius = 60;
+
     initRoads()
     initBackgroundDots();
     initIslandPath();
     initPorts();
     initDicePath();
     initButtons();
+
+    //add listeners
+    startMoveListener();
+    startClickListener();
 }
 
 
@@ -254,9 +276,6 @@ function drawBank(){
             ctx.font = "12px Arial"
             ctx.fillText(bank[i], cardX, currCardY + 5)
 
-
-
-
         }else{
             ctx.beginPath()
             ctx.rect(startX + (i * w/6), cardY + (i%2) * 40, cardWidth, cardHeight)
@@ -282,7 +301,6 @@ function drawBank(){
             ctx.font = "12px Arial"
             ctx.fillText(devCardArray.length, cardX, currCardY + 5)
         }
-        
     }
 }
 
@@ -749,18 +767,15 @@ function drawHand(){
 
 function drawIsland(){
 
-    var gradient = ctx.createRadialGradient(c_State.islandCenterX - 90,c_HEIGHT/2, 150, c_State.islandCenterX - 90,c_HEIGHT/2, 200);
+    var gradient = ctx.createRadialGradient(c_State.islandCenterX - 90, c_HEIGHT/2, 150, c_State.islandCenterX - 90, c_HEIGHT/2, 200);
     gradient.addColorStop(0, "#DEB887");
     gradient.addColorStop(1, 'wheat');
 
-
-    //this color is called burly wood
     ctx.fillStyle = gradient
     ctx.lineWidth = 8;
     ctx.strokeStyle = "wheat"
     ctx.stroke(c_State.islandPath);
     ctx.fill(c_State.islandPath);
-
 }
 
 function drawMonopolyMenu(){
@@ -1137,7 +1152,6 @@ function drawTiles(){
                     ctx.fill()
                 }
             }
-
             centerX += c_State.tileRadius * 2 
         }
     }
@@ -1147,8 +1161,7 @@ function drawTileTextures(){
 
     var centerX;
     var centerY;
-    //var radius = c_HEIGHT/11.5;
-    var radius = 60
+    var radius = c_State.tileRadius;
 
     for(var i = 0; i < 5; i++){
         //centerY = ((2 + i) * (c_HEIGHT / 7)) - radius;
@@ -1223,7 +1236,6 @@ function drawTileTextures(){
             ctx.closePath()
             ctx.clip();
             
-
             let drawX = centerX - (hexRad) - 50 - 50 * Math.sin(randomTable[i][j])
             let drawY = centerY - (hexRad) - 50 - 50 * Math.sin(randomTable[j][i])
 
@@ -1236,11 +1248,7 @@ function drawTileTextures(){
             centerX += radius * 2 
             
         }
-
     } 
-    
-    //draw rest of tile on top of image
-    drawTiles()
 }
 
 function drawTimer(x, y){
@@ -1392,10 +1400,7 @@ function drawVertices(){
             ctx.stroke()
             ctx.closePath()
         }
-
-    }
-
-    
+    }    
 }
 
 function drawYOPMenu(){
@@ -1720,9 +1725,8 @@ function drawCanvas(){
     //board itself
     if(c_State.textured){
         drawTileTextures()
-    }else{
-        drawTiles()
     }
+    drawTiles()
 
     //elements on top of board
     drawRoads()

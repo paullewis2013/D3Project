@@ -6,9 +6,6 @@
 //--------------------------------------------------
 
 
-//TODO organize instance fields
-
-
 //inputs
 var diceButtonEnabled = false;
 var tradeButtonEnabled = false;
@@ -111,8 +108,8 @@ var currPlayer = null;
 var currPlayerIndex;
 
 //create an array of 2 dice to be rolled
+//TODO this shouldn't be loose
 var diceArr = new Array(new Dice(), new Dice());
-
 
 //defines enum for a dev card
 const devCard = {
@@ -133,6 +130,7 @@ const resourceCard = {
 }
 
 //another weird statistical thing to track
+//TODO make a new file to hold this data
 var productionCapacity = [0, 0, 0, 0, 0]
 
 var numTilePointers = [
@@ -241,7 +239,6 @@ function setUpTiles(){
     tilesArr[2].splice(2,0,( tempTiles[counter]));
     counter++;
 
-
     //find location of robber and record it
     for(var i = 0; i < 5; i++){
         for(var j = 0; j < tilesArr[i].length; j++){
@@ -259,9 +256,12 @@ function setUpTiles(){
     }
 
     // don't remove this
+    // it shouldn't be here but things break if it's not
     drawTiles();
 }
 
+//TODO create an init players method
+// don't leave this loose
 var p1 = new Player("Orange", true);
 var p2 = new Player("Red", true);
 var p3 = new Player("Purple", true);
@@ -281,6 +281,9 @@ function setup(){
 
     //TODO load settings here
 
+    // create canvas
+    initCanvas();
+
     initRandomTable()
     populateDevCardDeck()
 
@@ -290,7 +293,7 @@ function setup(){
     generatePorts()
 
     //initializes canvas elements
-    initCanvas();
+    initCanvasElements();
 
     // these are stat tracking method not necessary for gameplay
     // TODO eventually all of these init methods should be handled together
@@ -313,9 +316,7 @@ async function initialSettlements(){
     cityButtonEnabled = false;
     turnButtonEnabled = false;
 
-
     let botDelay = 250
-
 
     //go through players in order
     //WARNING use currPlayer to access player and not playersArr[i]
@@ -354,7 +355,6 @@ async function initialSettlements(){
             currPlayer = playersArr[currPlayerIndex]
         }
     }
-
 
     //snake backwards through players
     for(let i = 0; i < playersArr.length; i++){
@@ -412,7 +412,7 @@ async function mainGameLoop(){
     //turn loop
     do {
 
-        //this is for a specific edge case where a player can reach 10 points while it
+        // this is for a specific edge case where a player can reach 10 points while it
         // is not their turn
         checkWinCondition()
 
@@ -428,7 +428,6 @@ async function mainGameLoop(){
         //preturn option to play knight card
         knightsEnabled = true;
 
-
         //await player rolling the dice
         await waitForDiceRoll()
 
@@ -437,7 +436,6 @@ async function mainGameLoop(){
             //await each player choosing resources to discard
             //await currPlayer moving robber
             //await currPlayer choosing player to rob
-
 
         //begin body of turn
         anyDevCardEnabled = true;
@@ -449,10 +447,6 @@ async function mainGameLoop(){
 
         //await choice to end turn
         await waitForTurnButton(turnNumber);
-
-        //end of turn
-        drawCanvas();
-        drawPlayerInfo();
     
     }while(!winCondition)
 
@@ -480,7 +474,6 @@ function setButtons(){
             tradeButtonEnabled = false;
         }
         
-
         //dev button
         if(!building && devCardArray.length > 0 && (currPlayer.resources[2] > 0 && currPlayer.resources[3] > 0 && currPlayer.resources[4] > 0)){
             devButtonEnabled = true;
@@ -516,7 +509,6 @@ function setButtons(){
             turnButtonEnabled = false;
         }
         
-
     }else{
 
         tradeButtonEnabled = false;
@@ -527,7 +519,6 @@ function setButtons(){
         turnButtonEnabled = false;
 
     }
-    
     
     //dice
     if(!diceRolledThisTurn && initialPlacementsComplete){
@@ -686,6 +677,7 @@ function populateDevCardDeck(){
     devCardArray = _.shuffle(devCardArray)
 }
 
+//TODO move this to stats file
 //fill dice array with 0s
 function populateDiceResultsArr(){
     for(var i = 0; i<11; i++){
@@ -696,6 +688,7 @@ function populateDiceResultsArr(){
     }
 }
 
+//requires verticesArr to already exist
 function generatePorts(){
 
     //4 3:1 ports and a 2:1 for every resource
@@ -748,8 +741,6 @@ function checkWinCondition(){
         winner = currPlayer;
     }
 
-    drawCanvas()
-    drawPlayerInfo()
 }
 
 //generates a dice roll between 1 and 12 by summing two d6
@@ -797,8 +788,6 @@ function drawDevCard(){
     }else{
         console.log("deck empty")
     }
-    drawCanvas()
-    
 }
 
 function generateResources(result){
@@ -960,6 +949,7 @@ function buildSettlement(vertex, player){
     vertex.build(vertex.settlement);
 
     buildingSettlement = false;
+    c_State.showVerts = false;
     unfreeze();
 }
 
@@ -1008,9 +998,6 @@ function tradeButton(){
     }else{
         currentlyTrading = false;
     }
-
-    drawCanvas()
-
 }
 
 function freeze(){
@@ -1071,9 +1058,6 @@ function roadButton(){
     c_State.showRoads = true;
     buildingRoad = true;
     freeze();
-    drawRoads();
-    drawSettlements();
-
 }
 
 function settlementButton(){
@@ -1081,8 +1065,6 @@ function settlementButton(){
     buildingSettlement = true;
     freeze();
     c_State.showVerts = true;
-    drawVertices();
-
 }
 
 

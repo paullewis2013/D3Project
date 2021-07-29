@@ -39,10 +39,10 @@ function initBackgroundDots(){
 function initButtons(){
 
     //x y width height and curve radius for rectangle path
-    let x = (c_WIDTH/2) - 1.5*c_State.tileRadius
-    let y = c_HEIGHT - c_State.tileRadius * 1.8
+    let x = (c_WIDTH/2) - 1.5 * 60
+    let y = c_HEIGHT - 60 * 1.8
     let w = (c_WIDTH - x) / 7
-    let h = c_State.tileRadius * 1.5
+    let h = 60 * 1.5
     let radius = 10
 
     c_State.buttonWidth = w * 7/6
@@ -224,7 +224,7 @@ function initIslandPath(){
 
 function initPorts(){
 
-    var radius = 60;
+    var radius = c_State.tileRadius;
     var hexRad = 6.5/6 * radius
 
     //I'm just picking a vertex below or above the port to use as an anchor for positioning the port
@@ -261,7 +261,7 @@ function initPorts(){
 
 function initRoads(){
 
-    var radius = 60;
+    var radius = c_State.tileRadius;
     var centerX;
     var centerY;
     var hexRad = radius * 7/6.5
@@ -621,7 +621,7 @@ function initRoads(){
 
 function initVertices(){
 
-    var radius = 60;
+    var radius = c_State.tileRadius;
     var centerX;
     var centerY;
     var hexRad = radius * 7/6

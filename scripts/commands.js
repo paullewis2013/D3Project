@@ -13,6 +13,5 @@ function giveResources(){
 }
 
 function toggleTexture(){
-    textured = !textured
-    drawCanvas()
+    c_State.textured = !c_State.textured;
 }

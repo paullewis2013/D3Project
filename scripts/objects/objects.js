@@ -58,7 +58,6 @@ Vertex.prototype.getLongestPath = function (player, deadRoads){
         if(this.adjRoads[i].player === player && !deadRoads.includes(this.adjRoads[i])){
             newRoads.push(this.adjRoads[i])
         }
-
     }
     
     //base case is no adj roads of given color that aren't in deadRoads list
@@ -86,7 +85,6 @@ Vertex.prototype.getLongestPath = function (player, deadRoads){
             nextVert = newRoads[i].getOppositeVert(this);
 
             scores.push(1 + nextVert.getLongestPath(player, updatedDeadRoads))
-
         }
 
         let max = 0;
@@ -97,11 +95,7 @@ Vertex.prototype.getLongestPath = function (player, deadRoads){
 
         //take the maximum value returned from of any of the recursive calls
         return max;
-
     }
-
-
-
 }
 
 

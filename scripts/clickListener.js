@@ -49,6 +49,11 @@ function startClickListener(){
     
         //–––––––––––––––––––––––––––––––––––––––––––––––––––––––
         //buttons
+
+        //settingsButton
+        if(ctx.isPointInPath(c_State.settingsButtonPath, CLICK_X, CLICK_Y)){
+            openSettings();
+        }
     
         //dice Button
         if(ctx.isPointInPath(c_State.dicePath, CLICK_X, CLICK_Y)){
@@ -124,7 +129,6 @@ function startClickListener(){
     
             if(ctx.isPointInPath(c_State.cardPaths[i].path, CLICK_X, CLICK_Y)){
                 console.log(c_State.cardPaths[i].type + " card clicked")
-    
     
                 //dev cards
                 if(!devCardPlayedThisTurn){

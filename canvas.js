@@ -21,7 +21,7 @@ var c_State = {
     hoveredRoad: null,
     hoveredVert: null,
 
-    colorVals: ["green", "firebrick", "lightgreen", "#ffff99", "slategrey", "blue"],
+    colorVals: ["green", "firebrick", "lightgreen", "#ffff99", "slategrey", "lightgrey"],
 
     cityButtonPath: null,
     devButtonPath: null,
@@ -31,6 +31,7 @@ var c_State = {
     settlementButtonPath: null,
     tradeButtonPath: null,
     turnButtonPath: null,
+    settingsButtonPath: null,
 
     buttonWidth: 0,
     islandCenterX: 0,
@@ -131,7 +132,7 @@ var imageSrcs = [
                 "assets/OreTexture.png",
                 "assets/DesertTexture.png",
                 "assets/settlement.svg",
-                "assets/bank.svg",
+                "assets/bank.png",
                 "assets/user.svg",
 
                 //10
@@ -142,6 +143,8 @@ var imageSrcs = [
                 "assets/Dice-5.png",
                 "assets/Dice-6.png",
 
+                //16
+                "assets/settings.png"
                 ];
 
 var images = [];
@@ -239,33 +242,37 @@ function drawBank(){
     ctx.strokeStyle = "black"
 
     //draw bank image
-    ctx.drawImage(images[8], x + w/2 - c_State.tileRadius/2, 0, c_State.tileRadius, c_State.tileRadius)
+    ctx.drawImage(images[8], x + w/2 - 40, 10, 80, 80)
 
-    let cardHeight = 0.8 * c_State.tileRadius
+    //draw settings wheel
+    ctx.fillStyle = "lightgrey"
+    ctx.fill(c_State.settingsButtonPath)
+
+    ctx.drawImage(images[16], c_WIDTH - 50, 10, 40, 40)
+
+    let cardHeight = 48
     let cardWidth = 5 * cardHeight/7
 
-    let startX = x + c_State.tileRadius/6
-    let cardY = 1.3 * c_State.tileRadius
+    let startX = x + cardWidth/2;
+    let cardY = 110;
     
     //draw numbers for resources
     for(var i = 0; i < 6; i++){
         ctx.fillStyle = "black"
         ctx.font = "15px Arial"
         if(i<5){
+            let cardX = startX + (i * w/6)
+
             ctx.beginPath()
-            ctx.rect(startX + (i * w/6), cardY + (i%2) * 40, cardWidth, cardHeight)
+            ctx.rect(cardX, cardY, cardWidth, cardHeight)
             ctx.stroke()
             ctx.fillStyle = c_State.colorVals[i]
             ctx.fill()
             ctx.fillStyle = "black"
-            //ctx.fillText(bank[i], 160 + ((i%3)*320/4), 40 + Math.floor(i/3) * 40)
-
-            let cardX = startX + (i * w/6)
-            let currCardY = cardY + (i%2) * 40
 
             //draw circle for number of cards
             ctx.beginPath()
-            ctx.arc(cardX, currCardY, c_State.tileRadius * 0.15, 0, 2 * Math.PI, false)
+            ctx.arc(cardX, cardY, c_State.tileRadius * 0.15, 0, 2 * Math.PI, false)
             ctx.stroke()
             ctx.fillStyle = "white"
             ctx.fill()
@@ -274,23 +281,23 @@ function drawBank(){
             ctx.fillStyle = "black"
             ctx.textAlign = "center"
             ctx.font = "12px Arial"
-            ctx.fillText(bank[i], cardX, currCardY + 5)
+            ctx.fillText(bank[i], cardX, cardY + 5)
 
-        }else{
+        }
+        //dev card pile
+        else{
+            let cardX = startX + (i * w/6)
+
             ctx.beginPath()
-            ctx.rect(startX + (i * w/6), cardY + (i%2) * 40, cardWidth, cardHeight)
+            ctx.rect(cardX, cardY, cardWidth, cardHeight)
             ctx.stroke()
             ctx.fillStyle = c_State.colorVals[i]
             ctx.fill()
             ctx.fillStyle = "black"
-            //ctx.fillText(devCardArray.length, 160 + ((i%3)*320/4), 40 + Math.floor(i/3) * 40)
-
-            let cardX = startX + (i * w/6)
-            let currCardY = cardY + (i%2) * 40
 
             //draw circle for number of cards
             ctx.beginPath()
-            ctx.arc(cardX, currCardY, c_State.tileRadius * 0.15, 0, 2 * Math.PI, false)
+            ctx.arc(cardX, cardY, c_State.tileRadius * 0.15, 0, 2 * Math.PI, false)
             ctx.stroke()
             ctx.fillStyle = "white"
             ctx.fill()
@@ -299,7 +306,10 @@ function drawBank(){
             ctx.fillStyle = "black"
             ctx.textAlign = "center"
             ctx.font = "12px Arial"
-            ctx.fillText(devCardArray.length, cardX, currCardY + 5)
+            ctx.fillText(devCardArray.length, cardX, cardY + 5)
+
+            ctx.font = "20px Arial"
+            ctx.fillText("D", cardX + cardWidth/2, cardY + cardHeight/2 + 5)
         }
     }
 }

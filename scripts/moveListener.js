@@ -13,7 +13,8 @@ function startMoveListener(){
                 (ctx.isPointInPath(c_State.roadButtonPath, POS_X, POS_Y) && roadButtonEnabled) ||
                 (ctx.isPointInPath(c_State.settlementButtonPath, POS_X, POS_Y) && settlementButtonEnabled) ||
                 (ctx.isPointInPath(c_State.cityButtonPath, POS_X, POS_Y) && cityButtonEnabled)||
-                (ctx.isPointInPath(c_State.turnButtonPath, POS_X, POS_Y) && turnButtonEnabled)){
+                (ctx.isPointInPath(c_State.turnButtonPath, POS_X, POS_Y) && turnButtonEnabled) ||
+                (ctx.isPointInPath(c_State.settingsButtonPath, POS_X, POS_Y))){
                 
             document.body.style.cursor = "pointer";
     
@@ -63,5 +64,4 @@ function startMoveListener(){
             }
         }
     });
-
 }

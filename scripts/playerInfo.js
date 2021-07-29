@@ -19,7 +19,7 @@ function drawPlayerInfo(){
         
         //used to show which players turn it is
         if(playersArr[i] == currPlayer){
-            ctx.fillStyle = "#9dd9b8"
+            ctx.fillStyle = "#71da9d"
         }
 
         ctx.fill();

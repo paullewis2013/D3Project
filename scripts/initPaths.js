@@ -160,6 +160,13 @@ function initButtons(){
     c_State.turnButtonPath.lineTo(x, y+radius);
     c_State.turnButtonPath.quadraticCurveTo(x, y, x+radius, y);
     ctx.closePath()
+
+    //settings button
+    c_State.settingsButtonPath = new Path2D();
+
+    ctx.beginPath();
+    c_State.settingsButtonPath.arc(c_WIDTH - 30, 30, 19.5, 0, 2 * Math.PI);
+    ctx.closePath();
 }
 
 function initDicePath(){
@@ -619,6 +626,9 @@ function initRoads(){
     }
 }
 
+//TODO change all push commands to modify existing vertex in place
+// create new init vertices method to fix order issue for method calls w board.js
+// then initVertices can be called in initCanvasElements
 function initVertices(){
 
     var radius = c_State.tileRadius;

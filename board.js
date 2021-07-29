@@ -29,14 +29,16 @@ var devCardPlayedThisTurn = false;
 var currentlyTrading = false;
 
 //an array to store value and frequency of dice rolls
+//TODO goes in d_State
 var dice_results_arr = [];
 
 //array to store dev cards left in deck
 var devCardArray = [];
 
 //object to track number of each dev card which haven't been played
+//TODO both go in d_State
 var unplayedDevCards = {knight: 14, vp: 5, monopoly: 2, road: 2, plenty: 2};
-var playedDevCards = {knight: 0, vp: 0, monopoly: 0, road: 0, plenty: 0}
+var playedDevCards = {knight: 0, vp: 0, monopoly: 0, road: 0, plenty: 0};
 
 //array to store resource cards in bank
 var bank = [19, 19, 19, 19, 19];
@@ -45,15 +47,17 @@ var buildingRoad = false;
 var buildingSettlement = false;
 var buildingCity = false;
 
-var turnNumber = 0
+var turnNumber = 0;
 
 //maybe this should point to a tile
-var robberLocation = null
+var robberLocation = null;
 
 var longestRoadHolder = null;
 var largestArmyHolder = null;
 
+//TODO remove quickstart
 var quickStarting = true
+
 var randomTable = []
 
 //the tiles on the board
@@ -545,9 +549,7 @@ async function waitForSettlement(player, num){
         }else{
             await sleep(100)
         }
-
     }
-
 }
 
 //bizarrely this is the exact same method body as waitForMonopolyChoice but it handles the global variable 
@@ -634,9 +636,7 @@ async function waitForTurnButton(currentTurn){
         }else{
             await sleep(100)
         }
-
     }
-
 }
 
 async function waitForDiceRoll(){
@@ -740,7 +740,6 @@ function checkWinCondition(){
         winCondition = true;
         winner = currPlayer;
     }
-
 }
 
 //generates a dice roll between 1 and 12 by summing two d6
@@ -772,9 +771,6 @@ function rollDice(){
         generateResources(result);
 
     }
-
-    drawCanvas()
-
     return result;
 }
 
@@ -1067,7 +1063,6 @@ function settlementButton(){
     c_State.showVerts = true;
 }
 
-
 //TODO
 function cityButton(){
 
@@ -1077,6 +1072,7 @@ function cityButton(){
 
 }
 
+//TODO move to data.js
 //eventually move this and other button functions to a seperate js file
 function graphicButton(){
 
@@ -1112,11 +1108,6 @@ function graphicButton(){
     }
 }
 
-//TODO does this method do anything useful?
-function quickStart(){
-    quickStarting = true
-}
-
 //fills the random table with angles between 0 and 2 PI Radians
 function initRandomTable(){
 
@@ -1126,32 +1117,6 @@ function initRandomTable(){
 
         for(let j = 0; j < 100; j++){
             randomTable[i].push(Math.random() * 2 * Math.PI)
-        }
-    }
-}
-
-
-//--------------------------------------------------
-//End of button controls
-//--------------------------------------------------
-
-//where does this belong??
-//sums up dot values for each resource by checking all tiles
-function calcProduction(){
-    for(var i = 0; i < tilesArr.length; i++){
-        for(var j = 0; j < tilesArr[i].length; j++){
-
-            if(tilesArr[i][j].resourceCard === "wood"){
-                productionCapacity[0] += (6 - Math.abs(7 - tilesArr[i][j].number))
-            }else if(tilesArr[i][j].resourceCard === "brick"){
-                productionCapacity[1] += (6 - Math.abs(7 - tilesArr[i][j].number))
-            }else if(tilesArr[i][j].resourceCard === "sheep"){
-                productionCapacity[2] += (6 - Math.abs(7 - tilesArr[i][j].number))
-            }else if(tilesArr[i][j].resourceCard === "wheat"){
-                productionCapacity[3] += (6 - Math.abs(7 - tilesArr[i][j].number))
-            }else if(tilesArr[i][j].resourceCard === "ore"){
-                productionCapacity[4] += (6 - Math.abs(7 - tilesArr[i][j].number))
-            }
         }
     }
 }

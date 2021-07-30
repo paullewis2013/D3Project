@@ -266,7 +266,7 @@ function setUpTiles(){
 
 //TODO create an init players method
 // don't leave this loose
-var p1 = new Player("Orange", true);
+var p1 = new Player("Orange", false);
 var p2 = new Player("Red", true);
 var p3 = new Player("Purple", true);
 var p4 = new Player("Blue", true);
@@ -351,8 +351,6 @@ async function initialSettlements(){
 
             await sleep(botDelay)
         }
-        
-
 
         if(i < playersArr.length - 1){
             currPlayerIndex = ++currPlayerIndex%(playersArr.length);
@@ -409,63 +407,78 @@ async function mainGameLoop(){
     turnNumber = 1;
 
     //unbot all the players
-    for(let i = 0; i < playersArr.length; i++){
-        playersArr[i].isBot = false;
-    }
+    // for(let i = 0; i < playersArr.length; i++){
+    //     playersArr[i].isBot = false;
+    // }
 
     //turn loop
     do {
 
-        // this is for a specific edge case where a player can reach 10 points while it
-        // is not their turn
-        checkWinCondition()
+        if(currPlayer.isBot){
+            await sleep(1000)
+            currPlayer.botTurn()
+        }else{
+            // this is for a specific edge case where a player can reach 10 points while it
+            // is not their turn
+            checkWinCondition()
 
-        //disable all moves except dice and knight
-        diceRolledThisTurn = false;
-        freeze()
-        diceButtonEnabled = true;
+            //disable all moves except dice and knight
+            diceRolledThisTurn = false;
+            freeze()
+            diceButtonEnabled = true;
 
-        //cap dev cards played per turn
-        devCardPlayedThisTurn = false;
-        anyDevCardEnabled = false;
+            //cap dev cards played per turn
+            devCardPlayedThisTurn = false;
+            anyDevCardEnabled = false;
 
-        //preturn option to play knight card
-        knightsEnabled = true;
+            //preturn option to play knight card
+            knightsEnabled = true;
 
-        //await player rolling the dice
-        await waitForDiceRoll()
+            //await player rolling the dice
+            await waitForDiceRoll()
 
-        //handle this in roll dice method
-        //if robber
-            //await each player choosing resources to discard
-            //await currPlayer moving robber
-            //await currPlayer choosing player to rob
+            //handle this in roll dice method
+            //if robber
+                //await each player choosing resources to discard
+                //await currPlayer moving robber
+                //await currPlayer choosing player to rob
 
-        //begin body of turn
-        anyDevCardEnabled = true;
+            //begin body of turn
+            anyDevCardEnabled = true;
 
-        //disable all moves which aren't legal for player
-        drawButtons()
+            //disable all moves which aren't legal for player
+            // drawButtons()
 
-        //main turn loop actions can happen asynchronously here 
+            //main turn loop actions can happen asynchronously here 
 
-        //await choice to end turn
-        await waitForTurnButton(turnNumber);
+            //await choice to end turn
+            await waitForTurnButton(turnNumber);
+        }
     
     }while(!winCondition)
 
     //do something when end of game condition is reached
 
     freeze();
-    drawCanvas();
 
     console.log("Game over")
     console.log(winner.color + " won the game")
-
 }
 
 //disables buttons which the user cannot push
-function setButtons(){
+function setButtons(player){
+
+    //don't enable buttons when it's not the players turn
+    if(player != currPlayer){
+        tradeButtonEnabled = false;
+        devButtonEnabled = false;
+        roadButtonEnabled = false;
+        settlementButtonEnabled = false;
+        cityButtonEnabled = false;
+        turnButtonEnabled = false;
+        diceButtonEnabled = false;
+        return;
+    }
     
     let building = buildingRoad || buildingSettlement || buildingCity;
 
@@ -613,7 +626,7 @@ async function waitForRoad(player, num){
 
         if(winCondition){
             break;
-        }else if(15 - player.roadsRemaining > num){
+        }else if(15 - player.roadsRemaining >= num){
             built = true
         }else{
             await sleep(100)

@@ -134,7 +134,7 @@ Road.prototype.getOppositeVert = function(v){
 function Player(color, isBot){
     this.isBot = isBot;
     this.VP = 0;
-    this.name = "";
+    this.name = "DEFAULT_NAME";
     this.resources = [0, 0, 0, 0, 0];
     this.devCards = [0, 0, 0, 0, 0];
     this.roadsRemaining = 15;
@@ -551,7 +551,6 @@ Player.prototype.playDevCard = async function(card){
 
                     }
                 }
-                
             }
 
             //turn off free roads
@@ -638,11 +637,7 @@ Player.prototype.playDevCard = async function(card){
 
     }
 
-    // drawHand()
-    // drawButtons()
-
     checkWinCondition()
-
 }
 Player.prototype.getBuildableRoads = function(){
 
@@ -1055,9 +1050,14 @@ Player.prototype.botTurn = function(){
     //target player with resource you want to steal but maybe wait until after normal dice roll
 
     //roll phase
+    rollDice();
 
     //next roll the dice
     //if necessary move the robber
+    //TODO moving robber should belong to b_State not c_State
+    if(c_State.movingRobber){
+        
+    }
     //and discard resources etc.
 
     //post roll phase
@@ -1084,7 +1084,7 @@ Player.prototype.botTurn = function(){
     //continue until no moves worth playing are found
 
     //end turn
-
+    turnButton()
 }
 
 

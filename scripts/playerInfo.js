@@ -3,23 +3,42 @@ const playersInfoWidth = 350;
 //this is the only thing this entire file does
 function drawPlayerInfo(){
 
-    var offset = (canvas.height * 0.25)  / playersArr.length;
+    var offset = 110//(canvas.height * 0.25)  / playersArr.length;
 
     //draw background
     ctx.fillStyle = "#93a1a1"
-    ctx.fillRect(0, offset * 4, playersInfoWidth, 85);
+    if(diceButtonEnabled){
+        ctx.fillStyle = c_State.selectedColor
+    }
+
+    let radius = 20;
+    let bottom = offset * (playersArr.length) + 85
+
+    ctx.beginPath()
+    ctx.moveTo(0, 0)
+    ctx.lineTo(playersInfoWidth, 0)
+    ctx.lineTo(playersInfoWidth, bottom - radius)
+    ctx.quadraticCurveTo(playersInfoWidth, bottom, playersInfoWidth - radius, bottom)
+    ctx.lineTo(0, bottom)
+    ctx.lineTo(0, 0)
+    ctx.fill()
+    ctx.strokeStyle = "black"
+    ctx.lineWidth = 1
+    ctx.stroke();
+    ctx.closePath()
 
     for(let i = 0; i < playersArr.length; i++){
 
         ctx.textAlign = "center"
         ctx.font = "20px Arial";
 
+        ctx.beginPath()
         ctx.rect(0, offset * i, playersInfoWidth, offset);
-        ctx.fillStyle = "#fdf6e3"
+        ctx.fillStyle = c_State.menuColor
         
         //used to show which players turn it is
         if(playersArr[i] == currPlayer){
-            ctx.fillStyle = "#71da9d"
+            ctx.fillStyle = c_State.selectedColor
         }
 
         ctx.fill();
@@ -114,7 +133,7 @@ function drawPlayerInfo(){
         // ctx.fillText("Cities: " + playersArr[i].citiesRemaining, playersInfoWidth - 10, offset * i + offset * 3/4 + fontH/2)
     }
 
-    drawTurnNum(playersInfoWidth - 10, 430);
-    drawTimer(playersInfoWidth - 10, 465);
-    drawDice(80, 465);
+    drawTurnNum(playersInfoWidth - 10, playersArr.length * offset);
+    drawTimer(playersInfoWidth - 10, playersArr.length * offset + 40);
+    drawDice(80, playersArr.length * offset + 40);
 }

@@ -8,9 +8,15 @@ var ctx;
 // information about canvas state which may be needed in other files
 var c_State = {
 
+    //the specific player who the canvas is drawn for
+    player: null,
+
     //textured refers to tile images
     textured: true,
+    menuColor: "#fdf6e3",
+    selectedColor: "#71da9d",
 
+    //TODO move me to b_State
     movingRobber: false,
 
     showMonopolyMenu: false,
@@ -82,6 +88,7 @@ function initCanvasElements(){
 
     //set a few parameters needed in state
     c_State.tileRadius = 60;
+    c_State.player = playersArr[0];
 
     initRoads()
     initBackgroundDots();
@@ -236,13 +243,13 @@ function drawBank(){
     ctx.lineWidth = 4;
     // ctx.strokeStyle = "#B0E0E6"
     ctx.stroke(bankPath);
-    ctx.fillStyle = "#fdf6e3"
+    ctx.fillStyle = c_State.menuColor
     ctx.fill(bankPath)
     ctx.lineWidth = 1;
     ctx.strokeStyle = "black"
 
     //draw bank image
-    ctx.drawImage(images[8], x + w/2 - 40, 10, 80, 80)
+    ctx.drawImage(images[8], x + w/2 - 45, 10, 100, 80)
 
     //draw settings wheel
     ctx.fillStyle = "lightgrey"
@@ -316,7 +323,7 @@ function drawBank(){
 
 function drawButtons(){
     
-    setButtons()
+    setButtons(c_State.player)
 
     //draw a path behind the buttons
     ctx.strokeStyle = "black";
@@ -348,7 +355,7 @@ function drawButtons(){
     //the text isn't really linked to the locations of the buttons and must be updated separately if moved
     let disabledColor = "#839496"
     let enabledColor = '#073642'
-    let strokeColor = "#2aa198"
+    let strokeColor = c_State.selectedColor
 
     //trade button
     ctx.fillStyle = enabledColor
@@ -491,7 +498,7 @@ function drawDice(x, y){
     }
 }
 
-function drawHand(){
+function drawHand(player){
 
     ctx.strokeStyle = "black";
     ctx.lineWidth = 1;
@@ -520,7 +527,7 @@ function drawHand(){
     ctx.lineWidth = 4;
     // ctx.strokeStyle = "#B0E0E6"
     ctx.stroke(handPath);
-    ctx.fillStyle = "#fdf6e3"
+    ctx.fillStyle = c_State.menuColor
     ctx.fill(handPath)
     ctx.lineWidth = 1;
     ctx.strokeStyle = "black"
@@ -529,7 +536,7 @@ function drawHand(){
     ctx.beginPath();
     ctx.arc(w/6, c_HEIGHT - 2 * h/3, c_State.tileRadius/2, 0, 2 * Math.PI, false);
     ctx.closePath();
-    ctx.fillStyle = currPlayer.color;
+    ctx.fillStyle = player.color;
     ctx.fill()
 
     //draw user icon on top of player circle
@@ -537,26 +544,24 @@ function drawHand(){
 
     ctx.font = "20px Arial"
     ctx.fillStyle = "black"
-    ctx.fillText("PLAYER_NAME", w/6, c_HEIGHT - h/6, 200)
+    ctx.fillText(player.name, w/6, c_HEIGHT - h/6, 200)
 
     c_State.cardPaths = [];
 
-    let cardTypes = 0
     let cardHeight = 0.8 * c_State.tileRadius
     let cardWidth = 5 * cardHeight/7
     let buffer = (((2*w)/3) - 5 * cardWidth) / 5
-    let boxWidth = 10 * cardWidth + 11 * buffer
     let cardY = y + 0.1 * c_State.tileRadius
     let cardX = w/3
 
     //loop through all of current players resources
-    for(let i = 0; i < currPlayer.resources.length; i++){
+    for(let i = 0; i < player.resources.length; i++){
 
         //only draw resource types that the player actually has
-        if(currPlayer.resources[i] != 0){
+        if(player.resources[i] != 0){
 
             //define boundaries of resource card
-            let currCard = new Path2D
+            let currCard = new Path2D()
 
             ctx.beginPath()
             currCard.rect(cardX, cardY, cardWidth, cardHeight);
@@ -630,10 +635,9 @@ function drawHand(){
             ctx.fillStyle = "black"
             ctx.textAlign = "center"
             ctx.font = "12px Arial"
-            ctx.fillText(currPlayer.resources[i], cardX, cardY + 5)
+            ctx.fillText(player.resources[i], cardX, cardY + 5)
             
             cardX += buffer + cardWidth
-            cardTypes++;
         }
         //for resources the player doesnt have draw a stroked line
         else{
@@ -658,13 +662,13 @@ function drawHand(){
     cardX = w/3
 
     //loop though all of current players dev cards and draw them
-    for(let i = 0; i < currPlayer.devCards.length; i++){
+    for(let i = 0; i < player.devCards.length; i++){
         
         //only draw resource types that the player actually has
-        if(currPlayer.devCards[i] != 0){
+        if(player.devCards[i] != 0){
             
             //define boundaries of resource card
-            let currCard = new Path2D
+            let currCard = new Path2D()
 
             ctx.beginPath()
             currCard.rect(cardX, cardY, cardWidth, cardHeight);
@@ -739,12 +743,13 @@ function drawHand(){
             ctx.stroke()
             ctx.fillStyle = "white"
             ctx.fill()
+            ctx.closePath()
 
             //draw number to show how many the user has
             ctx.fillStyle = "black"
             ctx.textAlign = "center"
             ctx.font = "12px Arial"
-            ctx.fillText(currPlayer.devCards[i], cardX, cardY + 5)
+            ctx.fillText(player.devCards[i], cardX, cardY + 5)
             
             //draw dev card type
             ctx.fillStyle = "black"
@@ -753,7 +758,6 @@ function drawHand(){
             ctx.fillText(printMe, cardX + cardWidth/2, cardY + cardHeight/2)
             
             cardX += buffer + cardWidth
-            cardTypes++;
         }
         
         //for resources the player doesnt have draw a stroked line
@@ -803,7 +807,7 @@ function drawMonopolyMenu(){
     let b = y + h;
 
     //draw the trade menu box
-    let monopolyMenuPath = new Path2D
+    let monopolyMenuPath = new Path2D()
 
     ctx.beginPath()
     monopolyMenuPath.moveTo(x+radius, y);
@@ -841,7 +845,7 @@ function drawMonopolyMenu(){
         if(bank[i] != 0){
 
             //define boundaries of resource card
-            let currCard = new Path2D
+            let currCard = new Path2D()
 
             ctx.beginPath()
             currCard.rect(cardX, cardY, cardWidth, cardHeight);
@@ -910,7 +914,7 @@ function drawMonopolyMenu(){
         else{
 
             //define boundaries of resource card
-            let currCard = new Path2D
+            let currCard = new Path2D()
 
             ctx.beginPath()
             currCard.rect(cardX, cardY, cardWidth, cardHeight);
@@ -1468,7 +1472,7 @@ function drawYOPMenu(){
         if(bank[i] != 0){
 
             //define boundaries of resource card
-            let currCard = new Path2D
+            let currCard = new Path2D()
 
             ctx.beginPath()
             currCard.rect(cardX, cardY, cardWidth, cardHeight);
@@ -1545,7 +1549,7 @@ function drawYOPMenu(){
         else{
 
             //define boundaries of resource card
-            let currCard = new Path2D
+            let currCard = new Path2D()
 
             ctx.beginPath()
             currCard.rect(cardX, cardY, cardWidth, cardHeight);
@@ -1578,7 +1582,7 @@ function drawYOPMenu(){
         if(bank[i] != 0 && c_State.yop1 && !(i == c_State.selectedResource[0] && bank[c_State.selectedResource[0]] == 1)){
 
             //define boundaries of resource card
-            let currCard = new Path2D
+            let currCard = new Path2D()
 
             ctx.beginPath()
             currCard.rect(cardX, cardY, cardWidth, cardHeight);
@@ -1645,7 +1649,7 @@ function drawYOPMenu(){
         else{
 
             //define boundaries of resource card
-            let currCard = new Path2D
+            let currCard = new Path2D()
 
             ctx.beginPath()
             currCard.rect(cardX, cardY, cardWidth, cardHeight);
@@ -1714,7 +1718,7 @@ function drawCanvas(){
     //elements unrelated to board
     drawBank();
     drawButtons();
-    drawHand();
+    drawHand(c_State.player);
     drawPlayerInfo();
 
     //conditional elements

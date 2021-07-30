@@ -15,13 +15,28 @@
         <p>Player Name</p>
         <p>Victory Points to Win</p>
 
-        <p>Animate Background</p>
-        <p>Toggle Tile Textures</p>
+        <!-- c_State -->
+        <div display="flex">
+            <span>Animate Background</span>
+
+            <label class="switch">
+                <input type="checkbox" onchange="toggleAnimateBackground()"><div></div>
+            </label>
+        </div>
+
+        <br>
+
+        <div display="flex">
+            <span>Toggle Tile Textures</span>
+
+            <label class="switch" id="TileTexturesToggle">
+                <input type="checkbox" onchange="toggleTileTextures()" id="TileTexturesToggleCheckbox"><div></div>
+            </label>
+        </div>
+
+
         <p>Enable cheats</p>
 
-        <label class="switch">
-            <input type="checkbox"><div></div>
-        </label>
-
+        <script src="settingsHandler.js"></script>
     </body>
 </html>

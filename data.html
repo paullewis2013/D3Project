@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Game Analysis</title>
+       
+        <!-- <link rel="stylesheet" type="text/css" href="css/settings.css">
+        <link rel="stylesheet" type="text/css" href="css/switch.css"> -->
+
+    </head>
+
+    <body>
+
+        <svg id = "display" height="300" visibility="visible"></svg> 
+        
+        <select name="displayOptions" id="displayOptions" onchange="graphicButton()">
+            <option value="Dice Distribution">Dice Distribution</option>
+            <option value="dev played">Played Dev Cards</option>
+            <option value="dev unplayed">Unplayed Dev Cards</option>
+            <option value="prod">Production Capacity</option>
+            <option value="None">None</option>
+        </select>
+
+        <script src="scripts/infoDisplay.js"></script>
+    </body>
+</html>

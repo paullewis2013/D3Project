@@ -5,15 +5,16 @@
 //instance fields
 //--------------------------------------------------
 
-
-//inputs
-var diceButtonEnabled = false;
-var tradeButtonEnabled = false;
-var devButtonEnabled = false;
-var roadButtonEnabled = false;
-var settlementButtonEnabled = false;
-var cityButtonEnabled = false;
-var turnButtonEnabled = false;
+b_State = {
+    //buttons
+    diceButtonEnabled: false,
+    tradeButtonEnabled: false,
+    devButtonEnabled: false,
+    roadButtonEnabled: false,
+    settlementButtonEnabled: false,
+    cityButtonEnabled: false,
+    turnButtonEnabled: false,
+}
 
 var anyDevCardEnabled = false;
 var knightsEnabled = false;
@@ -27,10 +28,6 @@ var diceRolledThisTurn = false;
 var devCardPlayedThisTurn = false;
 
 var currentlyTrading = false;
-
-//an array to store value and frequency of dice rolls
-//TODO goes in d_State
-var dice_results_arr = [];
 
 //array to store dev cards left in deck
 var devCardArray = [];
@@ -313,12 +310,12 @@ async function initialSettlements(){
     console.log("<2> entering Initial Settlements Loop")
 
     //disable all buttons
-    diceButtonEnabled = false;
-    devButtonEnabled = false;
-    roadButtonEnabled = false;
-    settlementButtonEnabled = false;
-    cityButtonEnabled = false;
-    turnButtonEnabled = false;
+    b_State.diceButtonEnabled = false;
+    b_State.devButtonEnabled = false;
+    b_State.roadButtonEnabled = false;
+    b_State.settlementButtonEnabled = false;
+    b_State.cityButtonEnabled = false;
+    b_State.turnButtonEnabled = false;
 
     let botDelay = 250
 
@@ -417,6 +414,7 @@ async function mainGameLoop(){
         if(currPlayer.isBot){
             await sleep(1000)
             currPlayer.botTurn()
+            await sleep(500)
         }else{
             // this is for a specific edge case where a player can reach 10 points while it
             // is not their turn
@@ -425,7 +423,7 @@ async function mainGameLoop(){
             //disable all moves except dice and knight
             diceRolledThisTurn = false;
             freeze()
-            diceButtonEnabled = true;
+            b_State.diceButtonEnabled = true;
 
             //cap dev cards played per turn
             devCardPlayedThisTurn = false;
@@ -470,13 +468,13 @@ function setButtons(player){
 
     //don't enable buttons when it's not the players turn
     if(player != currPlayer){
-        tradeButtonEnabled = false;
-        devButtonEnabled = false;
-        roadButtonEnabled = false;
-        settlementButtonEnabled = false;
-        cityButtonEnabled = false;
-        turnButtonEnabled = false;
-        diceButtonEnabled = false;
+        b_State.tradeButtonEnabled = false;
+        b_State.devButtonEnabled = false;
+        b_State.roadButtonEnabled = false;
+        b_State.settlementButtonEnabled = false;
+        b_State.cityButtonEnabled = false;
+        b_State.turnButtonEnabled = false;
+        b_State.diceButtonEnabled = false;
         return;
     }
     
@@ -486,62 +484,62 @@ function setButtons(player){
 
         //trade button
         if(!building){
-            tradeButtonEnabled = true;
+            b_State.tradeButtonEnabled = true;
         }else{
-            tradeButtonEnabled = false;
+            b_State.tradeButtonEnabled = false;
         }
         
         //dev button
         if(!building && devCardArray.length > 0 && (currPlayer.resources[2] > 0 && currPlayer.resources[3] > 0 && currPlayer.resources[4] > 0)){
-            devButtonEnabled = true;
+            b_State.devButtonEnabled = true;
         }else{
-            devButtonEnabled = false;
+            b_State.devButtonEnabled = false;
         }
 
         //road
         if((!building || buildingRoad) && currPlayer.roadsRemaining > 0 && (currPlayer.resources[0] > 0 && currPlayer.resources[1] > 0) ){
-            roadButtonEnabled = true;
+            b_State.roadButtonEnabled = true;
         }else{
-            roadButtonEnabled = false;
+            b_State.roadButtonEnabled = false;
         }
 
         //settlement
         if((!building || buildingSettlement) && currPlayer.settlementsRemaining > 0 && (currPlayer.resources[0] > 0 && currPlayer.resources[1] > 0 && currPlayer.resources[2] > 0 && currPlayer.resources[3] > 0 ) ){
-            settlementButtonEnabled = true;
+            b_State.settlementButtonEnabled = true;
         }else{
-            settlementButtonEnabled = false;
+            b_State.settlementButtonEnabled = false;
         }
 
         //city 
         if((!building || buildingCity) && currPlayer.citiesRemaining > 0 && (currPlayer.resources[3] > 1 && currPlayer.resources[4] > 2) ){
-            cityButtonEnabled = true;
+            b_State.cityButtonEnabled = true;
         }else{
-            cityButtonEnabled = false;
+            b_State.cityButtonEnabled = false;
         }
 
         //turn
         if(!building && diceRolledThisTurn){
-            turnButtonEnabled = true
+            b_State.turnButtonEnabled = true
         }else{
-            turnButtonEnabled = false;
+            b_State.turnButtonEnabled = false;
         }
         
     }else{
 
-        tradeButtonEnabled = false;
-        devButtonEnabled = false;
-        roadButtonEnabled = false;
-        settlementButtonEnabled = false;
-        cityButtonEnabled = false;
-        turnButtonEnabled = false;
+        b_State.tradeButtonEnabled = false;
+        b_State.devButtonEnabled = false;
+        b_State.roadButtonEnabled = false;
+        b_State.settlementButtonEnabled = false;
+        b_State.cityButtonEnabled = false;
+        b_State.turnButtonEnabled = false;
 
     }
     
     //dice
     if(!diceRolledThisTurn && initialPlacementsComplete){
-        diceButtonEnabled = true;
+        b_State.diceButtonEnabled = true;
     }else{
-        diceButtonEnabled = false;
+        b_State.diceButtonEnabled = false;
     }
 }
 
@@ -694,7 +692,7 @@ function populateDevCardDeck(){
 //fill dice array with 0s
 function populateDiceResultsArr(){
     for(var i = 0; i<11; i++){
-        dice_results_arr.push({
+        d_State.dice_results_arr.push({
             value: i+2,
             frequency: 0
         })
@@ -765,7 +763,7 @@ function rollDice(){
 
     var result = diceArr[0].getValue() + diceArr[1].getValue()
 
-    dice_results_arr[result - 2].frequency += 1;
+    d_State.dice_results_arr[result - 2].frequency += 1;
 
     if(result === 7){
         //discard resources over 7 first
@@ -1011,23 +1009,23 @@ function tradeButton(){
 
 function freeze(){
 
-    diceButtonEnabled = false;
-    tradeButtonEnabled = false;
-    devButtonEnabled = false;
-    roadButtonEnabled = false;
-    settlementButtonEnabled = false;
-    cityButtonEnabled = false;
-    turnButtonEnabled = false;
+    b_State.diceButtonEnabled = false;
+    b_State.tradeButtonEnabled = false;
+    b_State.devButtonEnabled = false;
+    b_State.roadButtonEnabled = false;
+    b_State.settlementButtonEnabled = false;
+    b_State.cityButtonEnabled = false;
+    b_State.turnButtonEnabled = false;
 }
 
 function unfreeze(){
 
-    diceButtonEnabled = true;
-    devButtonEnabled = true;
-    roadButtonEnabled = true;
-    settlementButtonEnabled = true;
-    cityButtonEnabled = true;
-    turnButtonEnabled = true;
+    b_State.diceButtonEnabled = true;
+    b_State.devButtonEnabled = true;
+    b_State.roadButtonEnabled = true;
+    b_State.settlementButtonEnabled = true;
+    b_State.cityButtonEnabled = true;
+    b_State.turnButtonEnabled = true;
 
 }
 

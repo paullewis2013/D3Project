@@ -7,24 +7,24 @@ function startMoveListener(){
         const POS_X = e.offsetX * c_State.scale;
         const POS_Y = e.offsetY * c_State.scale;
     
-        if(     (ctx.isPointInPath(c_State.dicePath, POS_X, POS_Y) && diceButtonEnabled)||
-                (ctx.isPointInPath(c_State.tradeButtonPath, POS_X, POS_Y) && tradeButtonEnabled)||
-                (ctx.isPointInPath(c_State.devButtonPath, POS_X, POS_Y) && devButtonEnabled) ||
-                (ctx.isPointInPath(c_State.roadButtonPath, POS_X, POS_Y) && roadButtonEnabled) ||
-                (ctx.isPointInPath(c_State.settlementButtonPath, POS_X, POS_Y) && settlementButtonEnabled) ||
-                (ctx.isPointInPath(c_State.cityButtonPath, POS_X, POS_Y) && cityButtonEnabled)||
-                (ctx.isPointInPath(c_State.turnButtonPath, POS_X, POS_Y) && turnButtonEnabled) ||
+        if(     (ctx.isPointInPath(c_State.dicePath, POS_X, POS_Y) && b_State.diceButtonEnabled)||
+                (ctx.isPointInPath(c_State.tradeButtonPath, POS_X, POS_Y) && b_State.tradeButtonEnabled)||
+                (ctx.isPointInPath(c_State.devButtonPath, POS_X, POS_Y) && b_State.devButtonEnabled) ||
+                (ctx.isPointInPath(c_State.roadButtonPath, POS_X, POS_Y) && b_State.roadButtonEnabled) ||
+                (ctx.isPointInPath(c_State.settlementButtonPath, POS_X, POS_Y) && b_State.settlementButtonEnabled) ||
+                (ctx.isPointInPath(c_State.cityButtonPath, POS_X, POS_Y) && b_State.cityButtonEnabled)||
+                (ctx.isPointInPath(c_State.turnButtonPath, POS_X, POS_Y) && b_State.turnButtonEnabled) ||
                 (ctx.isPointInPath(c_State.settingsButtonPath, POS_X, POS_Y))){
                 
             document.body.style.cursor = "pointer";
     
-        }else if(   (ctx.isPointInPath(c_State.dicePath, POS_X, POS_Y) && !diceButtonEnabled)||
-                    (ctx.isPointInPath(c_State.tradeButtonPath, POS_X, POS_Y) && !tradeButtonEnabled)||
-                    (ctx.isPointInPath(c_State.devButtonPath, POS_X, POS_Y) && !devButtonEnabled) ||
-                    (ctx.isPointInPath(c_State.roadButtonPath, POS_X, POS_Y) && !roadButtonEnabled) ||
-                    (ctx.isPointInPath(c_State.settlementButtonPath, POS_X, POS_Y) && !settlementButtonEnabled) ||
-                    (ctx.isPointInPath(c_State.cityButtonPath, POS_X, POS_Y) && !cityButtonEnabled)||
-                    (ctx.isPointInPath(c_State.turnButtonPath, POS_X, POS_Y) && !turnButtonEnabled)){
+        }else if(   (ctx.isPointInPath(c_State.dicePath, POS_X, POS_Y) && !b_State.diceButtonEnabled)||
+                    (ctx.isPointInPath(c_State.tradeButtonPath, POS_X, POS_Y) && !b_State.tradeButtonEnabled)||
+                    (ctx.isPointInPath(c_State.devButtonPath, POS_X, POS_Y) && !b_State.devButtonEnabled) ||
+                    (ctx.isPointInPath(c_State.roadButtonPath, POS_X, POS_Y) && !b_State.roadButtonEnabled) ||
+                    (ctx.isPointInPath(c_State.settlementButtonPath, POS_X, POS_Y) && !b_State.settlementButtonEnabled) ||
+                    (ctx.isPointInPath(c_State.cityButtonPath, POS_X, POS_Y) && !b_State.cityButtonEnabled)||
+                    (ctx.isPointInPath(c_State.turnButtonPath, POS_X, POS_Y) && !b_State.turnButtonEnabled)){
     
             document.body.style.cursor = "not-allowed";
     

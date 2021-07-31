@@ -1,7 +1,8 @@
 // stores data for real time analysis
 
 d_State = {
-
+    //contains values and frequency of dice rolls
+    dice_results_arr: [],
 }
 
 //sums up dot values for each resource by checking all tiles

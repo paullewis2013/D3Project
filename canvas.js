@@ -359,7 +359,7 @@ function drawButtons(){
 
     //trade button
     ctx.fillStyle = enabledColor
-    if(!tradeButtonEnabled){
+    if(!b_State.tradeButtonEnabled){
         ctx.fillStyle = disabledColor
     }
     ctx.fill(c_State.tradeButtonPath)
@@ -379,7 +379,7 @@ function drawButtons(){
 
     //dev Button
     ctx.fillStyle = enabledColor
-    if(!devButtonEnabled){
+    if(!b_State.devButtonEnabled){
         ctx.fillStyle = disabledColor
     }
     ctx.fill(c_State.devButtonPath)
@@ -391,7 +391,7 @@ function drawButtons(){
 
     //road Button
     ctx.fillStyle = enabledColor
-    if(!roadButtonEnabled){
+    if(!b_State.roadButtonEnabled){
         ctx.fillStyle = disabledColor
     }
     ctx.fill(c_State.roadButtonPath)
@@ -409,7 +409,7 @@ function drawButtons(){
 
     //settlement Button
     ctx.fillStyle = enabledColor
-    if(!settlementButtonEnabled){
+    if(!b_State.settlementButtonEnabled){
         ctx.fillStyle = disabledColor
     }
     ctx.fill(c_State.settlementButtonPath)
@@ -429,7 +429,7 @@ function drawButtons(){
 
     //city Button
     ctx.fillStyle = enabledColor
-    if(!cityButtonEnabled){
+    if(!b_State.cityButtonEnabled){
         ctx.fillStyle = disabledColor
     }
     ctx.fill(c_State.cityButtonPath)
@@ -447,7 +447,7 @@ function drawButtons(){
 
     //turn Button
     ctx.fillStyle = enabledColor
-    if(!turnButtonEnabled){
+    if(!b_State.turnButtonEnabled){
         ctx.fillStyle = disabledColor
     }
     ctx.fill(c_State.turnButtonPath)
@@ -463,7 +463,7 @@ function drawDice(x, y){
 
         let size = 60
 
-        if(initialPlacementsComplete && diceButtonEnabled){
+        if(initialPlacementsComplete && b_State.diceButtonEnabled){
             size = aState.vertSize * 4
         }
 

@@ -1,13 +1,12 @@
 const playersInfoWidth = 350;
 
-//this is the only thing this entire file does
 function drawPlayerInfo(){
 
-    var offset = 110//(canvas.height * 0.25)  / playersArr.length;
+    var offset = 110
 
     //draw background
     ctx.fillStyle = "#93a1a1"
-    if(diceButtonEnabled){
+    if(b_State.diceButtonEnabled){
         ctx.fillStyle = c_State.selectedColor
     }
 

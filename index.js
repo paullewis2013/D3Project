@@ -2,6 +2,8 @@
 const { app, ipcMain, BrowserWindow } = require('electron')
 const path = require('path')
 
+var settingsWindowOpen = false;
+
 function createWindow () {
     // Create the browser window.
     const mainWindow = new BrowserWindow({
@@ -12,18 +14,25 @@ function createWindow () {
             contextIsolation: false
         }
     })
-
     mainWindow.loadFile('index.html')
 }
 
 function createSettingsWindow () {
 
-    const settingsWindow = new BrowserWindow({
-        width: 350,
-        height: 500
-    })
+    //creates a new settings window if none exists
+    if(!settingsWindowOpen){
+        const settingsWindow = new BrowserWindow({
+            width: 350,
+            height: 500
+        })
+    
+        settingsWindow.loadFile('settings.html');
+        settingsWindowOpen = true;
 
-    settingsWindow.loadFile('settings.html');
+        settingsWindow.on("close", function() { //   <---- Catch close event
+            settingsWindowOpen = false;
+        });
+    }
 }
 
 // This method will be called when Electron has finished

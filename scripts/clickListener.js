@@ -57,7 +57,7 @@ function startClickListener(){
     
         //dice Button
         if(ctx.isPointInPath(c_State.dicePath, CLICK_X, CLICK_Y)){
-            if(diceButtonEnabled){
+            if(b_State.diceButtonEnabled){
                 diceButton()
             }
             console.log("dice clicked")
@@ -65,7 +65,7 @@ function startClickListener(){
     
         //trade button
         if(ctx.isPointInPath(c_State.tradeButtonPath, CLICK_X, CLICK_Y)){
-            if(tradeButtonEnabled){
+            if(b_State.tradeButtonEnabled){
                 tradeButton()
             }
             console.log("trade button clicked")
@@ -73,7 +73,7 @@ function startClickListener(){
     
         //dev button
         if(ctx.isPointInPath(c_State.devButtonPath, CLICK_X, CLICK_Y)){
-            if(devButtonEnabled){
+            if(b_State.devButtonEnabled){
                 devButton()
             }
             console.log("dev button clicked")
@@ -81,9 +81,9 @@ function startClickListener(){
     
         //road button
         if(ctx.isPointInPath(c_State.roadButtonPath, CLICK_X, CLICK_Y)){
-            if(roadButtonEnabled && !buildingRoad){
+            if(b_State.roadButtonEnabled && !buildingRoad){
                 roadButton()
-            }else if(roadButtonEnabled && buildingRoad){
+            }else if(b_State.roadButtonEnabled && buildingRoad){
                 cancelAction();
             }
             console.log("road button clicked")
@@ -91,9 +91,9 @@ function startClickListener(){
     
         //settlement button
         if(ctx.isPointInPath(c_State.settlementButtonPath, CLICK_X, CLICK_Y)){
-            if(settlementButtonEnabled && !buildingSettlement){
+            if(b_State.settlementButtonEnabled && !buildingSettlement){
                 settlementButton()
-            }else if(settlementButtonEnabled && buildingSettlement){
+            }else if(b_State.settlementButtonEnabled && buildingSettlement){
                 cancelAction()
                 c_State.showVerts = false
             }
@@ -102,9 +102,9 @@ function startClickListener(){
     
         //city Button
         if(ctx.isPointInPath(c_State.cityButtonPath, CLICK_X, CLICK_Y)){
-            if(cityButtonEnabled && !buildingCity){
+            if(b_State.cityButtonEnabled && !buildingCity){
                 cityButton()
-            }else if(cityButtonEnabled && buildingCity){
+            }else if(b_State.cityButtonEnabled && buildingCity){
                 cancelAction()
             }
             console.log("city button clicked")
@@ -112,7 +112,7 @@ function startClickListener(){
     
         //turn button
         if(ctx.isPointInPath(c_State.turnButtonPath, CLICK_X, CLICK_Y)){
-            if(turnButtonEnabled){
+            if(b_State.turnButtonEnabled){
                 turnButton()
             }
             console.log("turn button clicked")
@@ -218,22 +218,8 @@ function startClickListener(){
                         robberLocation = tilesArr[i][j]
                         c_State.movingRobber = false;
                         tilesArr[i][j].block()
-                        
-                        if(textured){
-                            drawTileTextures()
-                        }
-                        drawTiles()
-                        drawRobber()
-                        //drawVertices()
     
                         //TODO select player to steal from if multiple are adjacent
-    
-                        //reenable buttons to work when drawButtons method is called in drawCanvas
-                        drawCanvas()
-                        
-                        // //if this isn't here I get an error but the error doesn't seem to cause any problems
-                        // //it just makes me uncomfortable
-                        // return;
                     }
                 }
             }

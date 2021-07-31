@@ -219,7 +219,7 @@ Player.prototype.buildSettlement = function(settlement){
 
     }
 
-    if(initialPlacementsComplete){
+    if(b_State.initialPlacementsComplete){
         //take players resources and give them to the bank
         this.resources = [this.resources[0] - 1, this.resources[1] - 1, this.resources[2] - 1, this.resources[3] - 1, this.resources[4]];
         bank = [bank[0] + 1, bank[1] + 1, bank[2] + 1, bank[3] + 1, bank[4]];
@@ -281,7 +281,7 @@ Player.prototype.buildRoad = function(r){
     this.roadsRemaining--;
     this.roads.push(r)
 
-    if(initialPlacementsComplete && !this.rbDevPlayed){
+    if(b_State.initialPlacementsComplete && !this.rbDevPlayed){
         //take players resources and give them to the bank
         this.resources = [this.resources[0] - 1, this.resources[1] - 1, this.resources[2], this.resources[3], this.resources[4]];
         bank = [bank[0] + 1, bank[1] + 1, bank[2], bank[3], bank[4]];
@@ -947,7 +947,7 @@ Player.prototype.botCalcSettlementValue = function(vertex){
     }
 
     //add in extra weight for 2nd settlement resources
-    if(!initialPlacementsComplete && this.VP == 1){
+    if(!b_State.initialPlacementsComplete && this.VP == 1){
 
         //create array of adjacent resources
         let foundResources = []

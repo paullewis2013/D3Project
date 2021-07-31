@@ -167,6 +167,13 @@ function initButtons(){
     ctx.beginPath();
     c_State.settingsButtonPath.arc(c_WIDTH - 30, 30, 19.5, 0, 2 * Math.PI);
     ctx.closePath();
+
+    //analysis button
+    c_State.analysisButtonPath = new Path2D();
+
+    ctx.beginPath();
+    c_State.analysisButtonPath.arc(c_WIDTH - 330, 30, 19.5, 0, 2 * Math.PI);
+    ctx.closePath();
 }
 
 function initDicePath(){

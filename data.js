@@ -3,6 +3,7 @@
 d_State = {
     //contains values and frequency of dice rolls
     dice_results_arr: [],
+    productionCapacity: [0, 0, 0, 0, 0],
 }
 
 //sums up dot values for each resource by checking all tiles
@@ -11,15 +12,15 @@ function calcProduction(){
         for(var j = 0; j < tilesArr[i].length; j++){
 
             if(tilesArr[i][j].resourceCard === "wood"){
-                productionCapacity[0] += (6 - Math.abs(7 - tilesArr[i][j].number))
+                d_State.productionCapacity[0] += (6 - Math.abs(7 - tilesArr[i][j].number))
             }else if(tilesArr[i][j].resourceCard === "brick"){
-                productionCapacity[1] += (6 - Math.abs(7 - tilesArr[i][j].number))
+                d_State.productionCapacity[1] += (6 - Math.abs(7 - tilesArr[i][j].number))
             }else if(tilesArr[i][j].resourceCard === "sheep"){
-                productionCapacity[2] += (6 - Math.abs(7 - tilesArr[i][j].number))
+                d_State.productionCapacity[2] += (6 - Math.abs(7 - tilesArr[i][j].number))
             }else if(tilesArr[i][j].resourceCard === "wheat"){
-                productionCapacity[3] += (6 - Math.abs(7 - tilesArr[i][j].number))
+                d_State.productionCapacity[3] += (6 - Math.abs(7 - tilesArr[i][j].number))
             }else if(tilesArr[i][j].resourceCard === "ore"){
-                productionCapacity[4] += (6 - Math.abs(7 - tilesArr[i][j].number))
+                d_State.productionCapacity[4] += (6 - Math.abs(7 - tilesArr[i][j].number))
             }
         }
     }

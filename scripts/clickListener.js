@@ -54,6 +54,11 @@ function startClickListener(){
         if(ctx.isPointInPath(c_State.settingsButtonPath, CLICK_X, CLICK_Y)){
             openSettings();
         }
+
+        //analysisButton
+        if(ctx.isPointInPath(c_State.analysisButtonPath, CLICK_X, CLICK_Y)){
+            openAnalysis();
+        }
     
         //dice Button
         if(ctx.isPointInPath(c_State.dicePath, CLICK_X, CLICK_Y)){
@@ -134,9 +139,9 @@ function startClickListener(){
                 if(!devCardPlayedThisTurn){
     
                     //knight
-                    if(knightsEnabled && c_State.cardPaths[i].type === "knight"){
+                    if(b_State.knightsEnabled && c_State.cardPaths[i].type === "knight"){
                         currPlayer.playDevCard(c_State.cardPaths[i].type);
-                    }else if(anyDevCardEnabled){
+                    }else if(b_State.anyDevCardEnabled){
                         
                         //VP are special case and cannot be played 
                         if(c_State.cardPaths[i].type === "victory point"){

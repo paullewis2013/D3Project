@@ -14,7 +14,9 @@ function startMoveListener(){
                 (ctx.isPointInPath(c_State.settlementButtonPath, POS_X, POS_Y) && b_State.settlementButtonEnabled) ||
                 (ctx.isPointInPath(c_State.cityButtonPath, POS_X, POS_Y) && b_State.cityButtonEnabled)||
                 (ctx.isPointInPath(c_State.turnButtonPath, POS_X, POS_Y) && b_State.turnButtonEnabled) ||
-                (ctx.isPointInPath(c_State.settingsButtonPath, POS_X, POS_Y))){
+                (ctx.isPointInPath(c_State.settingsButtonPath, POS_X, POS_Y)) ||
+                (ctx.isPointInPath(c_State.analysisButtonPath, POS_X, POS_Y))
+            ){
                 
             document.body.style.cursor = "pointer";
     
@@ -24,7 +26,8 @@ function startMoveListener(){
                     (ctx.isPointInPath(c_State.roadButtonPath, POS_X, POS_Y) && !b_State.roadButtonEnabled) ||
                     (ctx.isPointInPath(c_State.settlementButtonPath, POS_X, POS_Y) && !b_State.settlementButtonEnabled) ||
                     (ctx.isPointInPath(c_State.cityButtonPath, POS_X, POS_Y) && !b_State.cityButtonEnabled)||
-                    (ctx.isPointInPath(c_State.turnButtonPath, POS_X, POS_Y) && !b_State.turnButtonEnabled)){
+                    (ctx.isPointInPath(c_State.turnButtonPath, POS_X, POS_Y) && !b_State.turnButtonEnabled))
+                {
     
             document.body.style.cursor = "not-allowed";
     

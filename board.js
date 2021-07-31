@@ -1,10 +1,6 @@
 //Paul Lewis
 //Started in July, 2020
 
-//--------------------------------------------------
-//instance fields
-//--------------------------------------------------
-
 b_State = {
     //buttons
     diceButtonEnabled: false,
@@ -14,20 +10,20 @@ b_State = {
     settlementButtonEnabled: false,
     cityButtonEnabled: false,
     turnButtonEnabled: false,
+
+    anyDevCardEnabled: false,
+    knightsEnabled: false,
+
+    pointsToWin: 10,
+    winCondition: false,
+    winner: null,
+
+    initialPlacementsComplete: false,
+    turnNumber: 0,
 }
-
-var anyDevCardEnabled = false;
-var knightsEnabled = false;
-
-var pointsToWin = 10;
-var winCondition = false;
-var winner = null;
-var initialPlacementsComplete = false;
 
 var diceRolledThisTurn = false;
 var devCardPlayedThisTurn = false;
-
-var currentlyTrading = false;
 
 //array to store dev cards left in deck
 var devCardArray = [];
@@ -40,11 +36,10 @@ var playedDevCards = {knight: 0, vp: 0, monopoly: 0, road: 0, plenty: 0};
 //array to store resource cards in bank
 var bank = [19, 19, 19, 19, 19];
 
+var currentlyTrading = false;
 var buildingRoad = false;
 var buildingSettlement = false;
 var buildingCity = false;
-
-var turnNumber = 0;
 
 //maybe this should point to a tile
 var robberLocation = null;
@@ -58,7 +53,7 @@ var quickStarting = true
 var randomTable = []
 
 //the tiles on the board
-//a 2d array where first index represents row and second represent num in row
+//a 2d array where first index represents row and second represents num in row
 var tilesArr = [
     [],
     [],
@@ -130,9 +125,6 @@ const resourceCard = {
     ORE: 'ore'
 }
 
-//another weird statistical thing to track
-//TODO make a new file to hold this data
-var productionCapacity = [0, 0, 0, 0, 0]
 
 var numTilePointers = [
     [],
@@ -392,7 +384,7 @@ async function initialSettlements(){
         }
     }
 
-    initialPlacementsComplete = true;
+    b_State.initialPlacementsComplete = true;
 
     //enter main game loop here
     mainGameLoop()
@@ -401,7 +393,7 @@ async function initialSettlements(){
 async function mainGameLoop(){
     console.log("<3> entering MainGameLoop")
 
-    turnNumber = 1;
+    b_State.turnNumber = 1;
 
     //unbot all the players
     // for(let i = 0; i < playersArr.length; i++){
@@ -427,10 +419,10 @@ async function mainGameLoop(){
 
             //cap dev cards played per turn
             devCardPlayedThisTurn = false;
-            anyDevCardEnabled = false;
+            b_State.anyDevCardEnabled = false;
 
             //preturn option to play knight card
-            knightsEnabled = true;
+            b_State.knightsEnabled = true;
 
             //await player rolling the dice
             await waitForDiceRoll()
@@ -442,7 +434,7 @@ async function mainGameLoop(){
                 //await currPlayer choosing player to rob
 
             //begin body of turn
-            anyDevCardEnabled = true;
+            b_State.anyDevCardEnabled = true;
 
             //disable all moves which aren't legal for player
             // drawButtons()
@@ -450,17 +442,17 @@ async function mainGameLoop(){
             //main turn loop actions can happen asynchronously here 
 
             //await choice to end turn
-            await waitForTurnButton(turnNumber);
+            await waitForTurnButton(b_State.turnNumber);
         }
     
-    }while(!winCondition)
+    }while(!b_State.winCondition)
 
     //do something when end of game condition is reached
 
     freeze();
 
     console.log("Game over")
-    console.log(winner.color + " won the game")
+    console.log(b_State.winner.color + " won the game")
 }
 
 //disables buttons which the user cannot push
@@ -536,7 +528,7 @@ function setButtons(player){
     }
     
     //dice
-    if(!diceRolledThisTurn && initialPlacementsComplete){
+    if(!diceRolledThisTurn && b_State.initialPlacementsComplete){
         b_State.diceButtonEnabled = true;
     }else{
         b_State.diceButtonEnabled = false;
@@ -553,7 +545,7 @@ async function waitForSettlement(player, num){
 
     while(!built){
 
-        if(winCondition){
+        if(b_State.winCondition){
             break;
         }else if(5 - player.settlementsRemaining >= num){
             built = true
@@ -622,7 +614,7 @@ async function waitForRoad(player, num){
 
     while(!built){
 
-        if(winCondition){
+        if(b_State.winCondition){
             break;
         }else if(15 - player.roadsRemaining >= num){
             built = true
@@ -640,9 +632,9 @@ async function waitForTurnButton(currentTurn){
 
     while(!ended){
 
-        if(winCondition){
+        if(b_State.winCondition){
             break;
-        }else if(turnNumber > currentTurn){
+        }else if(b_State.turnNumber > currentTurn){
             ended = true
         }else{
             await sleep(100)
@@ -653,11 +645,11 @@ async function waitForTurnButton(currentTurn){
 async function waitForDiceRoll(){
 
     let diceRollFinished = false
-    knightsEnabled = true
+    b_State.knightsEnabled = true
 
     while(!diceRollFinished){
         
-        if(winCondition){
+        if(b_State.winCondition){
             break;
         }else if(diceRolledThisTurn && !c_State.movingRobber){
             diceRollFinished = true;
@@ -747,9 +739,9 @@ function generatePorts(){
 
 function checkWinCondition(){
 
-    if(currPlayer.VP + currPlayer.devCards[1] >= pointsToWin){
-        winCondition = true;
-        winner = currPlayer;
+    if(currPlayer.VP + currPlayer.devCards[1] >= b_State.pointsToWin){
+        b_State.winCondition = true;
+        b_State.winner = currPlayer;
     }
 }
 
@@ -987,7 +979,7 @@ function cancelAction(){
 
 function turnButton(){
     
-    turnNumber++;
+    b_State.turnNumber++;
 
     //move to next player
     currPlayerIndex = ++currPlayerIndex%(playersArr.length);

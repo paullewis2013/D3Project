@@ -3,6 +3,7 @@ const { app, ipcMain, BrowserWindow } = require('electron')
 const path = require('path')
 
 var settingsWindowOpen = false;
+var analysisWindowOpen = false;
 
 function createWindow () {
     // Create the browser window.
@@ -35,6 +36,24 @@ function createSettingsWindow () {
     }
 }
 
+function createAnalysisWindow () {
+
+    //creates a new analysis window if none exists
+    if(!analysisWindowOpen){
+        const analysisWindow = new BrowserWindow({
+            width: 650,
+            height: 500
+        })
+    
+        analysisWindow.loadFile('data.html');
+        analysisWindowOpen = true;
+
+        analysisWindow.on("close", function() { 
+            analysisWindowOpen = false;
+        });
+    }
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -46,5 +65,11 @@ app.whenReady().then(() => {
 ipcMain.on("settings", (event, arg) => {
     if(arg == "open"){
         createSettingsWindow();
+    }
+})
+
+ipcMain.on("analysis", (event, arg) => {
+    if(arg == "open"){
+        createAnalysisWindow();
     }
 })

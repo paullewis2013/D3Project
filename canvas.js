@@ -38,6 +38,7 @@ var c_State = {
     tradeButtonPath: null,
     turnButtonPath: null,
     settingsButtonPath: null,
+    analysisButtonPath: null,
 
     buttonWidth: 0,
     islandCenterX: 0,
@@ -151,7 +152,8 @@ var imageSrcs = [
                 "assets/Dice-6.png",
 
                 //16
-                "assets/settings.png"
+                "assets/settings.png",
+                "assets/analysis.png"
                 ];
 
 var images = [];
@@ -223,7 +225,7 @@ function drawBank(){
     let bankPath = new Path2D()
 
     //draw shape for bank to go in
-    let x = c_WIDTH - c_State.tileRadius * 6
+    let x = c_WIDTH - 360
     let y = 0
     let w = c_State.tileRadius * 6
     let h = 3 * c_State.tileRadius
@@ -241,7 +243,6 @@ function drawBank(){
     ctx.closePath() 
 
     ctx.lineWidth = 4;
-    // ctx.strokeStyle = "#B0E0E6"
     ctx.stroke(bankPath);
     ctx.fillStyle = c_State.menuColor
     ctx.fill(bankPath)
@@ -251,12 +252,22 @@ function drawBank(){
     //draw bank image
     ctx.drawImage(images[8], x + w/2 - 45, 10, 100, 80)
 
-    //draw settings wheel
+    //draw settings button
     ctx.fillStyle = "lightgrey"
     ctx.fill(c_State.settingsButtonPath)
 
     ctx.drawImage(images[16], c_WIDTH - 50, 10, 40, 40)
 
+    //draw analysis button
+    ctx.fillStyle = "lightgrey"
+    ctx.fill(c_State.analysisButtonPath)
+    ctx.fillStyle = "#383f46"
+    ctx.lineWidth = 3
+    ctx.stroke(c_State.analysisButtonPath)
+
+    ctx.drawImage(images[17], x + 15, 19, 30, 20)
+
+    //start drawing cards
     let cardHeight = 48
     let cardWidth = 5 * cardHeight/7
 
@@ -396,7 +407,7 @@ function drawButtons(){
     }
     ctx.fill(c_State.roadButtonPath)
 
-    if(buildingRoad && initialPlacementsComplete){
+    if(buildingRoad && b_State.initialPlacementsComplete){
         ctx.lineWidth = 4;
         ctx.strokeStyle = strokeColor
         ctx.stroke(c_State.roadButtonPath)
@@ -414,7 +425,7 @@ function drawButtons(){
     }
     ctx.fill(c_State.settlementButtonPath)
 
-    if(buildingSettlement && initialPlacementsComplete){
+    if(buildingSettlement && b_State.initialPlacementsComplete){
         ctx.lineWidth = 4;
         ctx.strokeStyle = strokeColor
         ctx.stroke(c_State.settlementButtonPath)
@@ -434,7 +445,7 @@ function drawButtons(){
     }
     ctx.fill(c_State.cityButtonPath)
 
-    if(buildingCity && initialPlacementsComplete){
+    if(buildingCity && b_State.initialPlacementsComplete){
         ctx.lineWidth = 4;
         ctx.strokeStyle = strokeColor
         ctx.stroke(c_State.cityButtonPath)
@@ -463,7 +474,7 @@ function drawDice(x, y){
 
         let size = 60
 
-        if(initialPlacementsComplete && b_State.diceButtonEnabled){
+        if(b_State.initialPlacementsComplete && b_State.diceButtonEnabled){
             size = aState.vertSize * 4
         }
 
@@ -1351,7 +1362,7 @@ function drawTurnNum(x, y){
     ctx.textAlign = "right"
     ctx.font = "20px Arial"
     ctx.fillStyle = "black"
-    ctx.fillText("Turn: " + turnNumber, x - 5, y + 25)
+    ctx.fillText("Turn: " + b_State.turnNumber, x - 5, y + 25)
 }
 
 function drawVertices(){
@@ -1362,7 +1373,7 @@ function drawVertices(){
     ctx.font = "15px Arial"
 
     //draw all vertices which could be built on 
-    if(!initialPlacementsComplete){
+    if(!b_State.initialPlacementsComplete){
         for(var i = 0; i < 12; i++){
 
             for(var j = 0; j < verticesArr[i].length; j++){

@@ -176,36 +176,36 @@ Player.prototype.buildSettlement = function(settlement){
             switch(r){
 
                 case "wood":
-                    if(bank[0] > 0){
-                        bank[0] -= amount;
+                    if(b_State.bank[0] > 0){
+                        b_State.bank[0] -= amount;
                         this.resources[0] += amount;
                     }
                     break;
                 
                 case "brick":
-                    if(bank[1] > 0){
-                        bank[1] -= amount;
+                    if(b_State.bank[1] > 0){
+                        b_State.bank[1] -= amount;
                         this.resources[1] += amount;
                     }
                     break;
 
                 case "sheep":
-                    if(bank[2] > 0){
-                        bank[2] -= amount;
+                    if(b_State.bank[2] > 0){
+                        b_State.bank[2] -= amount;
                         this.resources[2] += amount;
                     }
                     break;
 
                 case "wheat":
-                    if(bank[3] > 0){
-                        bank[3] -= amount;
+                    if(b_State.bank[3] > 0){
+                        b_State.bank[3] -= amount;
                         this.resources[3] += amount;
                     }
                     break;
 
                 case "ore":
-                    if(bank[4] > 0){
-                        bank[4] -= amount;
+                    if(b_State.bank[4] > 0){
+                        b_State.bank[4] -= amount;
                         this.resources[4] += amount;
                     }
                     break;
@@ -222,7 +222,7 @@ Player.prototype.buildSettlement = function(settlement){
     if(b_State.initialPlacementsComplete){
         //take players resources and give them to the bank
         this.resources = [this.resources[0] - 1, this.resources[1] - 1, this.resources[2] - 1, this.resources[3] - 1, this.resources[4]];
-        bank = [bank[0] + 1, bank[1] + 1, bank[2] + 1, bank[3] + 1, bank[4]];
+        b_State.bank = [b_State.bank[0] + 1, b_State.bank[1] + 1, b_State.bank[2] + 1, b_State.bank[3] + 1, b_State.bank[4]];
     }
 
     //give player better trade rate with bank
@@ -284,7 +284,7 @@ Player.prototype.buildRoad = function(r){
     if(b_State.initialPlacementsComplete && !this.rbDevPlayed){
         //take players resources and give them to the bank
         this.resources = [this.resources[0] - 1, this.resources[1] - 1, this.resources[2], this.resources[3], this.resources[4]];
-        bank = [bank[0] + 1, bank[1] + 1, bank[2], bank[3], bank[4]];
+        b_State.bank = [b_State.bank[0] + 1, b_State.bank[1] + 1, b_State.bank[2], b_State.bank[3], b_State.bank[4]];
     }
 
     //longest road will be calculated in board.js file
@@ -306,7 +306,7 @@ Player.prototype.buildCity = function(){
     
     //take players resources and give them to the bank
     this.resources = [this.resources[0], this.resources[1], this.resources[2], this.resources[3] - 2, this.resources[4] - 3];
-    bank = [bank[0], bank[1], bank[2], bank[3] + 2, bank[4] + 3];
+    b_State.bank = [b_State.bank[0], b_State.bank[1], b_State.bank[2], b_State.bank[3] + 2, b_State.bank[4] + 3];
 
 
     this.settlementsRemaining++;
@@ -319,7 +319,7 @@ Player.prototype.drawDevCard = function(card){
 
     //take players resources and give them to the bank
     this.resources = [this.resources[0], this.resources[1], this.resources[2] - 1, this.resources[3] - 1, this.resources[4] - 1];
-    bank = [bank[0], bank[1], bank[2] + 1, bank[3] + 1, bank[4] + 1];
+    b_State.bank = [b_State.bank[0], b_State.bank[1], b_State.bank[2] + 1, b_State.bank[3] + 1, b_State.bank[4] + 1];
     
     switch(card){
         case "knight": 
@@ -359,7 +359,7 @@ Player.prototype.drawDevCard = function(card){
 }
 Player.prototype.playDevCard = async function(card){
     
-    devCardPlayedThisTurn = true;
+    b_State.devCardPlayedThisTurn = true;
     let bankTotal = 0
     let resourceNum = 0
 
@@ -457,7 +457,7 @@ Player.prototype.playDevCard = async function(card){
             console.log("Can't play this card " + card)
 
             //maybe give some input that this cannot be played during a turn
-            devCardPlayedThisTurn = false;
+            b_State.devCardPlayedThisTurn = false;
 
             break;
 
@@ -466,13 +466,13 @@ Player.prototype.playDevCard = async function(card){
             console.log("playing a " + card)
 
             //make sure bank has at least 2 resources
-            for(let i = 0; i < bank.length; i++){
-                bankTotal += bank[i]
+            for(let i = 0; i < b_State.bank.length; i++){
+                bankTotal += b_State.bank[i]
             }
 
             if(bankTotal == 19 * 5){
                 console.log("No cards to use monopoly on")
-                devCardPlayedThisTurn = false;
+                b_State.devCardPlayedThisTurn = false;
                 break;
             }
 
@@ -486,7 +486,7 @@ Player.prototype.playDevCard = async function(card){
 
                 resourceNum = Math.floor(Math.random() * 5)
 
-                while(bank[resourceNum] == 0){
+                while(b_State.bank[resourceNum] == 0){
                     resourceNum = Math.floor(Math.random() * 5)
                 }
             }
@@ -563,13 +563,13 @@ Player.prototype.playDevCard = async function(card){
             console.log("playing a " + card)
 
             //make sure bank has at least 2 resources
-            for(let i = 0; i < bank.length; i++){
-                bankTotal += bank[i]
+            for(let i = 0; i < b_State.bank.length; i++){
+                bankTotal += b_State.bank[i]
             }
 
             if(bankTotal < 2){
                 console.log("Not enough cards in bank to play YOP")
-                devCardPlayedThisTurn = false;
+                b_State.devCardPlayedThisTurn = false;
                 break;
             }
 
@@ -585,13 +585,13 @@ Player.prototype.playDevCard = async function(card){
 
                 resourceNum1 = Math.floor(Math.random() * 5)
 
-                while(bank[resourceNum1] < 0){
+                while(b_State.bank[resourceNum1] < 0){
                     resourceNum1 = Math.floor(Math.random() * 5)
                 }
 
                 resourceNum2 = Math.floor(Math.random() * 5)
                 
-                while(bank[resourceNum2] < 0 || (bank[resourceNum2] < 1 && resourceNum1 == resourceNum2)){
+                while(b_State.bank[resourceNum2] < 0 || (b_State.bank[resourceNum2] < 1 && resourceNum1 == resourceNum2)){
                     resourceNum2 = Math.floor(Math.random() * 5)
                 }
 
@@ -623,11 +623,11 @@ Player.prototype.playDevCard = async function(card){
 
             console.log("YOP played on resource: " + resourceNum1 + " and " + resourceNum2)
 
-            //take those two resouces from the bank and give them to player
-            bank[resourceNum1]--
+            //take those two resouces from the b_State.bank and give them to player
+            b_State.bank[resourceNum1]--
             this.resources[resourceNum1]++
 
-            bank[resourceNum2]--
+            b_State.bank[resourceNum2]--
             this.resources[resourceNum2]++
 
             break;
@@ -910,9 +910,9 @@ Player.prototype.botDiscard = function(){
             let resourceType = Math.floor(Math.random() * 5)
 
             if(this.resources[resourceType] != 0){
-                //return card to bank
+                //return card to b_State.bank
                 this.resources[resourceType]--
-                bank[resourceType]++
+                b_State.bank[resourceType]++
 
                 //reduce counters for remaining cards
                 numCards--

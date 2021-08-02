@@ -27,7 +27,7 @@ function createSettingsWindow () {
             height: 500
         })
     
-        settingsWindow.loadFile('settings.html');
+        settingsWindow.loadFile('html/settings.html');
         settingsWindowOpen = true;
 
         settingsWindow.on("close", function() { //   <---- Catch close event
@@ -45,7 +45,7 @@ function createAnalysisWindow () {
             height: 500
         })
     
-        analysisWindow.loadFile('data.html');
+        analysisWindow.loadFile('html/data.html');
         analysisWindowOpen = true;
 
         analysisWindow.on("close", function() { 

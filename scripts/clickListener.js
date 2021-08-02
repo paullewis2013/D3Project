@@ -136,7 +136,7 @@ function startClickListener(){
                 console.log(c_State.cardPaths[i].type + " card clicked")
     
                 //dev cards
-                if(!devCardPlayedThisTurn){
+                if(!b_State.devCardPlayedThisTurn){
     
                     //knight
                     if(b_State.knightsEnabled && c_State.cardPaths[i].type === "knight"){

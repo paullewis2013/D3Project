@@ -20,21 +20,18 @@ b_State = {
 
     initialPlacementsComplete: false,
     turnNumber: 0,
+
+    diceRolledThisTurn: false,
+    devCardPlayedThisTurn: false,
+
+    devCardArray: [],
+    bank: [19, 19, 19, 19, 19],
 }
-
-var diceRolledThisTurn = false;
-var devCardPlayedThisTurn = false;
-
-//array to store dev cards left in deck
-var devCardArray = [];
 
 //object to track number of each dev card which haven't been played
 //TODO both go in d_State
 var unplayedDevCards = {knight: 14, vp: 5, monopoly: 2, road: 2, plenty: 2};
 var playedDevCards = {knight: 0, vp: 0, monopoly: 0, road: 0, plenty: 0};
-
-//array to store resource cards in bank
-var bank = [19, 19, 19, 19, 19];
 
 var currentlyTrading = false;
 var buildingRoad = false;
@@ -124,7 +121,6 @@ const resourceCard = {
     WHEAT: 'wheat',
     ORE: 'ore'
 }
-
 
 var numTilePointers = [
     [],
@@ -413,12 +409,12 @@ async function mainGameLoop(){
             checkWinCondition()
 
             //disable all moves except dice and knight
-            diceRolledThisTurn = false;
+            b_State.diceRolledThisTurn = false;
             freeze()
             b_State.diceButtonEnabled = true;
 
             //cap dev cards played per turn
-            devCardPlayedThisTurn = false;
+            b_State.devCardPlayedThisTurn = false;
             b_State.anyDevCardEnabled = false;
 
             //preturn option to play knight card
@@ -472,7 +468,7 @@ function setButtons(player){
     
     let building = buildingRoad || buildingSettlement || buildingCity;
 
-    if(diceRolledThisTurn && !c_State.movingRobber && !c_State.showMonopolyMenu && !c_State.showYOPMenu){
+    if(b_State.diceRolledThisTurn && !c_State.movingRobber && !c_State.showMonopolyMenu && !c_State.showYOPMenu){
 
         //trade button
         if(!building){
@@ -482,7 +478,7 @@ function setButtons(player){
         }
         
         //dev button
-        if(!building && devCardArray.length > 0 && (currPlayer.resources[2] > 0 && currPlayer.resources[3] > 0 && currPlayer.resources[4] > 0)){
+        if(!building && b_State.devCardArray.length > 0 && (currPlayer.resources[2] > 0 && currPlayer.resources[3] > 0 && currPlayer.resources[4] > 0)){
             b_State.devButtonEnabled = true;
         }else{
             b_State.devButtonEnabled = false;
@@ -510,7 +506,7 @@ function setButtons(player){
         }
 
         //turn
-        if(!building && diceRolledThisTurn){
+        if(!building && b_State.diceRolledThisTurn){
             b_State.turnButtonEnabled = true
         }else{
             b_State.turnButtonEnabled = false;
@@ -528,7 +524,7 @@ function setButtons(player){
     }
     
     //dice
-    if(!diceRolledThisTurn && b_State.initialPlacementsComplete){
+    if(!b_State.diceRolledThisTurn && b_State.initialPlacementsComplete){
         b_State.diceButtonEnabled = true;
     }else{
         b_State.diceButtonEnabled = false;
@@ -651,7 +647,7 @@ async function waitForDiceRoll(){
         
         if(b_State.winCondition){
             break;
-        }else if(diceRolledThisTurn && !c_State.movingRobber){
+        }else if(b_State.diceRolledThisTurn && !c_State.movingRobber){
             diceRollFinished = true;
         }else{
             await sleep(100)
@@ -663,21 +659,21 @@ async function waitForDiceRoll(){
 // being used as deck
 function populateDevCardDeck(){
     for(var i = 0; i < 14; i++){
-        devCardArray.push(devCard.KNIGHT);
+        b_State.devCardArray.push(devCard.KNIGHT);
     }
     for(var i = 0; i < 5; i++){
-        devCardArray.push(devCard.VP);
+        b_State.devCardArray.push(devCard.VP);
     }
     for(var i = 0; i < 2; i++){
-        devCardArray.push(devCard.MONOPOLY);
+        b_State.devCardArray.push(devCard.MONOPOLY);
     }
     for(var i = 0; i < 2; i++){
-        devCardArray.push(devCard.ROAD);
+        b_State.devCardArray.push(devCard.ROAD);
     }
     for(var i = 0; i < 2; i++){
-        devCardArray.push(devCard.PLENTY);
+        b_State.devCardArray.push(devCard.PLENTY);
     }
-    devCardArray = _.shuffle(devCardArray)
+    b_State.devCardArray = _.shuffle(b_State.devCardArray)
 }
 
 //TODO move this to stats file
@@ -748,7 +744,7 @@ function checkWinCondition(){
 //generates a dice roll between 1 and 12 by summing two d6
 function rollDice(){
 
-    diceRolledThisTurn = true;
+    b_State.diceRolledThisTurn = true;
 
     diceArr[0].roll()
     diceArr[1].roll()
@@ -780,8 +776,8 @@ function rollDice(){
 //this name is kind of confusing tbh
 //nothing is drawn on the canvas here
 function drawDevCard(){
-    if(devCardArray.length > 0){
-        var card = devCardArray.pop();
+    if(b_State.devCardArray.length > 0){
+        var card = b_State.devCardArray.pop();
 
         currPlayer.drawDevCard(card)
     }else{
@@ -815,36 +811,36 @@ function generateResources(result){
 
                     switch(r){
                         case "wood":
-                            if(bank[0] > 0){
-                                bank[0] -= amount;
+                            if(b_State.bank[0] > 0){
+                                b_State.bank[0] -= amount;
                                 p.resources[0] += amount;
                             }
                             break;
                         
                         case "brick":
-                            if(bank[1] > 0){
-                                bank[1] -= amount;
+                            if(b_State.bank[1] > 0){
+                                b_State.bank[1] -= amount;
                                 p.resources[1] += amount;
                             }
                             break;
 
                         case "sheep":
-                            if(bank[2] > 0){
-                                bank[2] -= amount;
+                            if(b_State.bank[2] > 0){
+                                b_State.bank[2] -= amount;
                                 p.resources[2] += amount;
                             }
                             break;
 
                         case "wheat":
-                            if(bank[3] > 0){
-                                bank[3] -= amount;
+                            if(b_State.bank[3] > 0){
+                                b_State.bank[3] -= amount;
                                 p.resources[3] += amount;
                             }
                             break;
 
                         case "ore":
-                            if(bank[4] > 0){
-                                bank[4] -= amount;
+                            if(b_State.bank[4] > 0){
+                                b_State.bank[4] -= amount;
                                 p.resources[4] += amount;
                             }
                             break;
@@ -852,17 +848,10 @@ function generateResources(result){
                         default:
 
                     }
-
-                    //redraw bank to update with what has changed
-                    drawBank();
                 }
-
-               
             }
-
         }
     }
-
 }
 
 function playDevCard(card){
@@ -1073,42 +1062,6 @@ function cityButton(){
     freeze();
     //drawVertices(currPlayer);
 
-}
-
-//TODO move to data.js
-//eventually move this and other button functions to a seperate js file
-function graphicButton(){
-
-    //TODO remove me
-    return;
-
-    var graphic = document.getElementById("displayOptions").value
-    //console.log(graphic)
-
-    switch(graphic){
-        case "None":
-            clearDisplay();
-            break;
-
-        case "Dice Distribution":  
-            drawDiceResults();
-            break;
-
-        case "dev played":
-            drawPlayedDevCards()
-            break;
-
-        case "dev unplayed":
-            drawUnplayedDevCards()
-            break;
-
-        case "prod":
-            drawProductionCapacity();
-            break;
-
-        default:
-            break;
-    }
 }
 
 //fills the random table with angles between 0 and 2 PI Radians

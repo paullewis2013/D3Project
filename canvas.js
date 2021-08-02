@@ -273,6 +273,8 @@ function drawBank(){
 
     let startX = x + cardWidth/2;
     let cardY = 110;
+
+    ctx.lineWidth = 1
     
     //draw numbers for resources
     for(var i = 0; i < 6; i++){
@@ -299,7 +301,7 @@ function drawBank(){
             ctx.fillStyle = "black"
             ctx.textAlign = "center"
             ctx.font = "12px Arial"
-            ctx.fillText(bank[i], cardX, cardY + 5)
+            ctx.fillText(b_State.bank[i], cardX, cardY + 5)
 
         }
         //dev card pile
@@ -324,7 +326,7 @@ function drawBank(){
             ctx.fillStyle = "black"
             ctx.textAlign = "center"
             ctx.font = "12px Arial"
-            ctx.fillText(devCardArray.length, cardX, cardY + 5)
+            ctx.fillText(b_State.devCardArray.length, cardX, cardY + 5)
 
             ctx.font = "20px Arial"
             ctx.fillText("D", cardX + cardWidth/2, cardY + cardHeight/2 + 5)
@@ -850,10 +852,10 @@ function drawMonopolyMenu(){
     let cardX = menu_x + buffer/2
 
     //loop through all of current players resources
-    for(let i = 0; i < bank.length; i++){
+    for(let i = 0; i < b_State.bank.length; i++){
 
         //only draw resource types that the player actually has
-        if(bank[i] != 0){
+        if(b_State.bank[i] != 0){
 
             //define boundaries of resource card
             let currCard = new Path2D()
@@ -1287,49 +1289,56 @@ function drawTimer(x, y){
 function drawTradeMenu(){
 
     //define boundaries of trade menu
-    let menu_x = c_WIDTH - 300
-    let menu_y = c_HEIGHT - 6 * c_State.tileRadius
-    let width = 290
+    let menu_x = c_WIDTH - 360
+    let menu_y = c_HEIGHT * 0.55
+    let width = 360
     let height = 225
 
     //draw the trade menu box
     ctx.beginPath()
     ctx.rect(menu_x, menu_y, width, height)
-    ctx.fillStyle = "antiquewhite"
+    ctx.fillStyle = c_State.menuColor
     ctx.fill()
 
     //draw the dividing lines for the 3 sections
     ctx.moveTo(menu_x + 3* width/4, menu_y)
     ctx.lineTo(menu_x + 3* width/4, menu_y + height)
+    ctx.lineWidth = 2
     ctx.stroke()
 
     //draw the cards
     //send cards
     ctx.textAlign = "left"
     ctx.fillStyle = "black"
+    ctx.font = "15px Arial"
     ctx.fillText("Send ", menu_x + 5, menu_y + 15)
+
+    let cardHeight = 48
+    let cardWidth = 5 * cardHeight/7
+
+    ctx.lineWidth = 1
 
     for(let i = 0; i < 5; i++){
         ctx.beginPath()
-        ctx.rect(menu_x + 15 + i * 40, menu_y + 25, 30, 55)
+        ctx.rect(menu_x + 15 + i * 40, menu_y + 25, cardWidth, cardHeight)
         ctx.stroke()
     }
 
     //receive cards
     ctx.textAlign = "left"
     ctx.fillStyle = "black"
-    ctx.fillText("Receive ", menu_x + 5, menu_y - 10 + height)
+    ctx.fillText("Receive ", menu_x + 5, menu_y + height/2 + 15)
 
     for(let i = 0; i < 5; i++){
         ctx.beginPath()
-        ctx.rect(menu_x + 15 + i * 40, menu_y + 20 + height/2, 30, 55)
+        ctx.rect(menu_x + 15 + i * 40, menu_y + height/2 + 25, cardWidth, cardHeight)
         ctx.stroke()
     }
 
     //draw the trade arrows
 
     //draw the player circles
-    let circle_y = menu_y + height/(2 * (playersArr.length - 1))
+    let circle_y = menu_y + height/(2 * (playersArr.length))
 
     for(let i = 0; i < playersArr.length; i++){
         
@@ -1349,12 +1358,11 @@ function drawTradeMenu(){
         //draw user icon on top of image
         ctx.drawImage(images[9], menu_x + (7 * width/8) - 21, circle_y - 24, 42, 40)
 
-        circle_y += height/(playersArr.length - 1);
+        circle_y += height/(playersArr.length);
     }
 
-    //console.log("here")
-    ctx.fillStyle = "black"
-
+    //draw bank
+    ctx.drawImage(images[8], menu_x + (7 * width/8) - 20, circle_y - 20, 40, 40)
 }
 
 function drawTurnNum(x, y){
@@ -1476,11 +1484,11 @@ function drawYOPMenu(){
     let cardY = menu_y + (h - 2 * cardHeight)/3
     let cardX = menu_x + buffer/2
 
-    //loop through all of banks resources
-    for(let i = 0; i < bank.length; i++){
+    //loop through all of b_State.banks resources
+    for(let i = 0; i < b_State.bank.length; i++){
 
         //only draw resource types that the bank actually has
-        if(bank[i] != 0){
+        if(b_State.bank[i] != 0){
 
             //define boundaries of resource card
             let currCard = new Path2D()
@@ -1587,10 +1595,10 @@ function drawYOPMenu(){
     ctx.lineWidth = 1
 
     //loop through all of banks resources
-    for(let i = 0; i < bank.length; i++){
+    for(let i = 0; i < b_State.bank.length; i++){
 
         //only draw resource types that the bank actually has
-        if(bank[i] != 0 && c_State.yop1 && !(i == c_State.selectedResource[0] && bank[c_State.selectedResource[0]] == 1)){
+        if(b_State.bank[i] != 0 && c_State.yop1 && !(i == c_State.selectedResource[0] && b_State.bank[c_State.selectedResource[0]] == 1)){
 
             //define boundaries of resource card
             let currCard = new Path2D()

@@ -6,6 +6,37 @@ d_State = {
     productionCapacity: [0, 0, 0, 0, 0],
 }
 
+//draws correct graphic to display
+function graphicButton(){
+
+    var graphic = document.getElementById("displayOptions").value
+
+    switch(graphic){
+        case "None":
+            clearDisplay();
+            break;
+
+        case "Dice Distribution":  
+            drawDiceResults();
+            break;
+
+        case "dev played":
+            drawPlayedDevCards()
+            break;
+
+        case "dev unplayed":
+            drawUnplayedDevCards()
+            break;
+
+        case "prod":
+            drawProductionCapacity();
+            break;
+
+        default:
+            break;
+    }
+}
+
 //sums up dot values for each resource by checking all tiles
 function calcProduction(){
     for(var i = 0; i < tilesArr.length; i++){

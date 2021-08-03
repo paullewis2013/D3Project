@@ -86,9 +86,9 @@ function startClickListener(){
     
         //road button
         if(ctx.isPointInPath(c_State.roadButtonPath, CLICK_X, CLICK_Y)){
-            if(b_State.roadButtonEnabled && !buildingRoad){
+            if(b_State.roadButtonEnabled && !b_State.buildingRoad){
                 roadButton()
-            }else if(b_State.roadButtonEnabled && buildingRoad){
+            }else if(b_State.roadButtonEnabled && b_State.buildingRoad){
                 cancelAction();
             }
             console.log("road button clicked")
@@ -96,9 +96,9 @@ function startClickListener(){
     
         //settlement button
         if(ctx.isPointInPath(c_State.settlementButtonPath, CLICK_X, CLICK_Y)){
-            if(b_State.settlementButtonEnabled && !buildingSettlement){
+            if(b_State.settlementButtonEnabled && !b_State.buildingSettlement){
                 settlementButton()
-            }else if(b_State.settlementButtonEnabled && buildingSettlement){
+            }else if(b_State.settlementButtonEnabled && b_State.buildingSettlement){
                 cancelAction()
                 c_State.showVerts = false
             }
@@ -107,9 +107,9 @@ function startClickListener(){
     
         //city Button
         if(ctx.isPointInPath(c_State.cityButtonPath, CLICK_X, CLICK_Y)){
-            if(b_State.cityButtonEnabled && !buildingCity){
+            if(b_State.cityButtonEnabled && !b_State.buildingCity){
                 cityButton()
-            }else if(b_State.cityButtonEnabled && buildingCity){
+            }else if(b_State.cityButtonEnabled && b_State.buildingCity){
                 cancelAction()
             }
             console.log("city button clicked")
@@ -154,6 +154,37 @@ function startClickListener(){
             }
         }
     
+        if(b_State.currentlyTrading){
+
+            //loop through send
+            for(let i = 0; i < 5; i++){
+                if(c_State.sendCardPaths[i] != null && ctx.isPointInPath(c_State.sendCardPaths[i], CLICK_X, CLICK_Y)){
+
+                    // don't allow player to try to trade a resource they don't have or that is already being received in same trade
+                    if(c_State.player.resources[i] > 0 && c_State.receive[i] < 1){
+                        c_State.send[i]++;
+                        c_State.player.resources[i]--;
+                    }
+                }
+            }
+
+            //loop through receive
+            for(let i = 0; i < 5; i++){
+                if(c_State.receiveCardPaths[i] != null && ctx.isPointInPath(c_State.receiveCardPaths[i], CLICK_X, CLICK_Y)){
+
+                    // don't allow player to trade for a resource they're also trying to send
+                    if(c_State.send[i] < 1){
+                        c_State.receive[i]++;
+                    }
+                }
+            }
+
+            //clear send button
+
+            //clear receive button
+
+        }
+
         //–––––––––––––––––––––––––––––––––––––––––––––––––––––––
     
     
@@ -167,7 +198,7 @@ function startClickListener(){
                     
                     console.log(verticesArr[i][j])
     
-                    if(buildingSettlement){
+                    if(b_State.buildingSettlement){
                         //console.log("attempting to build settlement at " + verticesArr[i][j].toString())
                         if(currPlayer.VP < 2){
                             buildSettlement(verticesArr[i][j], currPlayer)
@@ -192,7 +223,7 @@ function startClickListener(){
         }
     
         //loop through current players settlements
-        if(buildingCity){
+        if(b_State.buildingCity){
     
             //loop through all of currPlayer's Settlements
             for(var i = 0; i < currPlayer.settlements.length; i++){
@@ -233,7 +264,7 @@ function startClickListener(){
         //loop through all buildable roads
         let roads = currPlayer.getBuildableRoads()
     
-        if(buildingRoad){
+        if(b_State.buildingRoad){
             for(let i = 0; i < roads.length; i++){
                 if(ctx.isPointInPath(roads[i].hitbox, CLICK_X, CLICK_Y)){
                     buildRoad(roads[i], currPlayer);

@@ -106,7 +106,7 @@ function drawDiceResults() {
 //creates a donut chart with all the dev cards that have not been played yet
 function drawUnplayedDevCards(){
 
-    var data = unplayedDevCards
+    var data = d_State.unplayedDevCards
 
     d3.selectAll("svg > *").remove();
 
@@ -203,7 +203,7 @@ function drawUnplayedDevCards(){
 //no reason to do this one until I implement a way to play a dev card
 function drawPlayedDevCards(){
 
-    var data = playedDevCards
+    var data = d_State.playedDevCards
 
     d3.selectAll("svg > *").remove();
 

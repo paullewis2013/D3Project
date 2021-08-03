@@ -46,8 +46,15 @@ var c_State = {
     scale: 1,
 
     cardPaths: [],
+    sendCardPaths: [null, null, null, null, null],
+    receiveCardPaths: [null, null, null, null, null],
     monopolyMenuCardPaths: [],
     yopMenuCardPaths: [],
+
+    send: [0,0,0,0,0],
+    receive: [0,0,0,0,0],
+    clearSendPath: null,
+    clearReceivePath: null,
 
     // background vertices in animation
     dotsArray: [],
@@ -302,7 +309,6 @@ function drawBank(){
             ctx.textAlign = "center"
             ctx.font = "12px Arial"
             ctx.fillText(b_State.bank[i], cardX, cardY + 5)
-
         }
         //dev card pile
         else{
@@ -342,13 +348,13 @@ function drawButtons(){
     ctx.strokeStyle = "black";
     ctx.lineWidth = 1;
 
-    //draw shape for bank to go in
+    //draw shape for buttons to go in
     let x = (c_WIDTH/2) - 1.8 * c_State.tileRadius
-    let y = c_HEIGHT - 1.5 * c_State.tileRadius
+    let y = c_HEIGHT - 105
     let w = c_WIDTH - x
-    let h = 1.5 * c_State.tileRadius
+    let h = 105
 
-    let textY = c_HEIGHT - c_State.tileRadius + 10/2
+    let textY = c_HEIGHT - 50
 
     let textX = x + c_State.buttonWidth/2 + 0.3*c_State.tileRadius
 
@@ -377,7 +383,7 @@ function drawButtons(){
     }
     ctx.fill(c_State.tradeButtonPath)
 
-    if(currentlyTrading){
+    if(b_State.currentlyTrading){
         ctx.lineWidth = 4;
         ctx.strokeStyle = strokeColor
         ctx.stroke(c_State.tradeButtonPath)
@@ -409,7 +415,7 @@ function drawButtons(){
     }
     ctx.fill(c_State.roadButtonPath)
 
-    if(buildingRoad && b_State.initialPlacementsComplete){
+    if(b_State.buildingRoad && b_State.initialPlacementsComplete){
         ctx.lineWidth = 4;
         ctx.strokeStyle = strokeColor
         ctx.stroke(c_State.roadButtonPath)
@@ -427,7 +433,7 @@ function drawButtons(){
     }
     ctx.fill(c_State.settlementButtonPath)
 
-    if(buildingSettlement && b_State.initialPlacementsComplete){
+    if(b_State.buildingSettlement && b_State.initialPlacementsComplete){
         ctx.lineWidth = 4;
         ctx.strokeStyle = strokeColor
         ctx.stroke(c_State.settlementButtonPath)
@@ -447,7 +453,7 @@ function drawButtons(){
     }
     ctx.fill(c_State.cityButtonPath)
 
-    if(buildingCity && b_State.initialPlacementsComplete){
+    if(b_State.buildingCity && b_State.initialPlacementsComplete){
         ctx.lineWidth = 4;
         ctx.strokeStyle = strokeColor
         ctx.stroke(c_State.cityButtonPath)
@@ -807,10 +813,10 @@ function drawIsland(){
 
 function drawMonopolyMenu(){
     //define boundaries of trade menu
-    let menu_x = c_WIDTH - 300
-    let menu_y = c_HEIGHT - 4.5 * c_State.tileRadius
-    let w = 290
-    let h = 2 * c_State.tileRadius
+    let menu_x = c_WIDTH - 360
+    let menu_y = c_HEIGHT * 0.55
+    let w = 360
+    let h = 225
 
     let x = menu_x
     let y = menu_y
@@ -833,7 +839,7 @@ function drawMonopolyMenu(){
     monopolyMenuPath.lineTo(x, y+radius);
     monopolyMenuPath.quadraticCurveTo(x, y, x+radius, y);
     ctx.closePath()
-    ctx.fillStyle = "#d9e2ea"
+    ctx.fillStyle = c_State.menuColor
     ctx.fill(monopolyMenuPath)
     ctx.strokeColor = "black"
     ctx.stroke(monopolyMenuPath)
@@ -1307,6 +1313,7 @@ function drawTradeMenu(){
     ctx.stroke()
 
     //draw the cards
+
     //send cards
     ctx.textAlign = "left"
     ctx.fillStyle = "black"
@@ -1319,20 +1326,85 @@ function drawTradeMenu(){
     ctx.lineWidth = 1
 
     for(let i = 0; i < 5; i++){
+
+        let cardX = menu_x + 15 + i * 40
+        let cardY = menu_y + 25
+
+        //TODO move this to init paths
+        let p = new Path2D()
         ctx.beginPath()
-        ctx.rect(menu_x + 15 + i * 40, menu_y + 25, cardWidth, cardHeight)
-        ctx.stroke()
+        p.moveTo(cardX, cardY)
+        p.lineTo(cardX + cardWidth, cardY)
+        p.lineTo(cardX + cardWidth, cardY + cardHeight)
+        p.lineTo(cardX, cardY + cardHeight)
+        p.lineTo(cardX, cardY)
+        //p.rect(menu_x + 15 + i * 40, menu_y + 25, cardWidth, cardHeight)
+        ctx.stroke(p)
+        c_State.sendCardPaths[i] = p;
+
+        //if card is actually being sent in trade display it differently
+        if(c_State.send[i] > 0){
+            //add color to card
+            ctx.fillStyle = c_State.colorVals[i];
+            ctx.fill(p)
+
+            //draw circle for number of cards
+            ctx.beginPath()
+            ctx.arc(cardX + cardWidth/2, cardY + cardHeight/2, 9, 0, 2 * Math.PI, false)
+            ctx.stroke()
+            ctx.fillStyle = "white"
+            ctx.fill()
+
+            //draw number to show how many the user has
+            ctx.fillStyle = "black"
+            ctx.textAlign = "center"
+            ctx.font = "12px Arial"
+            ctx.fillText(c_State.send[i], cardX + cardWidth/2, cardY + cardHeight/2 + 5)
+        }
     }
 
     //receive cards
     ctx.textAlign = "left"
     ctx.fillStyle = "black"
+    ctx.font = "15px Arial"
     ctx.fillText("Receive ", menu_x + 5, menu_y + height/2 + 15)
 
     for(let i = 0; i < 5; i++){
+
+        let cardX = menu_x + 15 + i * 40
+        let cardY = menu_y + height/2 + 25
+
+        //TODO move this to init paths
+        let p = new Path2D()
         ctx.beginPath()
-        ctx.rect(menu_x + 15 + i * 40, menu_y + height/2 + 25, cardWidth, cardHeight)
-        ctx.stroke()
+        p.moveTo(cardX, cardY)
+        p.lineTo(cardX + cardWidth, cardY)
+        p.lineTo(cardX + cardWidth, cardY + cardHeight)
+        p.lineTo(cardX, cardY + cardHeight)
+        p.lineTo(cardX, cardY)
+        //p.rect(menu_x + 15 + i * 40, menu_y + 25, cardWidth, cardHeight)
+        ctx.stroke(p)
+        c_State.receiveCardPaths[i] = p;
+
+        //if card is actually being sent in trade display it differently
+        if(c_State.receive[i] > 0){
+            //add color to card
+            ctx.fillStyle = c_State.colorVals[i];
+            ctx.fill(p)
+
+            //draw circle for number of cards
+            ctx.beginPath()
+            ctx.arc(cardX + cardWidth/2, cardY + cardHeight/2, 9, 0, 2 * Math.PI, false)
+            ctx.stroke()
+            ctx.fillStyle = "white"
+            ctx.fill()
+
+            //draw number to show how many the user has
+            ctx.fillStyle = "black"
+            ctx.textAlign = "center"
+            ctx.font = "12px Arial"
+            ctx.fillText(c_State.receive[i], cardX + cardWidth/2, cardY + cardHeight/2 + 5)
+        }
     }
 
     //draw the trade arrows
@@ -1685,7 +1757,18 @@ function drawYOPMenu(){
     } 
 }
 
+function clearSend(){
+    for(let i = 0; i < 5; i++){
+        c_State.player.resources[i] += c_State.send[i];
+        c_State.send[i] = 0
+    }
+}
 
+function clearReceive(){
+    for(let i = 0; i < 5; i++){
+        c_State.receive[i] = 0
+    }
+}
 
 
 
@@ -1741,7 +1824,7 @@ function drawCanvas(){
     drawPlayerInfo();
 
     //conditional elements
-    if(currentlyTrading){
+    if(b_State.currentlyTrading){
         drawTradeMenu()
     }
     if(c_State.showMonopolyMenu){

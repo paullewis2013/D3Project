@@ -40,10 +40,10 @@ function initButtons(){
 
     //x y width height and curve radius for rectangle path
     let x = (c_WIDTH/2) - 1.5 * 60
-    let y = c_HEIGHT - 60 * 1.8
+    let y = c_HEIGHT - 95
     let w = (c_WIDTH - x) / 7
-    let h = 60 * 1.5
-    let radius = 10
+    let h = 80
+    let radius = 15
 
     c_State.buttonWidth = w * 7/6
 

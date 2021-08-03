@@ -23,20 +23,14 @@ b_State = {
 
     diceRolledThisTurn: false,
     devCardPlayedThisTurn: false,
+    currentlyTrading: false,
+    buildingRoad: false,
+    buildingSettlement: false,
+    buildingCity: false,
 
     devCardArray: [],
     bank: [19, 19, 19, 19, 19],
 }
-
-//object to track number of each dev card which haven't been played
-//TODO both go in d_State
-var unplayedDevCards = {knight: 14, vp: 5, monopoly: 2, road: 2, plenty: 2};
-var playedDevCards = {knight: 0, vp: 0, monopoly: 0, road: 0, plenty: 0};
-
-var currentlyTrading = false;
-var buildingRoad = false;
-var buildingSettlement = false;
-var buildingCity = false;
 
 //maybe this should point to a tile
 var robberLocation = null;
@@ -47,6 +41,7 @@ var largestArmyHolder = null;
 //TODO remove quickstart
 var quickStarting = true
 
+//TODO this might belong to the canvas state
 var randomTable = []
 
 //the tiles on the board
@@ -348,7 +343,6 @@ async function initialSettlements(){
 
         //input for all players
         if(!currPlayer.isBot || !quickStarting){
-            console.log("here")
 
             settlementButton();
 
@@ -466,7 +460,8 @@ function setButtons(player){
         return;
     }
     
-    let building = buildingRoad || buildingSettlement || buildingCity;
+    let building = b_State.buildingRoad || b_State.buildingSettlement || b_State.buildingCity;
+    let trading = b_State.currentlyTrading;
 
     if(b_State.diceRolledThisTurn && !c_State.movingRobber && !c_State.showMonopolyMenu && !c_State.showYOPMenu){
 
@@ -478,35 +473,35 @@ function setButtons(player){
         }
         
         //dev button
-        if(!building && b_State.devCardArray.length > 0 && (currPlayer.resources[2] > 0 && currPlayer.resources[3] > 0 && currPlayer.resources[4] > 0)){
+        if(!building && !trading && b_State.devCardArray.length > 0 && (currPlayer.resources[2] > 0 && currPlayer.resources[3] > 0 && currPlayer.resources[4] > 0)){
             b_State.devButtonEnabled = true;
         }else{
             b_State.devButtonEnabled = false;
         }
 
         //road
-        if((!building || buildingRoad) && currPlayer.roadsRemaining > 0 && (currPlayer.resources[0] > 0 && currPlayer.resources[1] > 0) ){
+        if((!building || b_State.buildingRoad) && !trading && currPlayer.roadsRemaining > 0 && (currPlayer.resources[0] > 0 && currPlayer.resources[1] > 0) ){
             b_State.roadButtonEnabled = true;
         }else{
             b_State.roadButtonEnabled = false;
         }
 
         //settlement
-        if((!building || buildingSettlement) && currPlayer.settlementsRemaining > 0 && (currPlayer.resources[0] > 0 && currPlayer.resources[1] > 0 && currPlayer.resources[2] > 0 && currPlayer.resources[3] > 0 ) ){
+        if((!building || b_State.buildingSettlement) && !trading && currPlayer.settlementsRemaining > 0 && (currPlayer.resources[0] > 0 && currPlayer.resources[1] > 0 && currPlayer.resources[2] > 0 && currPlayer.resources[3] > 0 ) ){
             b_State.settlementButtonEnabled = true;
         }else{
             b_State.settlementButtonEnabled = false;
         }
 
         //city 
-        if((!building || buildingCity) && currPlayer.citiesRemaining > 0 && (currPlayer.resources[3] > 1 && currPlayer.resources[4] > 2) ){
+        if((!building || b_State.buildingCity) && !trading && currPlayer.citiesRemaining > 0 && (currPlayer.resources[3] > 1 && currPlayer.resources[4] > 2) ){
             b_State.cityButtonEnabled = true;
         }else{
             b_State.cityButtonEnabled = false;
         }
 
         //turn
-        if(!building && b_State.diceRolledThisTurn){
+        if(!building && !trading && b_State.diceRolledThisTurn){
             b_State.turnButtonEnabled = true
         }else{
             b_State.turnButtonEnabled = false;
@@ -859,24 +854,24 @@ function playDevCard(card){
     //update unplayed dev cards tracker
     switch(card){
         case devCard.KNIGHT:
-            unplayedDevCards.knight -= 1;
-            playedDevCards.knight += 1;
+            d_State.unplayedDevCards.knight -= 1;
+            d_State.playedDevCards.knight += 1;
             break;
         case devCard.VP:
-            unplayedDevCards.vp -= 1;
-            playedDevCards.vp += 1;
+            d_State.unplayedDevCards.vp -= 1;
+            d_State.playedDevCards.vp += 1;
             break;
         case devCard.MONOPOLY:
-            unplayedDevCards.monopoly -= 1;
-            playedDevCards.monopoly += 1;
+            d_State.unplayedDevCards.monopoly -= 1;
+            d_State.playedDevCards.monopoly += 1;
             break;
         case devCard.ROAD:
-            unplayedDevCards.road -= 1;
-            playedDevCards.road += 1;
+            d_State.unplayedDevCards.road -= 1;
+            d_State.playedDevCards.road += 1;
             break;
         case devCard.PLENTY:
-            unplayedDevCards.plenty -= 1;
-            playedDevCards.plenty += 1;
+            d_State.unplayedDevCards.plenty -= 1;
+            d_State.playedDevCards.plenty += 1;
             break;
         default:
             break;
@@ -908,7 +903,7 @@ function buildRoad(road, player){
 
     player.calcLongestRoad()
 
-    buildingRoad = false;
+    b_State.buildingRoad = false;
     c_State.showRoads = false;
     unfreeze();
 }
@@ -936,7 +931,7 @@ function buildSettlement(vertex, player){
     //make any adjacent vertecies dead so that settlements cannot be built on them
     vertex.build(vertex.settlement);
 
-    buildingSettlement = false;
+    b_State.buildingSettlement = false;
     c_State.showVerts = false;
     unfreeze();
 }
@@ -946,7 +941,7 @@ function buildCity(settlement, player){
     settlement.isCity = true;
     player.buildCity();
 
-    buildingCity = false;
+    b_State.buildingCity = false;
     unfreeze();
 
 }
@@ -958,9 +953,9 @@ function cancelAction(){
     c_State.showRoads = false;
 
     c_State.movingRobber = false;
-    buildingRoad = false;
-    buildingSettlement = false;
-    buildingCity = false;
+    b_State.buildingRoad = false;
+    b_State.buildingSettlement = false;
+    b_State.buildingCity = false;
 
     //unfreeze()
     drawCanvas()
@@ -974,18 +969,21 @@ function turnButton(){
     currPlayerIndex = ++currPlayerIndex%(playersArr.length);
     currPlayer = playersArr[currPlayerIndex];
 
-    currentlyTrading = false;
+    b_State.currentlyTrading = false;
 
     console.log("turn completed")
 }
 
 function tradeButton(){
 
-    if(!currentlyTrading){
-        currentlyTrading = true;
+    if(!b_State.currentlyTrading){
+        b_State.currentlyTrading = true;
     }else{
-        currentlyTrading = false;
+        b_State.currentlyTrading = false;
+        clearSend();
+        clearReceive();
     }
+    freeze();
 }
 
 function freeze(){
@@ -1044,24 +1042,22 @@ function devButton(){
 function roadButton(){
 
     c_State.showRoads = true;
-    buildingRoad = true;
+    b_State.buildingRoad = true;
     freeze();
 }
 
 function settlementButton(){
 
-    buildingSettlement = true;
-    freeze();
+    b_State.buildingSettlement = true;
     c_State.showVerts = true;
+    freeze();
 }
 
 //TODO
 function cityButton(){
 
-    buildingCity = true;
+    b_State.buildingCity = true;
     freeze();
-    //drawVertices(currPlayer);
-
 }
 
 //fills the random table with angles between 0 and 2 PI Radians

@@ -4,6 +4,9 @@ d_State = {
     //contains values and frequency of dice rolls
     dice_results_arr: [],
     productionCapacity: [0, 0, 0, 0, 0],
+
+    unplayedDevCards: {knight: 14, vp: 5, monopoly: 2, road: 2, plenty: 2},
+    playedDevCards: {knight: 0, vp: 0, monopoly: 0, road: 0, plenty: 0},
 }
 
 //draws correct graphic to display

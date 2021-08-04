@@ -255,7 +255,7 @@ playersArr.push(p2);
 playersArr.push(p3);
 playersArr.push(p4);
 
-currPlayerIndex = Math.floor(Math.random() * 4);
+var currPlayerIndex = Math.floor(Math.random() * 4);
 var currPlayer = playersArr[currPlayerIndex];
 
 //sets all game conditions initally
@@ -730,7 +730,9 @@ function generatePorts(){
 
 function checkWinCondition(){
 
-    if(currPlayer.VP + currPlayer.devCards[1] >= b_State.pointsToWin){
+    console.log(currPlayer.VP + currPlayer.devCards[1])
+
+    if(currPlayer.getVP() >= b_State.pointsToWin){
         b_State.winCondition = true;
         b_State.winner = currPlayer;
     }

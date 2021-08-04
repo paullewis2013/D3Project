@@ -303,11 +303,9 @@ Player.prototype.totalResources = function(){
 }
 Player.prototype.buildCity = function(){
     
-    
     //take players resources and give them to the bank
     this.resources = [this.resources[0], this.resources[1], this.resources[2], this.resources[3] - 2, this.resources[4] - 3];
     b_State.bank = [b_State.bank[0], b_State.bank[1], b_State.bank[2], b_State.bank[3] + 2, b_State.bank[4] + 3];
-
 
     this.settlementsRemaining++;
     this.citiesRemaining--;
@@ -803,13 +801,14 @@ Player.prototype.getVP = function(){
 
     let result = this.VP;
 
+    //TODO this not working for some reason
     //add points for longest road
-    if(longestRoadHolder === this){
+    if(longestRoadHolder == this){
         result += 2;
     }
 
     //add points for largest army 
-    if(largestArmyHolder === this){
+    if(largestArmyHolder == this){
         result += 2;
     }
 

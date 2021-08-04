@@ -19,6 +19,7 @@
 
             <p>Player Name</p>
             <p>Victory Points to Win</p>
+            <p>Card Discard Limit</p>
         </div>
 
         <!-- c_State -->
@@ -27,22 +28,23 @@
             <h2>Appearance</h2>
 
             <div display="flex">
-                <span width="100px">Animate Background</span>
+                <span class="textSpan">Animate Background</span>
 
-                <label class="switch">
-                    <input type="checkbox" onchange="toggleAnimateBackground()"><div></div>
+                <label class="switch" id="AnimateBackgroundToggle">
+                    <input type="checkbox" onchange="toggleAnimateBackground()" id="AnimateBackgroundCheckbox"><div></div>
                 </label>
             </div>
 
             <br>
 
             <div display="flex">
-                <span width="100px">Toggle Tile Textures</span>
+                <span class="textSpan">Toggle Tile Textures</span>
 
                 <label class="switch" id="TileTexturesToggle">
                     <input type="checkbox" onchange="toggleTileTextures()" id="TileTexturesToggleCheckbox"><div></div>
                 </label>
             </div>
+
         </div>
 
         <!-- <p>Enable cheats</p> -->

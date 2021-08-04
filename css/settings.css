@@ -7,6 +7,10 @@ h1,h2{
     margin: 0;
     margin-bottom: 15px;
 }
+.textSpan {
+    display: inline-block;
+    width: 200px;
+}
 #b_state, #c_state{
     margin: 5px;
     background-color: #eee8d5;

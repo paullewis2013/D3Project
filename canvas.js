@@ -13,6 +13,8 @@ var c_State = {
 
     //textured refers to tile images
     textured: true,
+    animateBackground: true,
+
     menuColor: "#fdf6e3",
     selectedColor: "#71da9d",
 
@@ -1815,7 +1817,9 @@ function drawCanvas(){
     ctx.fillStyle = "#268bd2"
     ctx.fill()
 
-    drawBackgroundAnimated()
+    if(c_State.animateBackground){
+        drawBackgroundAnimated()
+    }
     
     //elements unrelated to board
     drawBank();

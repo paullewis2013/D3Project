@@ -4,10 +4,11 @@ const path = require('path')
 
 var settingsWindowOpen = false;
 var analysisWindowOpen = false;
+var mainWindow;
 
 function createWindow () {
     // Create the browser window.
-    const mainWindow = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         width: 1440,
         height: 900,
         webPreferences: {
@@ -24,7 +25,12 @@ function createSettingsWindow () {
     if(!settingsWindowOpen){
         const settingsWindow = new BrowserWindow({
             width: 350,
-            height: 500
+            height: 500,
+            webPreferences: {
+                nodeIntegration: true,
+                contextIsolation: false
+            },
+            alwaysOnTop: true
         })
     
         settingsWindow.loadFile('html/settings.html');
@@ -66,6 +72,11 @@ ipcMain.on("settings", (event, arg) => {
     if(arg == "open"){
         createSettingsWindow();
     }
+})
+
+//sends updated setting to main window
+ipcMain.on("settingsObject", (event, arg) => {
+    mainWindow.webContents.send("settingsObject", arg)
 })
 
 ipcMain.on("analysis", (event, arg) => {

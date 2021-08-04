@@ -2,3 +2,16 @@ body, html {
     background-color: #073642;
     color: #eee8d5;
 }
+h1,h2{
+    text-align: center;
+    margin: 0;
+    margin-bottom: 15px;
+}
+#b_state, #c_state{
+    margin: 5px;
+    background-color: #eee8d5;
+    color: black;
+    padding: 15px;
+    width: auto;
+    border-radius: 1rem;
+}

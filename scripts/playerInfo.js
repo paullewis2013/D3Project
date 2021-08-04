@@ -57,7 +57,7 @@ function drawPlayerInfo(){
         ctx.fillStyle = "black"
 
         let vp = playersArr[i].getVP()
-        if(playersArr[i].devCards[1] > 0){
+        if(playersArr[i].devCards[1] > 0 && playersArr[i] == c_State.player){
             vp += "(" + (vp + playersArr[i].devCards[1]) + ")"
         }
 

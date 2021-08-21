@@ -250,12 +250,16 @@ var p1 = new Player("Orange", false);
 var p2 = new Player("Red", true);
 var p3 = new Player("Purple", true);
 var p4 = new Player("Blue", true);
+// var p5= new Player("White", true);
+// var p6 = new Player("Black", true);
 playersArr.push(p1);
 playersArr.push(p2);
 playersArr.push(p3);
 playersArr.push(p4);
+// playersArr.push(p5);
+// playersArr.push(p6);
 
-var currPlayerIndex = Math.floor(Math.random() * 4);
+var currPlayerIndex = Math.floor(Math.random() * playersArr.length);
 var currPlayer = playersArr[currPlayerIndex];
 
 //sets all game conditions initally
@@ -263,7 +267,8 @@ var currPlayer = playersArr[currPlayerIndex];
 function setup(){
     console.log("<1> entering set up method")
 
-    //TODO load settings here
+    //read in settings here to synchronize values
+    syncSettings();
 
     // create canvas
     initCanvas();
@@ -449,7 +454,7 @@ async function mainGameLoop(){
 function setButtons(player){
 
     //don't enable buttons when it's not the players turn
-    if(player != currPlayer){
+    if(player != currPlayer || b_State.winCondition){
         b_State.tradeButtonEnabled = false;
         b_State.devButtonEnabled = false;
         b_State.roadButtonEnabled = false;
@@ -730,11 +735,10 @@ function generatePorts(){
 
 function checkWinCondition(){
 
-    console.log(currPlayer.VP + currPlayer.devCards[1])
-
-    if(currPlayer.getVP() >= b_State.pointsToWin){
+    if(currPlayer.getVP() + currPlayer.devCards[1] >= b_State.pointsToWin){
         b_State.winCondition = true;
         b_State.winner = currPlayer;
+        alert("Game Over")
     }
 }
 

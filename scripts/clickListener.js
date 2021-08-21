@@ -161,9 +161,8 @@ function startClickListener(){
                 if(c_State.sendCardPaths[i] != null && ctx.isPointInPath(c_State.sendCardPaths[i], CLICK_X, CLICK_Y)){
 
                     // don't allow player to try to trade a resource they don't have or that is already being received in same trade
-                    if(c_State.player.resources[i] > 0 && c_State.receive[i] < 1){
+                    if(c_State.player.resources[i] > c_State.send[i] && c_State.receive[i] < 1){
                         c_State.send[i]++;
-                        c_State.player.resources[i]--;
                     }
                 }
             }
@@ -179,10 +178,11 @@ function startClickListener(){
                 }
             }
 
-            //clear send button
-
-            //clear receive button
-
+            //clear button
+            if(ctx.isPointInPath(c_State.clearButtonPath, CLICK_X, CLICK_Y)){
+                clearSend()
+                clearReceive()
+            }
         }
 
         //–––––––––––––––––––––––––––––––––––––––––––––––––––––––

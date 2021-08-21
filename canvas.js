@@ -41,6 +41,10 @@ var c_State = {
     turnButtonPath: null,
     settingsButtonPath: null,
     analysisButtonPath: null,
+    // offerButtonPath: null,
+    // tradeBankButtonPath: null,
+    clearButtonPath: null,
+    
 
     buttonWidth: 0,
     islandCenterX: 0,
@@ -55,8 +59,8 @@ var c_State = {
 
     send: [0,0,0,0,0],
     receive: [0,0,0,0,0],
-    clearSendPath: null,
-    clearReceivePath: null,
+    // clearSendPath: null,
+    // clearReceivePath: null,
 
     // background vertices in animation
     dotsArray: [],
@@ -1298,9 +1302,9 @@ function drawTradeMenu(){
 
     //define boundaries of trade menu
     let menu_x = c_WIDTH - 360
-    let menu_y = c_HEIGHT * 0.55
+    let menu_y = c_HEIGHT - 385
     let width = 360
-    let height = 225
+    let height = 280
 
     //draw the trade menu box
     ctx.beginPath()
@@ -1315,22 +1319,21 @@ function drawTradeMenu(){
     ctx.stroke()
 
     //draw the cards
-
-    //send cards
-    ctx.textAlign = "left"
-    ctx.fillStyle = "black"
-    ctx.font = "15px Arial"
-    ctx.fillText("Send ", menu_x + 5, menu_y + 15)
-
     let cardHeight = 48
     let cardWidth = 5 * cardHeight/7
+
+    //send cards
+    ctx.textAlign = "center"
+    ctx.fillStyle = "black"
+    ctx.font = "15px Arial"
+    ctx.fillText("Send ", menu_x + 15 + 2 * ((width * 0.75)/5.5) + cardWidth/2, menu_y + 25)
 
     ctx.lineWidth = 1
 
     for(let i = 0; i < 5; i++){
 
-        let cardX = menu_x + 15 + i * 40
-        let cardY = menu_y + 25
+        let cardX = menu_x + 15 + i * ((width * 0.75)/5.5)
+        let cardY = menu_y + 35
 
         //TODO move this to init paths
         let p = new Path2D()
@@ -1363,18 +1366,25 @@ function drawTradeMenu(){
             ctx.font = "12px Arial"
             ctx.fillText(c_State.send[i], cardX + cardWidth/2, cardY + cardHeight/2 + 5)
         }
+
+        //show trade rates w bank
+        ctx.textAlign = "center"
+        ctx.fillStyle = "black"
+        ctx.font = "15px Arial"
+        ctx.fillText(currPlayer.tradecost[i] + ":1", cardX + cardWidth/2, cardY + cardHeight + 20)
+
     }
 
     //receive cards
-    ctx.textAlign = "left"
+    ctx.textAlign = "center"
     ctx.fillStyle = "black"
     ctx.font = "15px Arial"
-    ctx.fillText("Receive ", menu_x + 5, menu_y + height/2 + 15)
+    ctx.fillText("Receive ", menu_x + 15 + 2 * ((width * 0.75)/5.5) + cardWidth/2, menu_y + 130 + 15)
 
     for(let i = 0; i < 5; i++){
 
-        let cardX = menu_x + 15 + i * 40
-        let cardY = menu_y + height/2 + 25
+        let cardX = menu_x + 15 + i * ((width * 0.75)/5.5)
+        let cardY = menu_y + 130 + 25
 
         //TODO move this to init paths
         let p = new Path2D()
@@ -1409,7 +1419,59 @@ function drawTradeMenu(){
         }
     }
 
-    //draw the trade arrows
+    //draw trade controls
+
+    //first check if there's anything in trade
+    let empty = true;
+
+    for(let i = 0; i < 5; i++){
+        if(c_State.send[i] != 0 || c_State.receive[i] != 0){
+            empty = false;
+        }
+    }
+
+    let buttonY = menu_y + height - 50
+    let buttonHeight = 30
+
+    //offer trade button
+    ctx.beginPath()
+    ctx.rect(menu_x + 15, buttonY, 80, buttonHeight)
+    ctx.fillStyle = "lightgrey"
+    ctx.fill()
+
+    ctx.fillStyle = "black"
+    ctx.textAlign = "center"
+    ctx.font = "12px Arial"
+    ctx.fillText("Offer Trade", menu_x + 55, buttonY + 20)
+
+    //trade to bank button
+    ctx.beginPath()
+    ctx.rect(menu_x + 100, buttonY, 90, buttonHeight)
+    ctx.fillStyle = "red"
+    ctx.fill()
+
+    ctx.fillStyle = "black"
+    ctx.textAlign = "center"
+    ctx.font = "12px Arial"
+    ctx.fillText("Trade to Bank", menu_x + 145, buttonY + 20)
+
+    //clear button
+    //TODO move to init paths
+    c_State.clearButtonPath = new Path2D()
+    ctx.beginPath()
+    c_State.clearButtonPath.moveTo(menu_x + 195, buttonY)
+    c_State.clearButtonPath.lineTo(menu_x + 195 + 55, buttonY)
+    c_State.clearButtonPath.lineTo(menu_x + 195 + 55, buttonY + buttonHeight)
+    c_State.clearButtonPath.lineTo(menu_x + 195, buttonY + buttonHeight)
+    c_State.clearButtonPath.lineTo(menu_x + 195, buttonY)
+    ctx.closePath()
+    ctx.fillStyle = "lightgrey"
+    ctx.fill(c_State.clearButtonPath)
+
+    ctx.fillStyle = "black"
+    ctx.textAlign = "center"
+    ctx.font = "12px Arial"
+    ctx.fillText("Clear", menu_x + 220, buttonY + 20)
 
     //draw the player circles
     let circle_y = menu_y + height/(2 * (playersArr.length))
@@ -1761,7 +1823,6 @@ function drawYOPMenu(){
 
 function clearSend(){
     for(let i = 0; i < 5; i++){
-        c_State.player.resources[i] += c_State.send[i];
         c_State.send[i] = 0
     }
 }

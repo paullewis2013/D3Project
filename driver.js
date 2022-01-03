@@ -30,8 +30,8 @@
         "canvas.js",
         "scripts/initPaths.js",
         "scripts/commands.js",
-        "scripts/moveListener.js",
-        "scripts/clickListener.js",
+        "listeners/moveListener.js",
+        "listeners/clickListener.js",
 
         "scripts/playerInfo.js",
         "scripts/syncSettings.js",

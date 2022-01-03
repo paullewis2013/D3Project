@@ -16,6 +16,4 @@ ipcRenderer.on("settingsObject", (event, arg) => {
     if (Object.keys(arg)[0] == "AnimateBackground"){
         c_State.animateBackground = arg.AnimateBackground;
     }
-
-
 });

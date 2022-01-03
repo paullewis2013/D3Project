@@ -146,7 +146,7 @@ function setUpTiles(){
                 "slategrey"];
 
     //randomize tile resource order
-    colorNums = _.shuffle(colorNums)
+    colorNums = shuffle(colorNums)
     var resourceNums = [5, 2, 6, 3, 8, 10, 9, 12, 11, 4, 8, 10, 9, 4, 5, 6, 3, 11]
 
     var randomIndex = Math.floor(Math.random() * (colorNums.length + 1))
@@ -673,7 +673,7 @@ function populateDevCardDeck(){
     for(var i = 0; i < 2; i++){
         b_State.devCardArray.push(devCard.PLENTY);
     }
-    b_State.devCardArray = _.shuffle(b_State.devCardArray)
+    b_State.devCardArray = shuffle(b_State.devCardArray)
 }
 
 //TODO move this to stats file
@@ -719,7 +719,7 @@ function generatePorts(){
     ]
 
     //randomize port trades
-    tradesArr = _.shuffle(tradesArr)
+    tradesArr = shuffle(tradesArr)
 
     for (var i = 0; i < 9; i++){
         portsArr.push(new Port(tradesArr[i], portLocations[i]))

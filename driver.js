@@ -15,6 +15,9 @@
 
 (function() {
     var scriptNames = [
+        //load needed lodash functions
+        "scripts/minlodash.js",
+
         //load objects first
         "objects/Dice.js",
         "objects/Player.js",

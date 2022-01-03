@@ -11,6 +11,7 @@
 //          \/ \/ \/               ||               \\-----/   ||      ----         `---------------         \/ \/ \/
 
 //this method injects required scripts into index.html when called
+//it is the only script included in index.html at te time it is called
 
 (function() {
     var scriptNames = [

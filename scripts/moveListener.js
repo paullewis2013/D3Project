@@ -15,7 +15,7 @@ function startMoveListener(){
                 (ctx.isPointInPath(c_State.cityButtonPath, POS_X, POS_Y) && b_State.cityButtonEnabled)||
                 (ctx.isPointInPath(c_State.turnButtonPath, POS_X, POS_Y) && b_State.turnButtonEnabled) ||
                 (ctx.isPointInPath(c_State.settingsButtonPath, POS_X, POS_Y)) ||
-                (ctx.isPointInPath(c_State.analysisButtonPath, POS_X, POS_Y))
+                (ctx.isPointInPath(c_State.analysisButtonPath, POS_X, POS_Y)) 
             ){
                 
             document.body.style.cursor = "pointer";
@@ -47,6 +47,7 @@ function startMoveListener(){
                 for(let j = 0; j < verticesArr[i].length; j++){
                     if(ctx.isPointInPath(verticesArr[i][j].hitbox, POS_X, POS_Y)){
                         c_State.hoveredVert = verticesArr[i][j]
+                        document.body.style.cursor = "pointer";
                     }
                 }
             }
@@ -62,6 +63,7 @@ function startMoveListener(){
                 for(let j = 0; j < roadsArr[i].length; j++){
                     if(ctx.isPointInPath(roadsArr[i][j].hitbox, POS_X, POS_Y)){
                         c_State.hoveredRoad = roadsArr[i][j]
+                        document.body.style.cursor = "pointer";
                     }
                 }
             }

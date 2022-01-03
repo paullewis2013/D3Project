@@ -16,7 +16,7 @@
 (function() {
     var scriptNames = [
         //load needed lodash functions
-        "scripts/minlodash.js",
+        "util/min_lodash.js",
 
         //load objects first
         "objects/Dice.js",
@@ -27,9 +27,9 @@
         "objects/Tile.js",
         "objects/Vertex.js",
 
+        //canvas related files
         "canvas.js",
         "scripts/initPaths.js",
-        "scripts/commands.js",
         "listeners/moveListener.js",
         "listeners/clickListener.js",
 
@@ -38,6 +38,9 @@
         "board.js",
         "ipc.js",
         "data.js",
+
+        //finally more util 
+        "util/console_commands.js",
 
     ];
     for (var i = 0; i < scriptNames.length; i++) {

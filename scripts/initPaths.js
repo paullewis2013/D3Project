@@ -183,7 +183,8 @@ function initDicePath(){
     let lX = 55
     let rX = 175
 
-    let tY = 435
+    //110 is same as offset in playersInfo where draw dice is called
+    let tY = playersArr.length * 110 + 10
     let bY = tY + 65
 
     ctx.beginPath();

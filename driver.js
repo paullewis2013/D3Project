@@ -37,11 +37,10 @@
         "scripts/syncSettings.js",
         "board.js",
         "ipc.js",
-        "data.js",
 
         //finally more util 
         "util/console_commands.js",
-
+        "util/data.js"
     ];
     for (var i = 0; i < scriptNames.length; i++) {
         var script = document.createElement('script');

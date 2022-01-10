@@ -323,6 +323,7 @@ Player.prototype.playDevCard = async function(card){
             console.log("Can't play this card " + card)
 
             //maybe give some input that this cannot be played during a turn
+            //TODO this could cause a bug allowing player to reset devcard limit by attempting to play victory point
             b_State.devCardPlayedThisTurn = false;
 
             break;
@@ -400,6 +401,8 @@ Player.prototype.playDevCard = async function(card){
             //loop twice
             for(let i = 0; i < 2; i++){
                 
+                console.log("loopnum" + i)
+
                 if(this.roadsRemaining > 0){
                     //bot way to do this
                     if(this.isBot){
@@ -410,10 +413,8 @@ Player.prototype.playDevCard = async function(card){
                     }
                     //human way
                     else{
-                        //TODO make road free and don't let player click out of it
-
                         roadButton()
-                        await waitForRoad(this, 15 - this.roadsRemaining)
+                        await waitForRoad(this, 15 - this.roadsRemaining + 1)
 
                     }
                 }

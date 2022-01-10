@@ -488,7 +488,7 @@ function setButtons(player){
         }
 
         //road
-        if((!building || b_State.buildingRoad) && !trading && currPlayer.roadsRemaining > 0 && (currPlayer.resources[0] > 0 && currPlayer.resources[1] > 0) ){
+        if((!building || (b_State.buildingRoad && !currPlayer.rbDevPlayed)) && !trading && currPlayer.roadsRemaining > 0 && (currPlayer.resources[0] > 0 && currPlayer.resources[1] > 0) ){
             b_State.roadButtonEnabled = true;
         }else{
             b_State.roadButtonEnabled = false;

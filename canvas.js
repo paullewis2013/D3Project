@@ -852,7 +852,8 @@ function drawMonopolyMenu(){
 
     //add a message at the top
     ctx.fillStyle = "black"
-    ctx.fillText("Please select a resource type:", menu_x + w/2, menu_y + 15)
+    ctx.textAlign = "center"
+    ctx.fillText("Please select a resource type:", menu_x + w/2, menu_y + 25)
 
     c_State.monopolyMenuCardPaths = [];
 
@@ -1610,7 +1611,7 @@ function drawYOPMenu(){
     //add a message at the top
     ctx.fillStyle = "black"
     ctx.textAlign = "center"
-    ctx.fillText("Please select resource 1:", menu_x + w/2, menu_y + 15)
+    ctx.fillText("Please select resource 1:", menu_x + w/2, menu_y + 20)
 
     c_State.yopMenuCardPaths = [];
 

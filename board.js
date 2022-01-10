@@ -250,15 +250,15 @@ function setUpTiles(){
 //TODO create an init players method
 // don't leave this loose
 var p1 = new Player("Orange", false);
-var p2 = new Player("Red", true);
-var p3 = new Player("Purple", true);
-var p4 = new Player("Blue", true);
+// var p2 = new Player("Red", true);
+// var p3 = new Player("Purple", true);
+// var p4 = new Player("Blue", true);
 // var p5= new Player("White", true);
 // var p6 = new Player("Black", true);
 playersArr.push(p1);
-playersArr.push(p2);
-playersArr.push(p3);
-playersArr.push(p4);
+// playersArr.push(p2);
+// playersArr.push(p3);
+// playersArr.push(p4);
 // playersArr.push(p5);
 // playersArr.push(p6);
 

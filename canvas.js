@@ -1609,6 +1609,7 @@ function drawYOPMenu(){
 
     //add a message at the top
     ctx.fillStyle = "black"
+    ctx.textAlign = "center"
     ctx.fillText("Please select resource 1:", menu_x + w/2, menu_y + 15)
 
     c_State.yopMenuCardPaths = [];
@@ -1722,6 +1723,7 @@ function drawYOPMenu(){
 
     //add a message at the top
     ctx.fillStyle = "black"
+    ctx.textAlign = "center"
     ctx.fillText("Please select resource 2:", menu_x + w/2, menu_y + h/2 + 15)
 
     cardX = menu_x + buffer/2

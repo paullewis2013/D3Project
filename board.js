@@ -117,6 +117,8 @@ const resourceCard = {
     ORE: 'ore'
 }
 
+//contains pointers to each tile for given number with pointer for 2 tile in first array
+// both 3 tiles in the second array and so on up to 12 with 7 refering to the desert
 var numTilePointers = [
     [],
     [],
@@ -232,7 +234,7 @@ function setUpTiles(){
         }
     }
 
-    //find location of robber and record it
+    //loop through all tiles and push pointer to corresponding sub array of numTilePointers
     for(var i = 0; i < 5; i++){
         for(var j = 0; j < tilesArr[i].length; j++){
             numTilePointers[tilesArr[i][j].number - 2].push(tilesArr[i][j])
@@ -241,6 +243,7 @@ function setUpTiles(){
 
     // don't remove this
     // it shouldn't be here but things break if it's not
+    // TODO investigate whatever this is
     drawTiles();
 }
 
@@ -743,6 +746,7 @@ function checkWinCondition(){
 }
 
 //generates a dice roll between 1 and 12 by summing two d6
+//calls generate resources internally
 function rollDice(){
 
     b_State.diceRolledThisTurn = true;
@@ -786,9 +790,10 @@ function drawDevCard(){
     }
 }
 
+//result is the result of the dice roll
 function generateResources(result){
 
-    //get array of tiles rolled
+    //get pointer array of tiles rolled
     var tiles = numTilePointers[result - 2]
 
     for(var i = 0; i < tiles.length; i++){
@@ -1031,7 +1036,6 @@ function unfreeze(){
 function diceButton(){
 
     rollDice();
-    drawDice()
     
     //updates dice results if they are visible
     graphicButton()
@@ -1059,22 +1063,8 @@ function settlementButton(){
     freeze();
 }
 
-//TODO
 function cityButton(){
 
     b_State.buildingCity = true;
     freeze();
-}
-
-//fills the random table with angles between 0 and 2 PI Radians
-function initRandomTable(){
-
-    for(let i = 0; i < 100; i++){
-
-        randomTable.push([])
-
-        for(let j = 0; j < 100; j++){
-            randomTable[i].push(Math.random() * 2 * Math.PI)
-        }
-    }
 }
